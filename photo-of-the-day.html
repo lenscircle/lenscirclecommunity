@@ -382,7 +382,6 @@
       margin-bottom: 14px;
     }
 
-    /* Tap-to-expand photo viewer */
     .photo-expand { cursor: zoom-in; }
 
     .photo-lightbox {
@@ -592,7 +591,6 @@
     © Lens Circle Community · Photography brings us together
   </footer>
 
-  <!-- Expanded photo viewer -->
   <div
     id="photoLightbox"
     class="photo-lightbox"
@@ -618,7 +616,6 @@
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
     const bucket = "pod-photos";
 
-    // Photo expansion / lightbox
     const photoLightbox = document.querySelector("#photoLightbox");
     const photoLightboxImage = document.querySelector("#photoLightboxImage");
     const photoLightboxClose = document.querySelector("#photoLightboxClose");
@@ -700,6 +697,7 @@
       const end = start + 24 * 60 * 60 * 1000;
 
       return {
+        date: istDate,
         start: new Date(start).toISOString(),
         end: new Date(end).toISOString()
       };
@@ -811,6 +809,8 @@
 
       submitButton.disabled = true;
 
+      let uploadedPath = null;
+
       try {
         const photographer = document.querySelector("#photographer").value.trim();
         const title = document.querySelector("#title").value.trim();
@@ -825,15 +825,17 @@
         }
 
         const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-        const path = `${crypto.randomUUID()}-${safeName}`;
+        uploadedPath = `${crypto.randomUUID()}-${safeName}`;
 
         const { error: uploadError } = await supabase.storage
           .from(bucket)
-          .upload(path, file, { contentType: file.type });
+          .upload(uploadedPath, file, { contentType: file.type });
 
         if (uploadError) throw uploadError;
 
-        const { data: publicData } = supabase.storage.from(bucket).getPublicUrl(path);
+        const { data: publicData } = supabase.storage
+          .from(bucket)
+          .getPublicUrl(uploadedPath);
 
         const { error: insertError } = await supabase.from("photos").insert({
           photographer,
@@ -841,7 +843,23 @@
           image_path: publicData.publicUrl
         });
 
-        if (insertError) throw insertError;
+        if (insertError) {
+          await supabase.storage.from(bucket).remove([uploadedPath]);
+          uploadedPath = null;
+
+          const errorText = insertError.message?.toLowerCase() || "";
+
+          if (
+            errorText.includes("won within the last 7 days") ||
+            errorText.includes("recently won")
+          ) {
+            throw new Error(
+              "You won Photo of the Day recently. Please wait until 7 days have passed before submitting again."
+            );
+          }
+
+          throw insertError;
+        }
 
         form.reset();
         showMessage(status, "Your photo was submitted for today’s Photo of the Day!", "success");
@@ -971,20 +989,53 @@
 
       winnerPanel.style.display = "block";
 
-      if (!photos.length) {
-        winnerMessage.textContent = "No entries were submitted today, so there is no winner to announce.";
+      const { date } = getISTDayBounds();
+
+      const { data: winnerRecord, error } = await supabase
+        .from("pod_winners")
+        .select("photographer, photo_id")
+        .eq("winner_date", date)
+        .maybeSingle();
+
+      if (error) {
+        winnerMessage.textContent = "The winner is being finalized. Please check back shortly.";
         winnerDetails.textContent = "";
         winnerPhoto.replaceChildren();
         return;
       }
 
-      const winner = photos.reduce((best, photo) =>
-        (Number(photo.votes) || 0) > (Number(best.votes) || 0) ? photo : best
+      if (!winnerRecord) {
+        winnerMessage.textContent = photos.length
+          ? "Today’s winner will be announced shortly."
+          : "No entries were submitted today, so there is no winner to announce.";
+        winnerDetails.textContent = "";
+        winnerPhoto.replaceChildren();
+        return;
+      }
+
+      let winner = photos.find(
+        photo => String(photo.id) === String(winnerRecord.photo_id)
       );
 
-      winnerMessage.textContent = `Congratulations to ${winner.photographer}!`;
-      winnerDetails.textContent = `${winner.title} · ${Number(winner.votes) || 0} votes`;
+      if (!winner) {
+        const { data: fetchedPhoto } = await supabase
+          .from("photos")
+          .select("id, photographer, title, image_path, votes")
+          .eq("id", winnerRecord.photo_id)
+          .maybeSingle();
 
+        winner = fetchedPhoto;
+      }
+
+      winnerMessage.textContent = `Congratulations to ${winnerRecord.photographer}!`;
+
+      if (!winner) {
+        winnerDetails.textContent = "The winning photograph could not be loaded.";
+        winnerPhoto.replaceChildren();
+        return;
+      }
+
+      winnerDetails.textContent = `${winner.title} · ${Number(winner.votes) || 0} votes`;
       winnerPhoto.replaceChildren();
 
       const image = document.createElement("img");
@@ -997,13 +1048,13 @@
     }
 
     async function loadArchive() {
-      const { start } = getISTDayBounds();
+      const { date } = getISTDayBounds();
 
-      const { data, error } = await supabase
-        .from("photos")
-        .select("id, photographer, title, image_path, votes, created_at")
-        .lt("created_at", start)
-        .order("created_at", { ascending: false })
+      const { data: winners, error } = await supabase
+        .from("pod_winners")
+        .select("winner_date, photographer, photo_id")
+        .lt("winner_date", date)
+        .order("winner_date", { ascending: false })
         .limit(500);
 
       if (error) {
@@ -1013,39 +1064,40 @@
 
       archive.replaceChildren();
 
-      if (!data.length) {
+      if (!winners.length) {
         const empty = document.createElement("p");
         empty.className = "muted";
-        empty.textContent = "Past winners will appear here after the first voting day ends.";
+        empty.textContent = "Past winners will appear here after the first winner is recorded.";
         archive.append(empty);
         return;
       }
 
-      const days = new Map();
+      const photoIds = winners.map(winner => winner.photo_id);
 
-      for (const photo of data) {
-        const date = new Intl.DateTimeFormat("en-CA", {
-          timeZone: "Asia/Kolkata",
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit"
-        }).format(new Date(photo.created_at));
+      const { data: photos, error: photoError } = await supabase
+        .from("photos")
+        .select("id, title, image_path, votes")
+        .in("id", photoIds);
 
-        if (!days.has(date)) days.set(date, []);
-        days.get(date).push(photo);
+      if (photoError) {
+        archive.textContent = "Could not load the winning photographs.";
+        return;
       }
 
-      for (const [date, photos] of days) {
-        const winner = photos.reduce((best, photo) =>
-          (Number(photo.votes) || 0) > (Number(best.votes) || 0) ? photo : best
-        );
+      const photoById = new Map(
+        photos.map(photo => [String(photo.id), photo])
+      );
+
+      for (const winner of winners) {
+        const photo = photoById.get(String(winner.photo_id));
+        if (!photo) continue;
 
         const card = document.createElement("article");
         card.className = "card";
 
         const image = document.createElement("img");
-        image.src = winner.image_path;
-        image.alt = winner.title || "Past winning photograph";
+        image.src = photo.image_path;
+        image.alt = photo.title || "Past winning photograph";
         image.loading = "lazy";
         enablePhotoExpand(image);
 
@@ -1054,25 +1106,24 @@
 
         const dateLabel = document.createElement("div");
         dateLabel.className = "archive-date";
-        dateLabel.textContent = new Date(`${date}T00:00:00+05:30`).toLocaleDateString(
-          "en-IN",
-          {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-            timeZone: "Asia/Kolkata"
-          }
-        );
+        dateLabel.textContent = new Date(
+          `${winner.winner_date}T00:00:00+05:30`
+        ).toLocaleDateString("en-IN", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+          timeZone: "Asia/Kolkata"
+        });
 
         const title = document.createElement("h3");
-        title.textContent = winner.title || "Untitled photograph";
+        title.textContent = photo.title || "Untitled photograph";
 
         const photographer = document.createElement("p");
         photographer.textContent = `By ${winner.photographer}`;
 
         const votes = document.createElement("p");
         votes.className = "muted";
-        votes.textContent = `${Number(winner.votes) || 0} votes`;
+        votes.textContent = `${Number(photo.votes) || 0} votes`;
 
         info.append(dateLabel, title, photographer, votes);
         card.append(image, info);

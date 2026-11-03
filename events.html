@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Events & Contests | Lens Circle</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b1020;
+      color: #f4f6fb;
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 20px 7%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      border-bottom: 1px solid #283047;
+    }
+
+    .logo { font-weight: bold; letter-spacing: 2px; }
+    .logo span { color: #d4af37; }
+
+    nav a {
+      color: #cbd2e3;
+      text-decoration: none;
+      margin-left: 18px;
+      font-size: 14px;
+    }
+
+    nav a:hover, .text-link:hover { color: #fff; }
+
+    main {
+      max-width: 1000px;
+      margin: 45px auto;
+      padding: 0 22px;
+    }
+
+    .eyebrow {
+      color: #d4af37;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-size: 12px;
+    }
+
+    h1 {
+      font-size: clamp(36px, 6vw, 58px);
+      line-height: 1.15;
+      margin: 12px 0;
+    }
+
+    .intro {
+      max-width: 650px;
+      color: #aeb7ca;
+      margin-bottom: 38px;
+    }
+
+    .events {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      background: #141b2e;
+      border: 1px solid #283047;
+      border-radius: 10px;
+      padding: 24px;
+    }
+
+    .tag {
+      display: inline-block;
+      color: #d4af37;
+      border: 1px solid #62552b;
+      border-radius: 20px;
+      padding: 3px 10px;
+      font-size: 12px;
+    }
+
+    .card p { color: #aeb7ca; }
+
+    .text-link {
+      color: #d4af37;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 30px;
+      color: #d4af37;
+      text-decoration: none;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #8791a8;
+      border-top: 1px solid #283047;
+      font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+      header { align-items: flex-start; flex-direction: column; }
+      nav a { margin: 0 14px 0 0; }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="logo">LENS <span>CIRCLE</span></div>
+    <nav>
+      <a href="home.html">Home</a>
+      <a href="photo-of-the-day.html">Photo of the Day</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="eyebrow">Create · Participate · Connect</div>
+    <h1>Events & Contests</h1>
+    <p class="intro">
+      Explore photography events and creative opportunities hosted by Lens Circle.
+      Check our Instagram community for current themes, announcements, and
+      submission instructions.
+    </p>
+
+    <div class="events">
+      <article class="card">
+        <span class="tag">Daily Event</span>
+        <h2>Photo of the Day</h2>
+        <p>Share a photograph, explore community entries, and vote for your favourites.</p>
+        <a class="text-link" href="photo-of-the-day.html">Visit daily event →</a>
+      </article>
+
+      <article class="card">
+        <span class="tag">Community Event</span>
+        <h2>Photography Contests</h2>
+        <p>Take part in themed contests and showcase your creative perspective.</p>
+        <a class="text-link" href="https://www.instagram.com/lenscirclecommunity/"
+           target="_blank" rel="noopener">Check announcements →</a>
+      </article>
+
+      <article class="card">
+        <span class="tag">Community Project</span>
+        <h2>Collaborations</h2>
+        <p>Join collaborative photography projects and create alongside other members.</p>
+        <a class="text-link" href="https://www.instagram.com/lenscirclecommunity/"
+           target="_blank" rel="noopener">Follow Lens Circle →</a>
+      </article>
+    </div>
+
+    <a class="back-link" href="home.html">← Back to Lens Circle Home</a>
+  </main>
+
+  <footer>© Lens Circle Community · Photography brings us together</footer>
+</body>
+</html>

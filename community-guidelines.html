@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -60,7 +61,9 @@
       font-size: 14px;
     }
 
-    nav a:hover, .text-link:hover { color: var(--gold); }
+    nav a:hover, .text-link:hover, .footer-links a:hover {
+      color: var(--gold);
+    }
 
     main {
       max-width: 900px;
@@ -126,6 +129,16 @@
       font-size: 13px;
     }
 
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px 22px;
+      margin-bottom: 14px;
+    }
+
+    .footer-links a { color: var(--muted); }
+
     @media (max-width: 600px) {
       header { align-items: flex-start; flex-direction: column; }
       nav { gap: 14px; }
@@ -133,6 +146,7 @@
       .guideline { padding: 20px; }
     }
   </style>
+
 </head>
 
 <body>
@@ -142,13 +156,16 @@
       <span>LENS CIRCLE</span>
     </a>
 
-    <nav aria-label="Main navigation">
-      <a href="home.html">Home</a>
-      <a href="events.html">Events &amp; Contests</a>
-      <a href="photo-of-the-day.html">Photo of the Day</a>
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
-    </nav>
+```
+<nav aria-label="Main navigation">
+  <a href="home.html">Home</a>
+  <a href="events.html">Events</a>
+  <a href="photo-of-the-day.html">Photo of the Day</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+</nav>
+```
+
   </header>
 
   <main>
@@ -160,78 +177,89 @@
       These guidelines help keep the community welcoming and respectful.
     </p>
 
-    <section class="guideline">
-      <h2>1. Be respectful</h2>
-      <p>
-        Treat every member with kindness. Give constructive feedback that helps
-        photographers improve, and avoid insults, harassment, or personal attacks.
-      </p>
-    </section>
+```
+<section class="guideline">
+  <h2>1. Be respectful</h2>
+  <p>
+    Treat every member with kindness. Give constructive feedback that helps
+    photographers improve, and avoid insults, harassment, or personal attacks.
+  </p>
+</section>
 
-    <section class="guideline">
-      <h2>2. Share work you have permission to share</h2>
-      <p>
-        Submit photographs and edits that you created, or that you have clear
-        permission to share. Do not claim another person's work as your own.
-      </p>
-    </section>
+<section class="guideline">
+  <h2>2. Share work you have permission to share</h2>
+  <p>
+    Submit photographs and edits that you created, or that you have clear
+    permission to share. Do not claim another person's work as your own.
+  </p>
+</section>
 
-    <section class="guideline">
-      <h2>3. Credit creators properly</h2>
-      <p>
-        When sharing or featuring someone else's work with permission, clearly
-        credit the photographer or editor. Do not remove watermarks or creator
-        credits without permission.
-      </p>
-    </section>
+<section class="guideline">
+  <h2>3. Credit creators properly</h2>
+  <p>
+    When sharing or featuring someone else's work with permission, clearly
+    credit the photographer or editor. Do not remove watermarks or creator
+    credits without permission.
+  </p>
+</section>
 
-    <section class="guideline">
-      <h2>4. Keep submissions relevant</h2>
-      <p>
-        Follow the instructions for each feature, event, or contest, including
-        its theme, format, deadline, and submission method. Submissions that
-        do not follow the stated requirements may not be included.
-      </p>
-    </section>
+<section class="guideline">
+  <h2>4. Keep submissions relevant</h2>
+  <p>
+    Follow the instructions for each feature, event, or contest, including
+    its theme, format, deadline, and submission method. Submissions that
+    do not follow the stated requirements may not be included.
+  </p>
+</section>
 
-    <section class="guideline">
-      <h2>5. Respect privacy and safety</h2>
-      <p>
-        Do not share private information, images of people in sensitive situations,
-        or content that could put someone at risk. Get appropriate permission
-        before posting identifiable people, especially children.
-      </p>
-    </section>
+<section class="guideline">
+  <h2>5. Respect privacy and safety</h2>
+  <p>
+    Do not share private information, images of people in sensitive situations,
+    or content that could put someone at risk. Get appropriate permission
+    before posting identifiable people, especially children.
+  </p>
+</section>
 
-    <section class="guideline">
-      <h2>6. No spam or misleading activity</h2>
-      <p>
-        Avoid repetitive promotions, unsolicited messages, fake engagement,
-        and misleading claims about your work or identity. Keep community
-        discussions focused on photography, editing, and related creative topics.
-      </p>
-    </section>
+<section class="guideline">
+  <h2>6. No spam or misleading activity</h2>
+  <p>
+    Avoid repetitive promotions, unsolicited messages, fake engagement,
+    and misleading claims about your work or identity. Keep community
+    discussions focused on photography, editing, and related creative topics.
+  </p>
+</section>
 
-    <section class="guideline">
-      <h2>7. Features and contests</h2>
-      <p>
-        Being featured or selected is not guaranteed. Follow the specific rules
-        and selection process announced for each activity. Lens Circle may
-        decline or remove submissions that violate these guidelines.
-      </p>
-    </section>
+<section class="guideline">
+  <h2>7. Features and contests</h2>
+  <p>
+    Being featured or selected is not guaranteed. Follow the specific rules
+    and selection process announced for each activity. Lens Circle may
+    decline or remove submissions that violate these guidelines.
+  </p>
+</section>
 
-    <div class="closing">
-      <strong>Questions or concerns?</strong><br>
-      Contact us at
-      <a class="text-link" href="mailto:lenscirclecommunity@gmail.com">
-        lenscirclecommunity@gmail.com
-      </a>.
-      Thank you for helping make Lens Circle a supportive creative community.
-    </div>
+<div class="closing">
+  <strong>Questions or concerns?</strong><br>
+  Contact us at
+  <a class="text-link" href="mailto:lenscirclecommunity@gmail.com">
+    lenscirclecommunity@gmail.com
+  </a>.
+  Thank you for helping make Lens Circle a supportive creative community.
+</div>
+```
+
   </main>
 
   <footer>
+    <div class="footer-links">
+      <a href="home.html">Home</a>
+      <a href="events.html">Events</a>
+      <a href="photo-of-the-day.html">Photo of the Day</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="community-guidelines.html">Community Guidelines</a>
+    </div>
     © Lens Circle — Through Every Lens.
   </footer>
 </body>

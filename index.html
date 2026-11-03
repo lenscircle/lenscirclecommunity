@@ -4,43 +4,241 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Lens Circle | Photo of the Day</title>
+
   <style>
     * { box-sizing: border-box; }
-    <body>
 
-    { margin: 0; background: #0b1020; color: #f4f6fb; font: 16px Arial, sans-serif; }
-    header { padding: 20px 7%; border-bottom: 1px solid #283047; }
-    h1, h2 { margin-top: 0; }
-    main { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
-    .intro { text-align: center; margin-bottom: 35px; }
-    .intro p, .muted { color: #aeb7ca; }
-    .panel { background: #141b2e; border: 1px solid #283047; border-radius: 12px; padding: 22px; margin-bottom: 30px; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b1020;
+      color: #f4f6fb;
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 20px 7%;
+      border-bottom: 1px solid #283047;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .logo { font-weight: bold; letter-spacing: 2px; }
+    .logo span { color: #d4af37; }
+
+    nav a {
+      color: #cbd2e3;
+      text-decoration: none;
+      margin-left: 18px;
+      font-size: 14px;
+    }
+
+    nav a:hover { color: #d4af37; }
+
+    .home-link {
+      display: block;
+      padding: 10px 7%;
+      background: #11182b;
+      border-bottom: 1px solid #283047;
+    }
+
+    .home-link a {
+      color: #d4af37;
+      text-decoration: none;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+
+    .hero, .intro { text-align: center; }
+
+    .hero { margin: 55px auto 35px; }
+
+    .eyebrow {
+      color: #d4af37;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-size: 12px;
+    }
+
+    h1 {
+      font-size: clamp(38px, 7vw, 68px);
+      line-height: 1.1;
+      margin: 18px 0;
+    }
+
+    h2 { margin-top: 0; }
+
+    .hero p, .muted, .intro p { color: #aeb7ca; }
+
+    .button {
+      display: inline-block;
+      padding: 13px 22px;
+      background: #d4af37;
+      color: #111624;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 5px;
+      margin: 6px;
+    }
+
+    .button.secondary {
+      background: transparent;
+      color: #f4f6fb;
+      border: 1px solid #424b62;
+    }
+
+    section { margin: 35px 0; }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .card, .panel {
+      background: #141b2e;
+      border: 1px solid #283047;
+      border-radius: 10px;
+    }
+
+    .card { overflow: hidden; }
+    .card-info { padding: 18px; }
+
+    .panel {
+      padding: 22px;
+      margin-bottom: 30px;
+    }
+
     form { display: grid; gap: 12px; }
-    input, button { font: inherit; border-radius: 6px; padding: 12px; }
-    input { background: #0b1020; color: white; border: 1px solid #424b62; width: 100%; }
-    button { border: 0; background: #d4af37; color: #111624; font-weight: bold; cursor: pointer; }
+
+    input, button {
+      font: inherit;
+      border-radius: 6px;
+      padding: 12px;
+    }
+
+    input {
+      background: #0b1020;
+      color: white;
+      border: 1px solid #424b62;
+      width: 100%;
+    }
+
+    button {
+      border: 0;
+      background: #d4af37;
+      color: #111624;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
     button:disabled { opacity: .6; cursor: wait; }
-    .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; }
-    .card { background: #141b2e; border: 1px solid #283047; border-radius: 10px; overflow: hidden; }
-    .card img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; }
-    .card-content { padding: 15px; }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 18px;
+    }
+
+    .gallery .card img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      display: block;
+    }
+
     .card h3 { margin: 0 0 6px; overflow-wrap: anywhere; }
     .card p { color: #aeb7ca; margin: 0 0 12px; overflow-wrap: anywhere; }
-    .vote-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+
+    .vote-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
     .vote-row button { padding: 9px 14px; }
-    #status { min-height: 24px; color: #d4af37; }
-    footer { text-align: center; padding: 25px; color: #8791a8; border-top: 1px solid #283047; }
+
+    #status {
+      min-height: 24px;
+      color: #d4af37;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      color: #8791a8;
+      border-top: 1px solid #283047;
+      font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 18px 5%; flex-direction: column; align-items: flex-start; }
+      nav a { margin: 0 12px 0 0; }
+      main { margin-top: 25px; }
+    }
   </style>
 </head>
-  <header><strong>LENS CIRCLE</strong></header>
+
+<body>
+  <header>
+    <div class="logo">LENS <span>CIRCLE</span></div>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#how">How It Works</a>
+      <a href="#gallery-section">Gallery</a>
+    </nav>
+  </header>
+
+  <div class="home-link">
+    <a href="home.html">← Lens Circle Home</a>
+  </div>
 
   <main>
-    <div class="intro">
-      <h1>Photo of the Day</h1>
-      <p>Share your photograph and vote for your favourites.</p>
-    </div>
+    <section class="hero">
+      <div class="eyebrow">A photography community</div>
+      <h1>One photo.<br>One community.</h1>
+      <p class="muted">
+        Welcome to Lens Circle’s Photo of the Day—a daily event to share your
+        photography, discover new perspectives, and celebrate creative work.
+      </p>
+      <a class="button" href="#submit">Submit Your Photo</a>
+      <a class="button secondary" href="#gallery-section">Explore Gallery</a>
+    </section>
 
-    <section class="panel">
+    <section id="about">
+      <h2>Photo of the Day</h2>
+      <p class="muted">
+        Every day, photographers are invited to share a photo based on the
+        announced theme. Explore the entries and support your favourites.
+        Check the Lens Circle Instagram channel for the current theme and
+        event instructions.
+      </p>
+
+      <div class="cards">
+        <article class="card"><div class="card-info">
+          <h3>📷 Share your work</h3>
+          <p class="muted">Submit your photograph for the current daily event.</p>
+        </div></article>
+        <article class="card"><div class="card-info">
+          <h3>🗳️ Vote for your favourite</h3>
+          <p class="muted">Explore the entries and support photographs you love.</p>
+        </div></article>
+        <article class="card"><div class="card-info">
+          <h3>✨ Get featured</h3>
+          <p class="muted">Selected photographers may be featured on Lens Circle.</p>
+        </div></article>
+      </div>
+    </section>
+
+    <section id="submit" class="panel">
       <h2>Submit your photo</h2>
       <form id="uploadForm">
         <input id="photographer" placeholder="Your name or Instagram username" required maxlength="80">
@@ -51,13 +249,24 @@
       </form>
     </section>
 
-    <section>
+    <section id="how">
+      <h2>How to participate</h2>
+      <p class="muted">
+        Check the Lens Circle Instagram channel for the current theme,
+        submission instructions, and voting announcement.
+      </p>
+      <a class="button" href="https://www.instagram.com/lenscirclecommunity/" target="_blank" rel="noopener">
+        Visit Lens Circle on Instagram
+      </a>
+    </section>
+
+    <section id="gallery-section">
       <h2>Community gallery</h2>
       <div id="gallery" class="gallery"></div>
     </section>
   </main>
 
-  <footer>© Lens Circle Community</footer>
+  <footer>© Lens Circle Community · Photography brings us together</footer>
 
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
@@ -127,11 +336,13 @@
 
     async function vote(photoId, button) {
       button.disabled = true;
+
       try {
         const { error } = await supabase.rpc("cast_vote", {
           p_photo_id: photoId,
           p_voter_token: voterToken
         });
+
         if (error) throw error;
         await loadPhotos();
       } catch (error) {
@@ -164,7 +375,7 @@
         image.loading = "lazy";
 
         const content = document.createElement("div");
-        content.className = "card-content";
+        content.className = "card-info";
 
         const title = document.createElement("h3");
         title.textContent = photo.title;

@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Lens Circle | Photo of the Day</title>
+  <link rel="icon" type="image/png" href="logo.png">
 
   <style>
     * { box-sizing: border-box; }
@@ -25,7 +26,22 @@
       gap: 20px;
     }
 
-    .logo { font-weight: bold; letter-spacing: 2px; }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      color: #f4f6fb;
+      text-decoration: none;
+    }
+
+    .logo img {
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
+    }
+
     .logo span { color: #d4af37; }
 
     nav a {
@@ -35,7 +51,8 @@
       font-size: 14px;
     }
 
-    nav a:hover { color: #d4af37; }
+    nav a:hover,
+    .footer-links a:hover { color: #d4af37; }
 
     .home-link {
       display: block;
@@ -173,14 +190,32 @@
 
     footer {
       text-align: center;
-      padding: 25px;
+      padding: 25px 7%;
       color: #8791a8;
       border-top: 1px solid #283047;
       font-size: 13px;
     }
 
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px 22px;
+      margin-bottom: 14px;
+    }
+
+    .footer-links a {
+      color: #cbd2e3;
+      text-decoration: none;
+    }
+
     @media (max-width: 600px) {
-      header { padding: 18px 5%; flex-direction: column; align-items: flex-start; }
+      header {
+        padding: 18px 5%;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
       nav a { margin: 0 12px 0 0; }
       main { margin-top: 25px; }
     }
@@ -189,16 +224,23 @@
 
 <body>
   <header>
-    <div class="logo">LENS <span>CIRCLE</span></div>
-    <nav>
-      <a href="#about">About</a>
-      <a href="#how">How It Works</a>
-      <a href="#gallery-section">Gallery</a>
+    <a class="logo" href="home.html">
+      <img src="logo.png" alt="Lens Circle logo">
+      <span>LENS CIRCLE</span>
+    </a>
+
+    <nav aria-label="Main navigation">
+      <a href="home.html">Home</a>
+      <a href="events.html">Events</a>
+      <a href="photo-of-the-day.html">Photo of the Day</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
     </nav>
   </header>
 
   <div class="home-link">
-<a href="https://lenscircle.github.io/lenscirclecommunity/home.html">← Lens Circle Home</a>  </div>
+    <a href="home.html">← Lens Circle Home</a>
+  </div>
 
   <main>
     <section class="hero">
@@ -222,18 +264,26 @@
       </p>
 
       <div class="cards">
-        <article class="card"><div class="card-info">
-          <h3>📷 Share your work</h3>
-          <p class="muted">Submit your photograph for the current daily event.</p>
-        </div></article>
-        <article class="card"><div class="card-info">
-          <h3>🗳️ Vote for your favourite</h3>
-          <p class="muted">Explore the entries and support photographs you love.</p>
-        </div></article>
-        <article class="card"><div class="card-info">
-          <h3>✨ Get featured</h3>
-          <p class="muted">Selected photographers may be featured on Lens Circle.</p>
-        </div></article>
+        <article class="card">
+          <div class="card-info">
+            <h3>📷 Share your work</h3>
+            <p class="muted">Submit your photograph for the current daily event.</p>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-info">
+            <h3>🗳️ Vote for your favourite</h3>
+            <p class="muted">Explore the entries and support photographs you love.</p>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-info">
+            <h3>✨ Get featured</h3>
+            <p class="muted">Selected photographers may be featured on Lens Circle.</p>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -265,7 +315,17 @@
     </section>
   </main>
 
-  <footer>© Lens Circle Community · Photography brings us together</footer>
+  <footer>
+    <div class="footer-links">
+      <a href="home.html">Home</a>
+      <a href="events.html">Events</a>
+      <a href="photo-of-the-day.html">Photo of the Day</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="community-guidelines.html">Community Guidelines</a>
+    </div>
+    © Lens Circle Community · Photography brings us together
+  </footer>
 
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";

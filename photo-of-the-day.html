@@ -133,6 +133,17 @@
       margin-bottom: 30px;
     }
 
+    .schedule {
+      text-align: center;
+      border: 1px solid #283047;
+      border-radius: 10px;
+      padding: 18px;
+      margin: 25px 0;
+      background: #11182b;
+    }
+
+    .schedule strong { color: #d4af37; }
+
     form { display: grid; gap: 12px; }
 
     input, button {
@@ -156,7 +167,7 @@
       cursor: pointer;
     }
 
-    button:disabled { opacity: .6; cursor: wait; }
+    button:disabled { opacity: .6; cursor: not-allowed; }
 
     .gallery {
       display: grid;
@@ -183,10 +194,13 @@
 
     .vote-row button { padding: 9px 14px; }
 
-    #status {
+    #status, #cycleStatus {
       min-height: 24px;
       color: #d4af37;
     }
+
+    #winnerPanel { display: none; }
+    #winnerPanel h2 { color: #d4af37; }
 
     footer {
       text-align: center;
@@ -254,43 +268,53 @@
       <a class="button secondary" href="#gallery-section">Explore Gallery</a>
     </section>
 
+    <div class="schedule">
+      <p><strong>Daily schedule — Indian Standard Time</strong></p>
+      <p>Submissions close at <strong>12:00 PM</strong> · Voting closes at <strong>8:00 PM</strong></p>
+      <p id="cycleStatus" role="status">Checking today’s Photo of the Day status…</p>
+    </div>
+
     <section id="about">
       <h2>Photo of the Day</h2>
       <p class="muted">
-        Every day, photographers are invited to share a photo based on the
-        announced theme. Explore the entries and support your favourites.
-        Check the Lens Circle Instagram channel for the current theme and
-        event instructions.
+        Submit your photo before noon, vote for your favourite between noon
+        and 8 PM, and check back after voting closes to see the daily winner.
       </p>
 
       <div class="cards">
         <article class="card">
           <div class="card-info">
             <h3>📷 Share your work</h3>
-            <p class="muted">Submit your photograph for the current daily event.</p>
+            <p class="muted">Submit your photograph before 12:00 PM IST.</p>
           </div>
         </article>
 
         <article class="card">
           <div class="card-info">
             <h3>🗳️ Vote for your favourite</h3>
-            <p class="muted">Explore the entries and support photographs you love.</p>
+            <p class="muted">Vote between 12:00 PM and 8:00 PM IST.</p>
           </div>
         </article>
 
         <article class="card">
           <div class="card-info">
-            <h3>✨ Get featured</h3>
-            <p class="muted">Selected photographers may be featured on Lens Circle.</p>
+            <h3>✨ Daily winner</h3>
+            <p class="muted">The winning photographer is announced after voting closes.</p>
           </div>
         </article>
       </div>
     </section>
 
+    <section id="winnerPanel" class="panel" aria-live="polite">
+      <h2>🏆 Today’s Photo of the Day Winner</h2>
+      <p id="winnerMessage"></p>
+      <div id="winnerPhoto"></div>
+    </section>
+
     <section id="submit" class="panel">
       <h2>Submit your photo</h2>
       <form id="uploadForm">
-        <input id="photographer" placeholder="Your name or Instagram username" required maxlength="80">
+        <input id="photographer" placeholder="Your Instagram username (e.g. @username)" required maxlength="80">
         <input id="title" placeholder="Photo title" required maxlength="120">
         <input id="photoFile" type="file" accept="image/*" required>
         <button id="submitButton" type="submit">Upload photo</button>
@@ -301,16 +325,16 @@
     <section id="how">
       <h2>How to participate</h2>
       <p class="muted">
-        Check the Lens Circle Instagram channel for the current theme,
-        submission instructions, and voting announcement.
+        Submit before 12 PM IST. Voting runs from 12 PM to 8 PM IST.
+        The winner is displayed after voting closes.
       </p>
-      <a class="button" href="https://www.instagram.com/lenscirclecommunity/" target="_blank" rel="noopener">
+      <a class="button" href="https://www.instagram.com/lenscirclecommunity/" target="_blank" rel="noopener noreferrer">
         Visit Lens Circle on Instagram
       </a>
     </section>
 
     <section id="gallery-section">
-      <h2>Community gallery</h2>
+      <h2>Today’s community gallery</h2>
       <div id="gallery" class="gallery"></div>
     </section>
   </main>
@@ -346,10 +370,69 @@
     const status = document.querySelector("#status");
     const submitButton = document.querySelector("#submitButton");
     const gallery = document.querySelector("#gallery");
+    const cycleStatus = document.querySelector("#cycleStatus");
+    const winnerPanel = document.querySelector("#winnerPanel");
+    const winnerMessage = document.querySelector("#winnerMessage");
+    const winnerPhoto = document.querySelector("#winnerPhoto");
+
+    // Get today's midnight in IST, represented as a UTC timestamp.
+    function getISTDayBounds() {
+      const now = new Date();
+      const istDate = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Kolkata",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      }).format(now);
+
+      const [year, month, day] = istDate.split("-").map(Number);
+      const start = Date.UTC(year, month - 1, day) - (5.5 * 60 * 60 * 1000);
+      const end = start + 24 * 60 * 60 * 1000;
+
+      return {
+        start: new Date(start).toISOString(),
+        end: new Date(end).toISOString()
+      };
+    }
+
+    function getISTTimeParts() {
+      const parts = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Asia/Kolkata",
+        hour: "2-digit",
+        minute: "2-digit",
+        hourCycle: "h23"
+      }).formatToParts(new Date());
+
+      const hour = Number(parts.find(part => part.type === "hour").value);
+      const minute = Number(parts.find(part => part.type === "minute").value);
+      return { hour, minute, minutes: hour * 60 + minute };
+    }
+
+    function updateCycleStatus() {
+      const { minutes } = getISTTimeParts();
+
+      if (minutes < 12 * 60) {
+        cycleStatus.textContent = "Submissions are open until 12:00 PM IST. Voting opens at noon.";
+        submitButton.disabled = false;
+      } else if (minutes < 20 * 60) {
+        cycleStatus.textContent = "Voting is open until 8:00 PM IST. Today’s submissions are closed.";
+        submitButton.disabled = true;
+      } else {
+        cycleStatus.textContent = "Voting is closed. Today’s winner is announced below.";
+        submitButton.disabled = true;
+      }
+    }
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
       status.textContent = "";
+
+      const { minutes } = getISTTimeParts();
+      if (minutes >= 12 * 60) {
+        status.textContent = "Today’s submission deadline has passed. Please submit tomorrow before 12:00 PM IST.";
+        return;
+      }
+
       submitButton.disabled = true;
 
       try {
@@ -384,16 +467,23 @@
         if (insertError) throw insertError;
 
         form.reset();
-        status.textContent = "Photo uploaded!";
+        status.textContent = "Photo uploaded for today’s Photo of the Day!";
         await loadPhotos();
       } catch (error) {
         status.textContent = error.message || "Upload failed. Please try again.";
       } finally {
-        submitButton.disabled = false;
+        updateCycleStatus();
       }
     });
 
     async function vote(photoId, button) {
+      const { minutes } = getISTTimeParts();
+
+      if (minutes < 12 * 60 || minutes >= 20 * 60) {
+        alert("Voting is open daily from 12:00 PM to 8:00 PM IST.");
+        return;
+      }
+
       button.disabled = true;
 
       try {
@@ -412,10 +502,14 @@
     }
 
     async function loadPhotos() {
+      const { start, end } = getISTDayBounds();
+
       const { data, error } = await supabase
         .from("photos")
         .select("id, photographer, title, image_path, votes, created_at")
-        .order("created_at", { ascending: false });
+        .gte("created_at", start)
+        .lt("created_at", end)
+        .order("created_at", { ascending: true });
 
       if (error) {
         gallery.textContent = "Could not load photos. Check your Supabase setup.";
@@ -423,6 +517,10 @@
       }
 
       gallery.replaceChildren();
+
+      if (!data.length) {
+        gallery.textContent = "No photos submitted yet today. Be the first to submit!";
+      }
 
       for (const photo of data) {
         const card = document.createElement("article");
@@ -446,10 +544,12 @@
         row.className = "vote-row";
 
         const count = document.createElement("span");
-        count.textContent = `${photo.votes} vote${photo.votes === 1 ? "" : "s"}`;
+        count.textContent = `${photo.votes ?? 0} vote${photo.votes === 1 ? "" : "s"}`;
 
         const button = document.createElement("button");
         button.textContent = "Vote";
+        const { minutes } = getISTTimeParts();
+        button.disabled = minutes < 12 * 60 || minutes >= 20 * 60;
         button.addEventListener("click", () => vote(photo.id, button));
 
         row.append(count, button);
@@ -457,10 +557,56 @@
         card.append(image, content);
         gallery.append(card);
       }
+
+      await showWinnerIfVotingClosed(data);
     }
 
+    async function showWinnerIfVotingClosed(photos) {
+      const { minutes } = getISTTimeParts();
+
+      if (minutes < 20 * 60) {
+        winnerPanel.style.display = "none";
+        return;
+      }
+
+      winnerPanel.style.display = "block";
+
+      if (!photos.length) {
+        winnerMessage.textContent = "No entries were submitted today, so there is no winner to announce.";
+        winnerPhoto.replaceChildren();
+        return;
+      }
+
+      const winner = photos.reduce((best, photo) =>
+        (Number(photo.votes) || 0) > (Number(best.votes) || 0) ? photo : best
+      );
+
+      winnerMessage.textContent =
+        `Today’s Photo of the Day winner is ${winner.photographer}! Congratulations!`;
+
+      winnerPhoto.replaceChildren();
+
+      const image = document.createElement("img");
+      image.src = winner.image_path;
+      image.alt = winner.title;
+      image.loading = "lazy";
+      image.style.width = "100%";
+      image.style.maxWidth = "600px";
+      image.style.borderRadius = "8px";
+
+      const title = document.createElement("p");
+      title.textContent = `${winner.title} · ${Number(winner.votes) || 0} votes`;
+
+      winnerPhoto.append(image, title);
+    }
+
+    updateCycleStatus();
     await loadPhotos();
-    setInterval(loadPhotos, 5000);
+
+    setInterval(async () => {
+      updateCycleStatus();
+      await loadPhotos();
+    }, 30000);
   </script>
 </body>
 </html>

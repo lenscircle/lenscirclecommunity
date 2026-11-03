@@ -156,9 +156,10 @@
       gap: 18px;
       align-items: center;
       padding: 22px;
-      border: 1px solid var(--border);
+      border: 1px solid rgba(212,175,55,.45);
       border-radius: 14px;
       background: linear-gradient(135deg, #151d32, #101729);
+      box-shadow: 0 10px 35px rgba(0,0,0,.18);
     }
 
     .schedule-label {
@@ -171,13 +172,22 @@
 
     #cycleStatus {
       margin: 6px 0 0;
+      font-size: clamp(18px, 2.5vw, 24px);
+      line-height: 1.3;
       font-weight: bold;
     }
 
     #countdown {
-      color: var(--muted);
+      color: var(--gold-light);
       font-size: 14px;
-      margin: 4px 0 0;
+      font-weight: bold;
+      margin: 8px 0 0;
+    }
+
+    #localSchedule {
+      color: var(--muted);
+      font-size: 13px;
+      margin: 6px 0 0;
     }
 
     .schedule-times {
@@ -429,11 +439,13 @@
       <div>
         <div class="schedule-label">Today’s Photo of the Day</div>
         <p id="cycleStatus" role="status" aria-live="polite">Checking today’s status…</p>
-        <p id="countdown">Schedule uses Indian Standard Time (IST).</p>
+        <p id="countdown">Checking countdown…</p>
+        <p id="localSchedule" class="muted"></p>
       </div>
+
       <div class="schedule-times">
-        <div class="time-chip">Submissions close <strong>12 PM</strong></div>
-        <div class="time-chip">Voting closes <strong>8 PM</strong></div>
+        <div class="time-chip">Submissions close <strong>12 PM IST</strong></div>
+        <div class="time-chip">Voting closes <strong>8 PM IST</strong></div>
       </div>
     </section>
 
@@ -451,12 +463,14 @@
             <p class="muted">Submit one photograph before 12:00 PM IST.</p>
           </div>
         </article>
+
         <article class="card">
           <div class="card-info">
             <h3>🗳️ Cast your vote</h3>
-            <p class="muted">Choose your favourite photograph between noon and 8 PM.</p>
+            <p class="muted">Choose your favourite photograph between noon and 8 PM IST.</p>
           </div>
         </article>
+
         <article class="card">
           <div class="card-info">
             <h3>🏆 Celebrate the winner</h3>
@@ -490,6 +504,7 @@
           required
           maxlength="80"
         >
+
         <input
           id="title"
           placeholder="Photo title"
@@ -497,6 +512,7 @@
           required
           maxlength="120"
         >
+
         <input id="photoFile" type="file" accept="image/*" aria-label="Choose photo" required>
         <button id="submitButton" type="submit">Upload photo</button>
         <div id="status" class="message" role="status" aria-live="polite"></div>
@@ -550,6 +566,7 @@
     const bucket = "pod-photos";
 
     let voterToken = localStorage.getItem("lenscircle-voter-token");
+
     if (!voterToken) {
       voterToken = crypto.randomUUID();
       localStorage.setItem("lenscircle-voter-token", voterToken);
@@ -565,6 +582,7 @@
     const archive = document.querySelector("#archive");
     const cycleStatus = document.querySelector("#cycleStatus");
     const countdown = document.querySelector("#countdown");
+    const localSchedule = document.querySelector("#localSchedule");
     const winnerPanel = document.querySelector("#winnerPanel");
     const winnerMessage = document.querySelector("#winnerMessage");
     const winnerDetails = document.querySelector("#winnerDetails");
@@ -598,33 +616,79 @@
 
       const hour = Number(parts.find(part => part.type === "hour").value);
       const minute = Number(parts.find(part => part.type === "minute").value);
+
       return { hour, minute, minutes: hour * 60 + minute };
     }
 
     function timeUntil(targetMinutes) {
       const { minutes } = getISTTimeParts();
       let remaining = targetMinutes - minutes;
+
       if (remaining <= 0) remaining += 24 * 60;
 
       const hours = Math.floor(remaining / 60);
       const mins = remaining % 60;
+
       return hours ? `${hours}h ${mins}m` : `${mins}m`;
+    }
+
+    // Creates the next deadline using Indian Standard Time.
+    function getNextISTDeadline(targetHour) {
+      const now = new Date();
+
+      const istDate = new Intl.DateTimeFormat("en-CA", {
+        timeZone: "Asia/Kolkata",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      }).format(now);
+
+      const [year, month, day] = istDate.split("-").map(Number);
+
+      // IST is UTC+5:30, so subtract 5 hours and 30 minutes from UTC.
+      let deadline = new Date(
+        Date.UTC(year, month - 1, day, targetHour, 0) - (5.5 * 60 * 60 * 1000)
+      );
+
+      if (deadline <= now) {
+        deadline = new Date(deadline.getTime() + 24 * 60 * 60 * 1000);
+      }
+
+      return deadline;
+    }
+
+    // Formats the deadline in the visitor's browser time zone.
+    function formatLocalTime(date) {
+      return new Intl.DateTimeFormat(undefined, {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+        hour: "numeric",
+        minute: "2-digit",
+        timeZoneName: "short"
+      }).format(date);
     }
 
     function updateCycleStatus() {
       const { minutes } = getISTTimeParts();
 
       if (minutes < 12 * 60) {
-        cycleStatus.textContent = "Submissions are open. Voting opens at noon.";
+        cycleStatus.textContent = "📷 Submissions are open";
         countdown.textContent = `Submissions close in ${timeUntil(12 * 60)}.`;
+        localSchedule.textContent =
+          `Voting opens at ${formatLocalTime(getNextISTDeadline(12))} in your local time.`;
         submitButton.disabled = false;
       } else if (minutes < 20 * 60) {
-        cycleStatus.textContent = "Voting is open. Today’s submissions are closed.";
+        cycleStatus.textContent = "🗳️ Voting is open";
         countdown.textContent = `Voting closes in ${timeUntil(20 * 60)}.`;
+        localSchedule.textContent =
+          `Voting closes at ${formatLocalTime(getNextISTDeadline(20))} in your local time.`;
         submitButton.disabled = true;
       } else {
-        cycleStatus.textContent = "Voting is closed. Today’s result is below.";
+        cycleStatus.textContent = "🏆 Voting is closed";
         countdown.textContent = `New submissions open in ${timeUntil(12 * 60)}.`;
+        localSchedule.textContent =
+          `Submissions open at ${formatLocalTime(getNextISTDeadline(12))} in your local time.`;
         submitButton.disabled = true;
       }
     }
@@ -639,8 +703,13 @@
       showMessage(status, "");
 
       const { minutes } = getISTTimeParts();
+
       if (minutes >= 12 * 60) {
-        showMessage(status, "Today’s submission deadline has passed. Please submit tomorrow before noon IST.", "error");
+        showMessage(
+          status,
+          "Today’s submission deadline has passed. Please submit tomorrow before noon IST.",
+          "error"
+        );
         return;
       }
 
@@ -654,6 +723,7 @@
         if (!file || !file.type.startsWith("image/")) {
           throw new Error("Please choose an image file.");
         }
+
         if (file.size > 5 * 1024 * 1024) {
           throw new Error("Please choose an image smaller than 5 MB.");
         }
@@ -779,7 +849,9 @@
         const button = document.createElement("button");
         button.textContent = votedPhotos.has(String(photo.id)) ? "Voted" : "Vote";
         button.disabled = !votingOpen || votedPhotos.has(String(photo.id));
+
         if (votedPhotos.has(String(photo.id))) button.classList.add("voted");
+
         button.setAttribute("aria-label", `Vote for ${photo.title}`);
         button.addEventListener("click", () => vote(photo.id, button));
 
@@ -851,7 +923,6 @@
         return;
       }
 
-      // Group previous entries by their calendar date in IST.
       const days = new Map();
 
       for (const photo of data) {
@@ -886,7 +957,12 @@
         dateLabel.className = "archive-date";
         dateLabel.textContent = new Date(`${date}T00:00:00+05:30`).toLocaleDateString(
           "en-IN",
-          { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Kolkata" }
+          {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+            timeZone: "Asia/Kolkata"
+          }
         );
 
         const title = document.createElement("h3");

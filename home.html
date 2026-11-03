@@ -3,171 +3,204 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0b1020">
-  <meta name="description" content="Lens Circle is a photography community to share work, discover perspectives, and take part in photography events.">
+  <meta name="description" content="Lens Circle is a photography community for photographers and editors to share, learn, and connect.">
+  <title>Lens Circle | Through Every Lens</title>
   <link rel="icon" type="image/png" href="logo.png">
-  <title>Lens Circle — A Community Through Every Lens</title>
 
   <style>
+    :root {
+      --bg: #080b12;
+      --panel: #111722;
+      --text: #f4f5f7;
+      --muted: #aab2c0;
+      --gold: #d8b46a;
+      --border: #283140;
+    }
+
     * { box-sizing: border-box; }
+
     html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
+      background: var(--bg);
+      color: var(--text);
       font-family: Arial, sans-serif;
-      background: #0b1020;
-      color: #f5f5f5;
+      line-height: 1.6;
     }
+
+    a { color: inherit; text-decoration: none; }
 
     header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       gap: 20px;
-      padding: 22px 8%;
-      border-bottom: 1px solid #293047;
+      padding: 18px 7%;
+      border-bottom: 1px solid var(--border);
     }
 
     .brand {
       display: flex;
       align-items: center;
       gap: 12px;
-      color: #f5f5f5;
-      font-size: 1.4rem;
       font-weight: bold;
       letter-spacing: 2px;
-      text-decoration: none;
     }
 
     .brand img {
-      width: 44px;
-      height: 44px;
+      width: 42px;
+      height: 42px;
       object-fit: contain;
     }
 
     nav {
       display: flex;
       flex-wrap: wrap;
-      gap: 18px;
+      gap: 20px;
+      color: var(--muted);
+      font-size: 14px;
     }
 
-    nav a {
-      color: #c9cde0;
-      text-decoration: none;
-    }
-
-    nav a:hover,
-    .card a:hover,
-    footer a:hover {
-      color: #ffffff;
-    }
+    nav a:hover, footer a:hover { color: var(--gold); }
 
     .hero {
-      max-width: 1000px;
-      margin: auto;
-      padding: 100px 24px 80px;
-      text-align: center;
+      min-height: 510px;
+      display: flex;
+      align-items: center;
+      padding: 80px 7%;
+      background:
+        radial-gradient(circle at 80% 20%, rgba(216,180,106,.12), transparent 32%),
+        linear-gradient(135deg, #080b12, #101827);
     }
 
+    .hero-content { max-width: 760px; }
+
     .eyebrow {
-      color: #d4af37;
+      color: var(--gold);
       letter-spacing: 3px;
       text-transform: uppercase;
+      font-size: 12px;
+      font-weight: bold;
     }
 
     h1 {
-      font-size: clamp(2.5rem, 7vw, 5rem);
-      margin: 18px 0;
+      margin: 15px 0;
+      font-size: clamp(42px, 8vw, 76px);
+      line-height: 1.08;
     }
 
     .hero p {
-      max-width: 650px;
-      margin: 0 auto 30px;
-      color: #b9bfd2;
-      line-height: 1.7;
+      max-width: 600px;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
     }
 
     .button {
       display: inline-block;
-      padding: 13px 22px;
-      margin: 6px;
-      border-radius: 5px;
-      background: #d4af37;
-      color: #0b1020;
-      text-decoration: none;
+      padding: 12px 19px;
+      border-radius: 8px;
+      background: var(--gold);
+      color: #10131a;
       font-weight: bold;
     }
 
-    .button:hover { background: #e6c85a; }
-
     .button.secondary {
       background: transparent;
-      color: #f5f5f5;
-      border: 1px solid #69718a;
+      color: var(--text);
+      border: 1px solid var(--border);
     }
 
-    section { padding: 50px 8%; }
+    section { padding: 65px 7%; }
 
-    h2 { font-size: 2rem; }
+    .section-heading {
+      margin: 0 0 10px;
+      font-size: clamp(28px, 5vw, 42px);
+    }
 
     .section-intro {
-      color: #b9bfd2;
-      line-height: 1.7;
-      max-width: 700px;
+      max-width: 650px;
+      margin: 0 0 30px;
+      color: var(--muted);
     }
 
     .cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 18px;
     }
 
     .card {
       padding: 25px;
-      border: 1px solid #293047;
-      border-radius: 10px;
-      background: #11182b;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
     }
 
-    .card p {
-      color: #b9bfd2;
-      line-height: 1.6;
+    .card h3 { margin-top: 0; }
+
+    .card p { color: var(--muted); }
+
+    .card-link {
+      display: inline-block;
+      margin-top: 8px;
+      color: var(--gold);
+      font-weight: bold;
     }
 
-    .card a {
-      color: #d4af37;
-      text-decoration: none;
-      line-height: 1.8;
+    .about-section {
+      background: #0d121b;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
     }
 
-    .community-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 24px;
+    .about-content { max-width: 780px; }
+
+    .about-content p { color: var(--muted); }
+
+    .join-section { text-align: center; }
+
+    .join-section p {
+      max-width: 620px;
+      margin: 0 auto;
+      color: var(--muted);
     }
+
+    .join-section .buttons { justify-content: center; }
 
     footer {
-      padding: 25px;
+      padding: 25px 7%;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
       text-align: center;
-      color: #8e96ad;
-      border-top: 1px solid #293047;
-      line-height: 1.8;
+      font-size: 13px;
     }
 
-    footer a {
-      color: #d4af37;
-      text-decoration: none;
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 18px;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 800px) {
+      .cards { grid-template-columns: 1fr; }
+      .hero { min-height: 430px; }
     }
 
     @media (max-width: 600px) {
-      header {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
+      header { align-items: flex-start; flex-direction: column; }
       nav { gap: 14px; }
-      .hero { padding-top: 65px; }
+      section { padding: 48px 6%; }
+      .hero { padding: 65px 6%; }
     }
   </style>
 </head>
@@ -189,123 +222,85 @@
 
   <main>
     <section class="hero">
-      <div class="eyebrow">A Photography Community</div>
-      <h1>Through Every Lens.</h1>
-
-      <p>
-        A place for photographers and creators to share their work,
-        discover new perspectives, learn together, and take part in
-        community photography events.
-      </p>
-
-      <a class="button" href="photo-of-the-day.html">Explore Photo of the Day</a>
-      <a class="button secondary" href="events.html">Discover Events</a>
-    </section>
-
-    <section id="events">
-      <h2>Explore Lens Circle</h2>
-      <p class="section-intro">
-        Discover our photography activities and creative projects.
-      </p>
-
-      <div class="cards">
-        <div class="card">
-          <h3>Photo of the Day</h3>
-          <p>
-            Join our daily photography event. Submit a photo,
-            explore the gallery, and vote for your favourites.
-          </p>
-          <a href="photo-of-the-day.html">Visit today’s event →</a>
-        </div>
-
-        <div class="card">
-          <h3>Events &amp; Contests</h3>
-          <p>
-            Take part in themed photography events, collaborations,
-            and community contests.
-          </p>
-          <a href="events.html">Explore events and contests →</a>
-        </div>
-
-        <div class="card">
-          <h3>Through Every Lens</h3>
-          <p>
-            Discover photography stories and community work
-            in our upcoming magazine.
-          </p>
-          <a href="events.html">Discover community projects →</a>
+      <div class="hero-content">
+        <div class="eyebrow">A photography community</div>
+        <h1>Through Every Lens.</h1>
+        <p>
+          A creative space for photographers and editors to share their work,
+          learn from one another, and grow together.
+        </p>
+        <div class="buttons">
+          <a class="button" href="photo-of-the-day.html">Photo of the Day</a>
+          <a class="button secondary" href="events.html">Explore Events</a>
         </div>
       </div>
     </section>
 
     <section id="community">
-      <h2>Grow with the Community</h2>
+      <h2 class="section-heading">Explore Lens Circle</h2>
+      <p class="section-intro">
+        Discover community features, creative activities, and opportunities
+        to connect with fellow photographers.
+      </p>
 
       <div class="cards">
-        <div class="card">
-          <h3>Share Your Work</h3>
-          <p>
-            Show your perspective and discover photographs
-            from other creators.
-          </p>
-        </div>
+        <article class="card">
+          <h3>Photo of the Day</h3>
+          <p>Discover photography from the Lens Circle community.</p>
+          <a class="card-link" href="photo-of-the-day.html">View featured photos →</a>
+        </article>
 
-        <div class="card">
-          <h3>Learn Together</h3>
-          <p>
-            Exchange ideas, editing tips, and constructive feedback.
-          </p>
-        </div>
+        <article class="card">
+          <h3>Events &amp; Contests</h3>
+          <p>Take part in photography events, themed activities, and contests.</p>
+          <a class="card-link" href="events.html">Explore activities →</a>
+        </article>
 
-        <div class="card">
-          <h3>Connect</h3>
-          <p>
-            Meet photographers who enjoy creating,
-            experimenting, and improving.
-          </p>
-        </div>
+        <article class="card">
+          <h3>Through Every Lens</h3>
+          <p>Meet a community that welcomes different perspectives and styles.</p>
+          <a class="card-link" href="about.html">Learn about us →</a>
+        </article>
       </div>
     </section>
 
-    <section id="about">
-      <h2>Every Photographer Has a Perspective.</h2>
-      <p class="section-intro">
-        Lens Circle welcomes photography enthusiasts using phones and cameras.
-        We believe every frame can tell a story—and every creator has
-        something worth sharing.
-      </p>
-      <a href="about.html" style="color:#d4af37;text-decoration:none;">
-        Learn more about Lens Circle →
-      </a>
+    <section class="about-section">
+      <div class="about-content">
+        <div class="eyebrow">About Lens Circle</div>
+        <h2 class="section-heading">More than a photograph.</h2>
+        <p>
+          Lens Circle brings photographers and editors together to share ideas,
+          exchange constructive feedback, and celebrate creativity. Whether you
+          use a phone or a camera, your perspective belongs here.
+        </p>
+        <a class="button secondary" href="about.html">Read our story</a>
+      </div>
     </section>
 
-    <section id="join">
-      <h2>Join Lens Circle</h2>
-      <p class="section-intro">
-        Follow our updates, discover community activities, and connect with
-        photographers who love creating and learning together.
+    <section class="join-section">
+      <div class="eyebrow">Be part of the community</div>
+      <h2 class="section-heading">Your perspective matters.</h2>
+      <p>
+        Follow Lens Circle for community features, events, and photography
+        inspiration.
       </p>
-
-      <div class="community-links">
-        <a class="button" href="https://www.instagram.com/channel/zbGoZYyW2_Ycrb4H/" target="_blank" rel="noopener noreferrer">
-          Join Our Broadcast Channel
-        </a>
-
-        <a class="button secondary" href="https://www.youtube.com/channel/UCwRrWfspq0107y_5phGSxDw?app=desktop" target="_blank" rel="noopener noreferrer">
-          Subscribe on YouTube
-        </a>
+      <div class="buttons">
+        <a class="button" href="https://www.instagram.com/channel/zbGoZYyW2_Ycrb4H/" target="_blank" rel="noopener noreferrer">Join Instagram Channel</a>
+        <a class="button secondary" href="https://www.youtube.com/channel/UCwRrWfspq0107y_5phGSxDw?app=desktop" target="_blank" rel="noopener noreferrer">Visit YouTube</a>
       </div>
     </section>
   </main>
 
   <footer>
-    © Lens Circle · A community through every lens
-    <br>
-    <a href="events.html">Events &amp; Contests</a>
-    ·
-    <a href="about.html">About Lens Circle</a>
-    ·
-    <a href="https://www.youtube.com/channel/UCwRrWfspq0107y_5phGSxDw?app=desktop" target="_blank" rel="noopener noreferrer">YouTube</a>
+    <div class="footer-links">
+      <a href="home.html">Home</a>
+      <a href="events.html">Events</a>
+      <a href="photo-of-the-day.html">Photo of the Day</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="community-guidelines.html">Community Guidelines</a>
+    </div>
+    <div>© Lens Circle — Through Every Lens.</div>
   </footer>
 </body>
 </html>

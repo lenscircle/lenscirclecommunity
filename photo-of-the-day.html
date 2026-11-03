@@ -382,6 +382,42 @@
       margin-bottom: 14px;
     }
 
+    /* Tap-to-expand photo viewer */
+    .photo-expand { cursor: zoom-in; }
+
+    .photo-lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(0,0,0,.92);
+    }
+
+    .photo-lightbox.open { display: flex; }
+
+    .photo-lightbox img {
+      display: block;
+      max-width: 95vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    .photo-lightbox-close {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      padding: 8px 14px;
+      background: #141b2e;
+      color: white;
+      border: 1px solid #59627a;
+      font-size: 24px;
+      line-height: 1;
+    }
+
     @media (max-width: 700px) {
       header {
         padding: 17px 5%;
@@ -556,6 +592,23 @@
     © Lens Circle Community · Photography brings us together
   </footer>
 
+  <!-- Expanded photo viewer -->
+  <div
+    id="photoLightbox"
+    class="photo-lightbox"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Expanded photograph"
+  >
+    <button
+      id="photoLightboxClose"
+      class="photo-lightbox-close"
+      type="button"
+      aria-label="Close expanded photo"
+    >×</button>
+    <img id="photoLightboxImage" src="" alt="">
+  </div>
+
   <script type="module">
     import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
@@ -564,6 +617,52 @@
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
     const bucket = "pod-photos";
+
+    // Photo expansion / lightbox
+    const photoLightbox = document.querySelector("#photoLightbox");
+    const photoLightboxImage = document.querySelector("#photoLightboxImage");
+    const photoLightboxClose = document.querySelector("#photoLightboxClose");
+
+    function enablePhotoExpand(image) {
+      image.classList.add("photo-expand");
+      image.tabIndex = 0;
+      image.setAttribute("role", "button");
+      image.setAttribute("aria-label", `Expand photo: ${image.alt || "Photograph"}`);
+
+      function openPhoto() {
+        photoLightboxImage.src = image.src;
+        photoLightboxImage.alt = image.alt || "Expanded photograph";
+        photoLightbox.classList.add("open");
+        document.body.style.overflow = "hidden";
+        photoLightboxClose.focus();
+      }
+
+      image.addEventListener("click", openPhoto);
+      image.addEventListener("keydown", event => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          openPhoto();
+        }
+      });
+    }
+
+    function closePhotoLightbox() {
+      photoLightbox.classList.remove("open");
+      photoLightboxImage.src = "";
+      document.body.style.overflow = "";
+    }
+
+    photoLightboxClose.addEventListener("click", closePhotoLightbox);
+
+    photoLightbox.addEventListener("click", event => {
+      if (event.target === photoLightbox) closePhotoLightbox();
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && photoLightbox.classList.contains("open")) {
+        closePhotoLightbox();
+      }
+    });
 
     let voterToken = localStorage.getItem("lenscircle-voter-token");
 
@@ -632,7 +731,6 @@
       return hours ? `${hours}h ${mins}m` : `${mins}m`;
     }
 
-    // Creates the next deadline using Indian Standard Time.
     function getNextISTDeadline(targetHour) {
       const now = new Date();
 
@@ -645,7 +743,6 @@
 
       const [year, month, day] = istDate.split("-").map(Number);
 
-      // IST is UTC+5:30, so subtract 5 hours and 30 minutes from UTC.
       let deadline = new Date(
         Date.UTC(year, month - 1, day, targetHour, 0) - (5.5 * 60 * 60 * 1000)
       );
@@ -657,7 +754,6 @@
       return deadline;
     }
 
-    // Formats the deadline in the visitor's browser time zone.
     function formatLocalTime(date) {
       return new Intl.DateTimeFormat(undefined, {
         weekday: "short",
@@ -698,7 +794,7 @@
       element.className = `message ${type}`.trim();
     }
 
-    form.addEventListener("submit", async (event) => {
+    form.addEventListener("submit", async event => {
       event.preventDefault();
       showMessage(status, "");
 
@@ -829,6 +925,7 @@
         image.src = photo.image_path;
         image.alt = photo.title || "Community photograph";
         image.loading = "lazy";
+        enablePhotoExpand(image);
 
         const content = document.createElement("div");
         content.className = "card-info";
@@ -894,6 +991,7 @@
       image.src = winner.image_path;
       image.alt = winner.title || "Winning photograph";
       image.loading = "lazy";
+      enablePhotoExpand(image);
 
       winnerPhoto.append(image);
     }
@@ -949,6 +1047,7 @@
         image.src = winner.image_path;
         image.alt = winner.title || "Past winning photograph";
         image.loading = "lazy";
+        enablePhotoExpand(image);
 
         const info = document.createElement("div");
         info.className = "card-info";

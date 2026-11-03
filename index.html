@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lens Circle | Photo of the Day</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b1020;
+      color: #f4f6fb;
+      line-height: 1.6;
+    }
+    header {
+      padding: 22px 8%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #252c40;
+    }
+    .logo { font-weight: bold; letter-spacing: 2px; }
+    .logo span { color: #d4af37; }
+    nav a {
+      color: #cbd2e3;
+      text-decoration: none;
+      margin-left: 22px;
+      font-size: 14px;
+    }
+    .hero {
+      max-width: 1000px;
+      margin: 80px auto;
+      padding: 0 24px;
+      text-align: center;
+    }
+    .eyebrow {
+      color: #d4af37;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-size: 12px;
+    }
+    h1 {
+      font-size: clamp(38px, 7vw, 68px);
+      line-height: 1.1;
+      margin: 18px 0;
+    }
+    .hero p {
+      color: #aeb7ca;
+      max-width: 620px;
+      margin: 0 auto 30px;
+    }
+    .button {
+      display: inline-block;
+      padding: 13px 22px;
+      background: #d4af37;
+      color: #111624;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 5px;
+      margin: 6px;
+    }
+    .button.secondary {
+      background: transparent;
+      color: #f4f6fb;
+      border: 1px solid #424b62;
+    }
+    section {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 28px 24px 55px;
+    }
+    h2 { font-size: 28px; margin-bottom: 8px; }
+    .muted { color: #aeb7ca; }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+    .card {
+      background: #141b2e;
+      border: 1px solid #252c40;
+      border-radius: 10px;
+      padding: 22px;
+    }
+    .card h3 { margin-top: 0; }
+    footer {
+      text-align: center;
+      padding: 28px 16px;
+      color: #8791a8;
+      border-top: 1px solid #252c40;
+      font-size: 13px;
+    }
+    @media (max-width: 600px) {
+      header { padding: 18px 5%; }
+      nav a { margin-left: 10px; font-size: 12px; }
+      .hero { margin: 55px auto; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">LENS <span>CIRCLE</span></div>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#how">How It Works</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div class="eyebrow">A photography community</div>
+      <h1>One photo.<br>One community.</h1>
+      <p>
+        Welcome to Lens Circle’s Photo of the Day—a place to share your
+        photography, discover new perspectives, and celebrate creative work.
+      </p>
+      <a class="button" href="#how">How to Participate</a>
+      <a class="button secondary" href="#about">Explore Lens Circle</a>
+    </div>
+
+    <section id="about">
+      <h2>Photo of the Day</h2>
+      <p class="muted">
+        Every day, photographers are invited to share a photo based on the
+        announced theme. Selected entries are featured and the community
+        gets to celebrate the work.
+      </p>
+      <div class="cards">
+        <div class="card">
+          <h3>📷 Share your work</h3>
+          <p class="muted">Submit your own photograph for the current theme.</p>
+        </div>
+        <div class="card">
+          <h3>🗳️ Vote for your favourite</h3>
+          <p class="muted">Explore the entries and support the photographs you love.</p>
+        </div>
+        <div class="card">
+          <h3>✨ Get featured</h3>
+          <p class="muted">Selected photographers may be featured on Lens Circle.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="how">
+      <h2>How to participate</h2>
+      <p class="muted">
+        Check the Lens Circle Instagram channel for the current theme,
+        submission instructions, and voting announcement.
+      </p>
+      <a class="button" href="https://www.instagram.com/lenscirclecommunity/" target="_blank" rel="noopener">
+        Visit Lens Circle on Instagram
+      </a>
+    </section>
+  </main>
+
+  <footer>
+    © Lens Circle Community · Photography brings us together
+  </footer>
+</body>
+</html>

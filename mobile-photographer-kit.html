@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Useful camera, photo editing, video editing, design, and backup apps for mobile photographers.">
+  <title>Mobile Photographer Kit | Lens Circle</title>
+  <link rel="icon" type="image/png" href="logo.png">
+
+  <style>
+    :root {
+      --background: #080b14;
+      --surface: #101624;
+      --surface-light: #171f30;
+      --gold: #d6b46a;
+      --text: #f3f4f7;
+      --muted: #a9b0bf;
+      --border: rgba(214, 180, 106, 0.22);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      background: rgba(8, 11, 20, 0.96);
+    }
+
+    .nav-container {
+      width: min(1100px, 92%);
+      min-height: 76px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .logo {
+      color: var(--gold);
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    nav a:hover,
+    nav a.active {
+      color: var(--gold);
+    }
+
+    .hero {
+      width: min(900px, 92%);
+      margin: auto;
+      padding: 70px 0 38px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 6vw, 3.7rem);
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    .hero p {
+      max-width: 700px;
+      margin: auto;
+      color: var(--muted);
+    }
+
+    main {
+      width: min(1100px, 92%);
+      margin: auto;
+      padding-bottom: 70px;
+    }
+
+    .category {
+      margin-top: 42px;
+    }
+
+    .category-heading {
+      margin-bottom: 18px;
+    }
+
+    .category-heading h2 {
+      font-size: 1.6rem;
+      margin-bottom: 5px;
+    }
+
+    .category-heading p {
+      color: var(--muted);
+    }
+
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .app-card {
+      display: flex;
+      flex-direction: column;
+      padding: 22px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .app-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--gold);
+    }
+
+    .app-type {
+      color: var(--gold);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 9px;
+    }
+
+    .app-card h3 {
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+    }
+
+    .app-card p {
+      color: var(--muted);
+      font-size: 0.94rem;
+      margin-bottom: 14px;
+    }
+
+    .platform {
+      color: #c9ced8;
+      font-size: 0.82rem;
+      margin-top: auto;
+      padding-top: 4px;
+    }
+
+    .app-link {
+      display: inline-block;
+      align-self: flex-start;
+      margin-top: 12px;
+      padding: 9px 15px;
+      border: 1px solid var(--gold);
+      border-radius: 7px;
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .app-link:hover {
+      background: var(--gold);
+      color: #10131b;
+    }
+
+    .note {
+      margin-top: 42px;
+      padding: 22px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface-light);
+      color: var(--muted);
+    }
+
+    .note strong {
+      color: var(--gold);
+    }
+
+    .note a {
+      color: var(--gold);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 4%;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    footer a {
+      color: var(--gold);
+    }
+
+    @media (max-width: 850px) {
+      .app-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 600px) {
+      .nav-container {
+        padding: 18px 0;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      nav {
+        gap: 12px;
+      }
+
+      .hero {
+        padding-top: 50px;
+      }
+
+      .app-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .app-card {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="nav-container">
+      <a class="logo" href="home.html">LENS CIRCLE</a>
+
+      <nav aria-label="Main navigation">
+        <a href="home.html">Home</a>
+        <a href="events.html">Events</a>
+        <a href="photography-tips.html">Photography Tips</a>
+        <a href="editing-tips.html">Editing Tips</a>
+        <a class="active" href="mobile-photographer-kit.html">Mobile Kit</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Useful apps and software</div>
+    <h1>Mobile Photographer Kit</h1>
+    <p>
+      A collection of apps for capturing, editing, designing, organizing,
+      and sharing your mobile photography. Choose the tools that fit your
+      workflow and device.
+    </p>
+  </section>
+
+  <main>
+    <section class="category">
+      <div class="category-heading">
+        <h2>Camera Apps</h2>
+        <p>Explore camera controls and capture options beyond your default camera app.</p>
+      </div>
+
+      <div class="app-grid">
+        <article class="app-card">
+          <div class="app-type">Camera</div>
+          <h3>Open Camera</h3>
+          <p>An Android camera app with manual controls and useful capture settings.</p>
+          <div class="platform">Platform: Android</div>
+          <a class="app-link" href="https://opencamera.org.uk/" target="_blank" rel="noopener noreferrer">Official Website ↗</a>
+        </article>
+
+        <article class="app-card">
+          <div class="app-type">Camera</div>
+          <h3>Photon Camera</h3>
+          <p>A camera app offering manual controls and advanced capture features on supported devices.</p>
+          <div class="platform">Platform: iPhone</div>
+          <a class="app-link" href="https://www.photon.cam/" target="_blank" rel="noopener noreferrer">Official Website ↗</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="category">
+      <div class="category-heading">
+        <h2>Photo Editing Apps</h2>
+        <p>For color correction, retouching, creative edits, and finishing your photos.</p>
+      </div>
+
+      <div class="app-grid">
+        <article class="app-card">
+          <div class="app-type">Photo Editing</div>
+          <h3>Snapseed</h3>
+          <p>A photo editor with tools for tuning, selective adjustments, curves, and detail work.</p>
+          <div class="platform">Platform: Android and iOS</div>
+          <a class="app-link" href="https://www.snapseed.com/" target="_blank" rel="noopener noreferrer">Official Website ↗</a>
+        </article>
+
+        <article class="app-card">
+          <div class="app-type">Photo Editing</div>
+          <h3>Adobe Lightroom</h3>
+          <p>Useful for exposure, color grading, presets, and organizing photo edits.</p>
+          <div class="platform">Platform: Android and iOS</div>
+          <a
+            class="app-link"
+            href="https://drive.google.com/uc?export=download&id=1JWl62evMn-7rHcs2BEtx8EPZHT0vY6AI"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Download APK ↗</a>
+          <a
+            class="app-link"
+            href="https://www.adobe.com/products/photoshop-lightroom/mobile.html"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Official Website ↗</a>
+        </article>
+
+        <article class="app-card">
+          <div class="app-type">Creative Editing</div>
+          <h3>Picsart</h3>
+          <p>For creative effects, cutouts, collages, text, and stylized photo edits.</p>
+          <div class="platform">Platform: Android and iOS</div>
+          <a
+            class="app-link"
+            href="https://drive.google.com/uc?export=download&id=1fWJHFH0B10kHCC57oTavhO-agwzjzXSn"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Download APK ↗</a>
+          <a
+            class="app-link"
+            href="https://picsart.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Official Website ↗</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="category">
+      <div class="category-heading">
+        <h2>Video Editing Apps</h2>
+        <p>Turn your photos and clips into reels, short films, and visual stories.</p>
+      </div>
+
+      <div class="app-grid">
+        <article class="app-card">
+          <div class="app-type">Video Editing</div>
+          <h3>Edits</h3>
+          <p>Instagram’s video editing app for creating and editing videos for Reels and other social platforms.</p>
+          <div class="platform">Platform: Android and iOS</div>
+          <a class="app-link" href="https://about.instagram.com/" target="_blank" rel="noopener noreferrer">Instagram ↗</a>
+        </article>
+
+        <article class="app-card">
+          <div class="app-type">Video Editing</div>
+          <h3>VN Video Editor</h3>
+          <p>A mobile editor for trimming clips, adding music, and creating video timelines.</p>
+          <div class="platform">Platform: Android and iOS</div>
+          <a class="app-link" href="https://www.vlognow.me/" target="_blank" rel="noopener noreferrer">Official Website ↗</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="category">
+      <div class="category-heading">
+        <h2>Design and Content Apps</h2>
+        <p>Create posters, story layouts, thumbnails, and other social media graphics.</p>
+      </div>
+
+      <div class="app-grid">
+        <article class="app-card">
+          <div class="app-type">Design</div>
+          <h3>Adobe Express</h3>
+          <p>Make social media graphics, posters, text layouts, and simple promotional designs.</p>
+          <div class="platform">Platform: Android, iOS, and web</div>
+          <a class="app-link" href="https://www.adobe.com/express/" target="_blank" rel="noopener noreferrer">Official Website ↗</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="category">
+      <div class="category-heading">
+        <h2>File and Backup Apps</h2>
+        <p>Keep your photos organized and make it easier to transfer or back them up.</p>
+      </div>
+
+      <div class="app-grid">
+        <article class="app-card">
+          <div class="app-type">Backup and Gallery</div>
+          <h3>Google Photos</h3>
+          <p>Organize your photo library and back up photos when you enable the available backup options.</p>
+          <div class="platform">Platform: Android and iOS</div>
+          <a class="app-link" href="https://photos.google.com/" target="_blank" rel="noopener noreferrer">Official Website ↗</a>
+        </article>
+
+        <article class="app-card">
+          <div class="app-type">File Transfer</div>
+          <h3>LocalSend</h3>
+          <p>Transfer files between nearby devices on the same local network.</p>
+          <div class="platform">Platform: Android, iOS, Windows, macOS, and Linux</div>
+          <a class="app-link" href="https://localsend.org/" target="_blank" rel="noopener noreferrer">Official Website ↗</a>
+        </article>
+      </div>
+    </section>
+
+    <div class="note">
+      <strong>Need an APK?</strong> Use the download buttons above.
+      APK downloads may trigger Android security warnings. Install only files
+      you trust, and check that each Google Drive file is shared so visitors
+      with the link can access it.
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2026 Lens Circle. Through Every Lens.</p>
+    <p><a href="home.html">Back to Home</a></p>
+  </footer>
+</body>
+</html>

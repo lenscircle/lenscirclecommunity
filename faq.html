@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Frequently asked questions about Lens Circle, a photography community for photographers and editors.">
+  <title>FAQ | Lens Circle</title>
+
+  <link rel="icon" type="image/png" href="logo.png">
+
+  <style>
+    :root {
+      --background: #080b14;
+      --surface: #101624;
+      --surface-light: #171f30;
+      --gold: #d6b46a;
+      --text: #f3f4f7;
+      --muted: #a9b0bf;
+      --border: rgba(214, 180, 106, 0.22);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      background: rgba(8, 11, 20, 0.96);
+    }
+
+    .nav-container {
+      width: min(1100px, 92%);
+      margin: auto;
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .logo {
+      color: var(--gold);
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      font-size: 0.92rem;
+      color: var(--muted);
+    }
+
+    nav a:hover,
+    nav a.active {
+      color: var(--gold);
+    }
+
+    .hero {
+      width: min(850px, 92%);
+      margin: 0 auto;
+      padding: 72px 0 38px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: clamp(2.2rem, 6vw, 3.8rem);
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      max-width: 650px;
+      margin: auto;
+    }
+
+    main {
+      width: min(850px, 92%);
+      margin: 0 auto;
+      padding: 10px 0 70px;
+    }
+
+    .faq-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    details {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    summary {
+      cursor: pointer;
+      list-style: none;
+      padding: 20px 22px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary::after {
+      content: "+";
+      color: var(--gold);
+      font-size: 1.5rem;
+      font-weight: 400;
+      flex-shrink: 0;
+    }
+
+    details[open] summary::after {
+      content: "−";
+    }
+
+    .answer {
+      padding: 0 22px 20px;
+      color: var(--muted);
+    }
+
+    .answer a {
+      color: var(--gold);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .contact-card {
+      margin-top: 36px;
+      padding: 30px;
+      text-align: center;
+      background: linear-gradient(135deg, #151d2d, #0e1420);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+
+    .contact-card h2 {
+      margin-bottom: 10px;
+      font-size: 1.5rem;
+    }
+
+    .contact-card p {
+      color: var(--muted);
+      margin-bottom: 20px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 22px;
+      border-radius: 7px;
+      background: var(--gold);
+      color: #10131b;
+      font-weight: 700;
+      transition: opacity 0.2s ease;
+    }
+
+    .button:hover {
+      opacity: 0.85;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 4%;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    footer a {
+      color: var(--gold);
+    }
+
+    @media (max-width: 650px) {
+      .nav-container {
+        padding: 18px 0;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      nav {
+        gap: 12px;
+      }
+
+      .hero {
+        padding-top: 50px;
+      }
+
+      summary {
+        padding: 17px;
+      }
+
+      .answer {
+        padding: 0 17px 18px;
+      }
+
+      .contact-card {
+        padding: 24px 18px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="nav-container">
+      <a class="logo" href="home.html">LENS CIRCLE</a>
+
+      <nav aria-label="Main navigation">
+        <a href="home.html">Home</a>
+        <a href="events.html">Events</a>
+        <a href="photography-tips.html">Photography Tips</a>
+        <a href="editing-tips.html">Editing Tips</a>
+        <a class="active" href="faq.html">FAQ</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow">Need help?</div>
+    <h1>Frequently Asked Questions</h1>
+    <p>
+      New to Lens Circle? Find answers about joining the community,
+      sharing your work, and taking part in our activities.
+    </p>
+  </section>
+
+  <main>
+    <section class="faq-list" aria-label="Frequently asked questions">
+
+      <details>
+        <summary>What is Lens Circle?</summary>
+        <div class="answer">
+          Lens Circle is a photography community where photographers and
+          editors can share their work, learn from one another, participate
+          in activities, and connect with other creators.
+        </div>
+      </details>
+
+      <details>
+        <summary>How can I join Lens Circle?</summary>
+        <div class="answer">
+          Follow Lens Circle on Instagram and check our community posts for
+          joining instructions, events, and opportunities to participate.
+        </div>
+      </details>
+
+      <details>
+        <summary>Can phone photographers participate?</summary>
+        <div class="answer">
+          Yes! Phone and camera photographers are welcome. We value creativity,
+          composition, and storytelling—not just the equipment used.
+        </div>
+      </details>
+
+      <details>
+        <summary>How can I submit a photo for a feature?</summary>
+        <div class="answer">
+          Follow the submission instructions shared in the relevant Lens Circle
+          post or announcement. Include your correct Instagram handle so we can
+          credit your work.
+        </div>
+      </details>
+
+      <details>
+        <summary>How are Photo of the Day and Photo of the Week selected?</summary>
+        <div class="answer">
+          Selection and voting details are shared in the relevant announcement.
+          Please check each post for its deadline, voting process, and results.
+        </div>
+      </details>
+
+      <details>
+        <summary>How can I participate in contests and collaborations?</summary>
+        <div class="answer">
+          Watch our Instagram posts and community announcements for themes,
+          rules, submission details, and deadlines. Follow the instructions
+          provided for each activity.
+        </div>
+      </details>
+
+      <details>
+        <summary>Can I share photography or editing tips?</summary>
+        <div class="answer">
+          Yes. You can share useful tips, tutorials, or editing knowledge
+          through the submission method announced by Lens Circle.
+        </div>
+      </details>
+
+      <details>
+        <summary>How do I get my work credited?</summary>
+        <div class="answer">
+          Always provide your correct Instagram handle when submitting work.
+          Lens Circle aims to credit photographers and editors when their work
+          is featured.
+        </div>
+      </details>
+
+      <details>
+        <summary>Where can I contact the Lens Circle team?</summary>
+        <div class="answer">
+          You can contact us through our
+          <a href="https://www.instagram.com/lenscirclecommunity/" target="_blank" rel="noopener noreferrer">
+            Instagram page
+          </a>.
+        </div>
+      </details>
+
+    </section>
+
+    <section class="contact-card">
+      <h2>Still have a question?</h2>
+      <p>Send us a message and the Lens Circle team will help you.</p>
+      <a
+        class="button"
+        href="https://www.instagram.com/lenscirclecommunity/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Contact Lens Circle
+      </a>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 Lens Circle. Through Every Lens.</p>
+    <p><a href="home.html">Back to Home</a></p>
+  </footer>
+</body>
+</html>

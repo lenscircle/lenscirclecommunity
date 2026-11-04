@@ -1,9 +1,10 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Lens Circle is a photography community for photographers and editors to share, learn, and connect.">
+  <meta name="description" content="Lens Circle is a photography community for photographers and editors to share, learn, and connect. Explore the Lens Circle digital photography magazine.">
   <title>Lens Circle | Through Every Lens</title>
   <link rel="icon" type="image/png" href="logo.png">
 
@@ -232,6 +233,146 @@
       margin: 0 auto 22px;
     }
 
+    /* Magazine section */
+
+    .magazine-section {
+      background:
+        radial-gradient(circle at 50% 0%, rgba(216, 180, 106, 0.06), transparent 45%),
+        var(--background);
+    }
+
+    .magazine-feature {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 40px;
+      align-items: center;
+      background: linear-gradient(135deg, #111a2b, #0c111d);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 35px;
+    }
+
+    .magazine-cover {
+      min-height: 420px;
+      background:
+        radial-gradient(circle at 50% 30%, rgba(216, 180, 106, 0.2), transparent 40%),
+        linear-gradient(160deg, #151f30, #080b14);
+      border: 1px solid rgba(216, 180, 106, 0.35);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 28px;
+      text-align: center;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.3);
+    }
+
+    .cover-brand {
+      color: var(--gold-light);
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: 3px;
+    }
+
+    .cover-title {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      line-height: 1.1;
+      color: var(--gold-light);
+    }
+
+    .cover-subtitle {
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .cover-footer {
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+    }
+
+    .magazine-details .eyebrow {
+      margin-bottom: 12px;
+    }
+
+    .magazine-details h3 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.15;
+      margin-bottom: 18px;
+    }
+
+    .magazine-details p {
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .magazine-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 24px 0;
+    }
+
+    .meta-tag {
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      padding: 6px 13px;
+      color: var(--gold-light);
+      font-size: 0.8rem;
+    }
+
+    .theme-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .theme-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .theme-item span {
+      display: block;
+      font-size: 1.3rem;
+      margin-bottom: 5px;
+    }
+
+    .magazine-note {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-top: 22px;
+    }
+
+    .coming-soon {
+      border: 1px dashed rgba(216, 180, 106, 0.3);
+      background: rgba(216, 180, 106, 0.03);
+      border-radius: 14px;
+      padding: 28px;
+      text-align: center;
+      margin-top: 24px;
+    }
+
+    .coming-soon h3 {
+      color: var(--gold-light);
+      margin-bottom: 8px;
+    }
+
+    .coming-soon p {
+      color: var(--muted);
+    }
+
     footer {
       border-top: 1px solid var(--border);
       padding: 25px 0;
@@ -263,8 +404,23 @@
       .community-panel {
         padding: 28px 20px;
       }
+
+      .magazine-feature {
+        grid-template-columns: 1fr;
+        padding: 20px;
+        gap: 28px;
+      }
+
+      .magazine-cover {
+        min-height: 380px;
+      }
+
+      .theme-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
   </style>
+
 </head>
 
 <body>
@@ -272,15 +428,19 @@
     <div class="container navbar">
       <a class="brand" href="home.html">LENS CIRCLE</a>
 
-      <nav aria-label="Main navigation">
-        <a href="home.html">Home</a>
-        <a href="events.html">Events</a>
-        <a href="photography-tips.html">Photo Tips</a>
-        <a href="editing-tips.html">Editing Tips</a>
-        <a href="mobile-photographer-kit.html">Mobile Kit</a>
-        <a href="faq.html">FAQ</a>
-      </nav>
-    </div>
+```
+  <nav aria-label="Main navigation">
+    <a href="home.html">Home</a>
+    <a href="events.html">Events</a>
+    <a href="photography-tips.html">Photo Tips</a>
+    <a href="editing-tips.html">Editing Tips</a>
+    <a href="mobile-photographer-kit.html">Mobile Kit</a>
+    <a href="magazine.html">Magazine</a>
+    <a href="faq.html">FAQ</a>
+  </nav>
+</div>
+```
+
   </header>
 
   <main>
@@ -294,94 +454,196 @@
           with people who love creating.
         </p>
 
-        <div class="button-row">
-          <a class="button button-primary"
+```
+    <div class="button-row">
+      <a class="button button-primary"
+         href="https://www.instagram.com/lenscirclecommunity/"
+         target="_blank" rel="noopener">
+        Join Lens Circle
+      </a>
+      <a class="button button-secondary" href="events.html">
+        Explore Events
+      </a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="section-heading">
+      <p class="eyebrow">Explore Lens Circle</p>
+      <h2>Learn, Create, Connect</h2>
+      <p>Explore resources and activities made for photographers and editors.</p>
+    </div>
+
+    <div class="grid">
+      <article class="card">
+        <div class="card-icon">📷</div>
+        <h3>Photography Tips</h3>
+        <p>Learn about composition, lighting, framing, and creating stronger photographs.</p>
+        <a class="card-link" href="photography-tips.html">Explore tips →</a>
+      </article>
+
+      <article class="card">
+        <div class="card-icon">🎨</div>
+        <h3>Editing Tips</h3>
+        <p>Improve your edits with practical guidance on colour, light, and detail.</p>
+        <a class="card-link" href="editing-tips.html">Explore editing →</a>
+      </article>
+
+      <article class="card">
+        <div class="card-icon">📱</div>
+        <h3>Mobile Photographer Kit</h3>
+        <p>Discover camera, editing, video, and design apps for mobile creators.</p>
+        <a class="card-link" href="mobile-photographer-kit.html">View the kit →</a>
+      </article>
+
+      <article class="card">
+        <div class="card-icon">🏆</div>
+        <h3>Community Events</h3>
+        <p>Find photography themes, contests, and creative activities to participate in.</p>
+        <a class="card-link" href="events.html">View events →</a>
+      </article>
+
+      <article class="card">
+        <div class="card-icon">❓</div>
+        <h3>Frequently Asked Questions</h3>
+        <p>Get answers about Lens Circle, participation, submissions, and community activities.</p>
+        <a class="card-link" href="faq.html">Read the FAQ →</a>
+      </article>
+
+      <article class="card">
+        <div class="card-icon">🤝</div>
+        <h3>Connect with Creators</h3>
+        <p>Meet photographers and editors, share your work, and find creative inspiration.</p>
+        <a class="card-link"
+           href="https://www.instagram.com/lenscirclecommunity/"
+           target="_blank" rel="noopener">
+          Visit Instagram →
+        </a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- Lens Circle Magazine -->
+<section class="magazine-section" id="magazine">
+  <div class="container">
+    <div class="section-heading">
+      <p class="eyebrow">A Lens Circle Publication</p>
+      <h2>Lens Circle Magazine</h2>
+      <p>
+        A digital photography magazine celebrating creativity,
+        community, and the stories behind every frame.
+      </p>
+    </div>
+
+    <div class="magazine-feature">
+      <div class="magazine-cover">
+        <div class="cover-brand">LENS CIRCLE</div>
+
+        <div>
+          <p class="cover-subtitle">Digital Photography Magazine</p>
+          <h3 class="cover-title">Through<br>Every Lens</h3>
+        </div>
+
+        <div class="cover-footer">
+          ISSUE 001 · COMING SOON
+        </div>
+      </div>
+
+      <div class="magazine-details">
+        <p class="eyebrow">Issue 001</p>
+        <h3>Through Every Lens</h3>
+
+        <p>
+          Our first digital magazine brings together photographs,
+          creative perspectives, and stories from the Lens Circle
+          community.
+        </p>
+
+        <p>
+          Explore different photography styles, discover talented
+          creators, and learn more about the art behind every image.
+        </p>
+
+        <div class="magazine-meta">
+          <span class="meta-tag">Digital Edition</span>
+          <span class="meta-tag">Community Photography</span>
+          <span class="meta-tag">12 Themes</span>
+        </div>
+
+        <div class="button-row" style="justify-content: flex-start;">
+          <a class="button button-primary" href="magazine.html">
+            Explore the Magazine
+          </a>
+
+          <a class="button button-secondary"
              href="https://www.instagram.com/lenscirclecommunity/"
              target="_blank" rel="noopener">
-            Join Lens Circle
-          </a>
-          <a class="button button-secondary" href="events.html">
-            Explore Events
+            Follow Lens Circle
           </a>
         </div>
       </div>
-    </section>
+    </div>
 
-    <section>
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">Explore Lens Circle</p>
-          <h2>Learn, Create, Connect</h2>
-          <p>Explore resources and activities made for photographers and editors.</p>
-        </div>
+    <div class="section-heading" style="margin-top: 55px;">
+      <p class="eyebrow">Inside Issue 001</p>
+      <h2>12 Photography Themes</h2>
+      <p>
+        A collection of different perspectives, styles,
+        and moments captured by our community.
+      </p>
+    </div>
 
-        <div class="grid">
-          <article class="card">
-            <div class="card-icon">📷</div>
-            <h3>Photography Tips</h3>
-            <p>Learn about composition, lighting, framing, and creating stronger photographs.</p>
-            <a class="card-link" href="photography-tips.html">Explore tips →</a>
-          </article>
+    <div class="theme-grid">
+      <div class="theme-item"><span>🌅</span>Sunset</div>
+      <div class="theme-item"><span>🌙</span>Moon</div>
+      <div class="theme-item"><span>☁️</span>Clouds</div>
+      <div class="theme-item"><span>🧑</span>Portraits</div>
+      <div class="theme-item"><span>⚫</span>Black & White</div>
+      <div class="theme-item"><span>🏙️</span>Street</div>
+      <div class="theme-item"><span>🌿</span>Nature</div>
+      <div class="theme-item"><span>🏛️</span>Architecture</div>
+      <div class="theme-item"><span>🪞</span>Reflections</div>
+      <div class="theme-item"><span>◻️</span>Minimalism</div>
+      <div class="theme-item"><span>🌧️</span>Rain</div>
+      <div class="theme-item"><span>🌃</span>Night</div>
+    </div>
 
-          <article class="card">
-            <div class="card-icon">🎨</div>
-            <h3>Editing Tips</h3>
-            <p>Improve your edits with practical guidance on colour, light, and detail.</p>
-            <a class="card-link" href="editing-tips.html">Explore editing →</a>
-          </article>
+    <p class="magazine-note">
+      Issue 001 is currently in preparation. More details will be announced soon.
+    </p>
 
-          <article class="card">
-            <div class="card-icon">📱</div>
-            <h3>Mobile Photographer Kit</h3>
-            <p>Discover camera, editing, video, and design apps for mobile creators.</p>
-            <a class="card-link" href="mobile-photographer-kit.html">View the kit →</a>
-          </article>
+    <div class="coming-soon">
+      <h3>More Issues Coming Soon</h3>
+      <p>
+        New editions will feature fresh themes, community photographers,
+        creative stories, and practical photography knowledge.
+      </p>
+    </div>
+  </div>
+</section>
 
-          <article class="card">
-            <div class="card-icon">🏆</div>
-            <h3>Community Events</h3>
-            <p>Find photography themes, contests, and creative activities to participate in.</p>
-            <a class="card-link" href="events.html">View events →</a>
-          </article>
+<section>
+  <div class="container">
+    <div class="community-panel">
+      <p class="eyebrow">Your Next Frame Starts Here</p>
+      <h2>Be Part of the Circle</h2>
+      <p>
+        Whether you use a phone or a camera, Lens Circle is a place
+        to share your perspective, learn from others, and keep creating.
+      </p>
+      <a class="button button-primary"
+         href="https://www.instagram.com/lenscirclecommunity/"
+         target="_blank" rel="noopener">
+        Connect with Lens Circle
+      </a>
+    </div>
+  </div>
+</section>
+```
 
-          <article class="card">
-            <div class="card-icon">❓</div>
-            <h3>Frequently Asked Questions</h3>
-            <p>Get answers about Lens Circle, participation, submissions, and community activities.</p>
-            <a class="card-link" href="faq.html">Read the FAQ →</a>
-          </article>
-
-          <article class="card">
-            <div class="card-icon">🤝</div>
-            <h3>Connect with Creators</h3>
-            <p>Meet photographers and editors, share your work, and find creative inspiration.</p>
-            <a class="card-link"
-               href="https://www.instagram.com/lenscirclecommunity/"
-               target="_blank" rel="noopener">
-              Visit Instagram →
-            </a>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <div class="container">
-        <div class="community-panel">
-          <p class="eyebrow">Your Next Frame Starts Here</p>
-          <h2>Be Part of the Circle</h2>
-          <p>
-            Whether you use a phone or a camera, Lens Circle is a place
-            to share your perspective, learn from others, and keep creating.
-          </p>
-          <a class="button button-primary"
-             href="https://www.instagram.com/lenscirclecommunity/"
-             target="_blank" rel="noopener">
-            Connect with Lens Circle
-          </a>
-        </div>
-      </div>
-    </section>
   </main>
 
   <footer>
@@ -393,5 +655,6 @@
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
+
 </body>
 </html>

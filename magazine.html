@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="description" content="Explore Lens Circle Magazine, a digital photography publication featuring community photographs, creative stories, photography tips, and editing tutorials.">
+
+  <title>Magazine | Lens Circle</title>
+  <link rel="icon" type="image/png" href="logo.png">
+
+  <style>
+    :root {
+      --background: #080b14;
+      --surface: #101725;
+      --surface-light: #151f30;
+      --gold: #d8b46a;
+      --gold-light: #f1d99f;
+      --text: #f4f4f6;
+      --muted: #aab3c2;
+      --border: rgba(216, 180, 106, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(1100px, 92%);
+      margin: 0 auto;
+    }
+
+    header {
+      background: rgba(8, 11, 20, 0.96);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(12px);
+    }
+
+    .navbar {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      color: var(--gold-light);
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      white-space: nowrap;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 16px;
+    }
+
+    nav a {
+      color: var(--muted);
+      font-size: 0.9rem;
+      transition: color 0.2s ease;
+    }
+
+    nav a:hover,
+    nav a.active {
+      color: var(--gold-light);
+    }
+
+    .hero {
+      padding: 90px 0 75px;
+      text-align: center;
+      background:
+        radial-gradient(circle at top, rgba(216, 180, 106, 0.12), transparent 45%),
+        linear-gradient(180deg, #0b1020, var(--background));
+    }
+
+    .eyebrow {
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    h1 span {
+      color: var(--gold-light);
+    }
+
+    .hero p {
+      color: var(--muted);
+      max-width: 700px;
+      margin: 0 auto 28px;
+      font-size: 1.05rem;
+    }
+
+    .button-row {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .button-primary {
+      background: var(--gold);
+      color: #111;
+    }
+
+    .button-secondary {
+      border: 1px solid var(--border);
+      color: var(--gold-light);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    section {
+      padding: 65px 0;
+    }
+
+    .section-heading {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .section-heading h2 {
+      font-size: clamp(1.7rem, 4vw, 2.5rem);
+      margin-bottom: 8px;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+      max-width: 650px;
+      margin: 0 auto;
+    }
+
+    .issue-feature {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 40px;
+      align-items: center;
+      background: linear-gradient(135deg, #111a2b, #0c111d);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 35px;
+    }
+
+    .magazine-cover {
+      min-height: 460px;
+      background:
+        radial-gradient(circle at 50% 30%, rgba(216, 180, 106, 0.2), transparent 40%),
+        linear-gradient(160deg, #151f30, #080b14);
+      border: 1px solid rgba(216, 180, 106, 0.35);
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 28px;
+      text-align: center;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.3);
+    }
+
+    .cover-brand {
+      color: var(--gold-light);
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: 3px;
+    }
+
+    .cover-title {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      line-height: 1.1;
+      color: var(--gold-light);
+      margin: 15px 0;
+    }
+
+    .cover-subtitle {
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .cover-footer {
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+    }
+
+    .issue-details .eyebrow {
+      margin-bottom: 12px;
+    }
+
+    .issue-details h2 {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      line-height: 1.15;
+      margin-bottom: 18px;
+    }
+
+    .issue-details p {
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .issue-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 24px 0;
+    }
+
+    .meta-tag {
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      padding: 6px 13px;
+      color: var(--gold-light);
+      font-size: 0.8rem;
+    }
+
+    .theme-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .theme-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 14px;
+      text-align: center;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .theme-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(216, 180, 106, 0.55);
+    }
+
+    .theme-icon {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+    }
+
+    .theme-card h3 {
+      color: var(--gold-light);
+      font-size: 0.95rem;
+    }
+
+    .contents-section {
+      background: linear-gradient(180deg, #0b1020, var(--background));
+    }
+
+    .contents-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .content-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+    }
+
+    .content-card h3 {
+      color: var(--gold-light);
+      margin-bottom: 10px;
+    }
+
+    .content-card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .submission-panel {
+      background: linear-gradient(135deg, #111a2b, #0c111d);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .submission-panel h2 {
+      margin-bottom: 12px;
+      font-size: clamp(1.7rem, 4vw, 2.5rem);
+    }
+
+    .submission-panel p {
+      color: var(--muted);
+      max-width: 650px;
+      margin: 0 auto 22px;
+    }
+
+    .submission-note {
+      color: var(--gold-light);
+      font-size: 0.85rem;
+      margin-top: 16px;
+    }
+
+    .future-issues {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .future-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px;
+      text-align: center;
+    }
+
+    .future-card h3 {
+      color: var(--gold-light);
+      margin-bottom: 10px;
+    }
+
+    .future-card p {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .community-panel {
+      background: linear-gradient(135deg, #111a2b, #0c111d);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 36px;
+      text-align: center;
+    }
+
+    .community-panel h2 {
+      margin-bottom: 10px;
+    }
+
+    .community-panel p {
+      color: var(--muted);
+      max-width: 650px;
+      margin: 0 auto 22px;
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 25px 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    @media (max-width: 760px) {
+      .navbar {
+        padding: 14px 0;
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      nav {
+        justify-content: flex-start;
+        gap: 12px;
+      }
+
+      .hero {
+        padding: 70px 0 60px;
+      }
+
+      .issue-feature {
+        grid-template-columns: 1fr;
+        padding: 20px;
+        gap: 28px;
+      }
+
+      .magazine-cover {
+        min-height: 390px;
+      }
+
+      .theme-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .contents-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .future-issues {
+        grid-template-columns: 1fr;
+      }
+
+      .submission-panel,
+      .community-panel {
+        padding: 28px 20px;
+      }
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <header>
+    <div class="container navbar">
+      <a class="brand" href="home.html">LENS CIRCLE</a>
+
+```
+  <nav aria-label="Main navigation">
+    <a href="home.html">Home</a>
+    <a href="events.html">Events</a>
+    <a href="photography-tips.html">Photo Tips</a>
+    <a href="editing-tips.html">Editing Tips</a>
+    <a href="mobile-photographer-kit.html">Mobile Kit</a>
+    <a href="magazine.html" class="active">Magazine</a>
+    <a href="faq.html">FAQ</a>
+  </nav>
+</div>
+```
+
+  </header>
+
+  <main>
+
+```
+<!-- Magazine introduction -->
+<section class="hero">
+  <div class="container">
+    <p class="eyebrow">A Lens Circle Publication</p>
+
+    <h1>Lens Circle <span>Magazine</span></h1>
+
+    <p>
+      Through Every Lens — a digital photography magazine
+      celebrating creativity, community, and the stories
+      behind every frame.
+    </p>
+
+    <div class="button-row">
+      <a href="#issue-001" class="button button-primary">
+        Explore Issue 001
+      </a>
+
+      <a href="#themes" class="button button-secondary">
+        Discover the Themes
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Issue 001 -->
+<section id="issue-001">
+  <div class="container">
+
+    <div class="section-heading">
+      <p class="eyebrow">First Edition</p>
+      <h2>Issue 001</h2>
+      <p>
+        Our first edition brings together photographs,
+        creative perspectives, and stories from the
+        Lens Circle community.
+      </p>
+    </div>
+
+    <div class="issue-feature">
+
+      <div class="magazine-cover">
+        <div class="cover-brand">LENS CIRCLE</div>
+
+        <div>
+          <p class="cover-subtitle">Digital Photography Magazine</p>
+
+          <h2 class="cover-title">
+            Through<br>Every Lens
+          </h2>
+
+          <p class="cover-subtitle">
+            A Celebration of Photography
+          </p>
+        </div>
+
+        <div class="cover-footer">
+          ISSUE 001 · 2026
+        </div>
+      </div>
+
+      <div class="issue-details">
+        <p class="eyebrow">The Beginning</p>
+
+        <h2>Through Every Lens</h2>
+
+        <p>
+          Every photograph tells a story. Our first issue
+          celebrates the different ways photographers
+          see and capture the world.
+        </p>
+
+        <p>
+          Discover community photographs, featured creators,
+          photography knowledge, editing ideas, and creative
+          inspiration.
+        </p>
+
+        <div class="issue-meta">
+          <span class="meta-tag">Digital Edition</span>
+          <span class="meta-tag">12 Themes</span>
+          <span class="meta-tag">Community Features</span>
+        </div>
+
+        <a href="#contents" class="button button-primary">
+          Explore Magazine Contents
+        </a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Magazine themes -->
+<section id="themes">
+  <div class="container">
+
+    <div class="section-heading">
+      <p class="eyebrow">Inside Issue 001</p>
+      <h2>12 Photography Themes</h2>
+      <p>
+        Different perspectives, creative styles,
+        and moments captured by our community.
+      </p>
+    </div>
+
+    <div class="theme-grid">
+
+      <article class="theme-card">
+        <div class="theme-icon">🌅</div>
+        <h3>Sunset</h3>
+      </article>
+
+      <article class="theme-card">
+        <div class="theme-icon">🌙</div>
+        <h3>Moon</h3>
+      </article>
+
+      <article class="theme-card">
+        <div class="theme-icon">☁️</div>
+        <h3>Clouds</h3>
+      </article>
+
+      <article class="theme-card">
+        <div class="theme-icon">🧑</div>
+        <h3>Portraits</h3>
+      </article>
+
+      <article class="theme-card">
+        <div class="theme-icon">⚫</div>
+        <h3>Black & White</h3>
+      </article>
+
+      <article class="theme-card">
+        <div class="theme-icon">🏙️</div>
+        <h3>Street</h3>
+      </article>
+
+      <article class="theme-card">
+        <div class="theme-icon">🌿</div>
+        <h3>Nature</h3>
+      </article>
+
+      <article class="theme-card">
+        <div class="theme-icon">🏛️</div>
+        <h3>Architecture</h3>
+      </article>
+
+      <article class="theme-card">
+        <div class="theme-icon">🪞</div>
+        <h3>Reflections</h3>
+      </article>
+
+      <article class="theme-card">
+        <div class="theme-icon">◻️</div>
+        <h3>Minimalism</h3>
+      </article>
+
+      <article class="theme-card">
+        <div class="theme-icon">🌧️</div>
+        <h3>Rain</h3>
+      </article>
+
+      <article class="theme-card">
+        <div class="theme-icon">🌃</div>
+        <h3>Night</h3>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- Magazine contents -->
+<section class="contents-section" id="contents">
+  <div class="container">
+
+    <div class="section-heading">
+      <p class="eyebrow">More Than Photographs</p>
+      <h2>Inside the Magazine</h2>
+      <p>
+        A closer look at the people, techniques,
+        and stories behind the images.
+      </p>
+    </div>
+
+    <div class="contents-grid">
+
+      <article class="content-card">
+        <h3>Featured Photographers</h3>
+        <p>
+          Meet talented community members and discover
+          their photography journeys, creative processes,
+          and favourite photographs.
+        </p>
+      </article>
+
+      <article class="content-card">
+        <h3>Behind the Frame</h3>
+        <p>
+          Explore the stories behind selected photographs,
+          including the ideas, techniques, and moments
+          that inspired them.
+        </p>
+      </article>
+
+      <article class="content-card">
+        <h3>Photography Tips</h3>
+        <p>
+          Learn practical techniques for composition,
+          lighting, framing, and capturing stronger images.
+        </p>
+      </article>
+
+      <article class="content-card">
+        <h3>Editing Knowledge</h3>
+        <p>
+          Discover editing approaches, colour techniques,
+          and creative ways to improve your photographs.
+        </p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- Submissions -->
+<section id="submissions">
+  <div class="container">
+
+    <div class="submission-panel">
+      <p class="eyebrow">Be Part of the First Issue</p>
+
+      <h2>Your Photograph Could Be Featured</h2>
+
+      <p>
+        Lens Circle Magazine celebrates the creativity
+        of photographers in our community. Selected
+        photographs may be featured in our digital
+        magazine with appropriate photographer credit.
+      </p>
+
+      <a class="button button-primary"
+         href="https://www.instagram.com/lenscirclecommunity/"
+         target="_blank" rel="noopener">
+        Contact Lens Circle
+      </a>
+
+      <p class="submission-note">
+        Submission instructions and deadlines will be
+        announced through our official community channels.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<!-- Future issues -->
+<section>
+  <div class="container">
+
+    <div class="section-heading">
+      <p class="eyebrow">The Journey Continues</p>
+      <h2>Future Issues</h2>
+      <p>
+        Every new edition will bring fresh photographs,
+        creative themes, and stories from our community.
+      </p>
+    </div>
+
+    <div class="future-issues">
+
+      <article class="future-card">
+        <h3>Issue 002</h3>
+        <p>
+          A new collection of photographs,
+          perspectives, and creative inspiration.
+        </p>
+      </article>
+
+      <article class="future-card">
+        <h3>Issue 003</h3>
+        <p>
+          Discover more photographers and
+          explore new creative ideas.
+        </p>
+      </article>
+
+      <article class="future-card">
+        <h3>Issue 004</h3>
+        <p>
+          Another chapter in the Lens Circle
+          photography journey.
+        </p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- Community -->
+<section>
+  <div class="container">
+
+    <div class="community-panel">
+      <p class="eyebrow">Through Every Lens</p>
+
+      <h2>Be Part of the Circle</h2>
+
+      <p>
+        Whether you use a phone or a camera,
+        Lens Circle is a place to share your
+        perspective, learn from others, and keep creating.
+      </p>
+
+      <a class="button button-primary"
+         href="https://www.instagram.com/lenscirclecommunity/"
+         target="_blank" rel="noopener">
+        Join Lens Circle
+      </a>
+    </div>
+
+  </div>
+</section>
+```
+
+  </main>
+
+  <footer>
+    <div class="container">
+      © <span id="year"></span> Lens Circle · Through Every Lens
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+  </script>
+
+</body>
+</html>

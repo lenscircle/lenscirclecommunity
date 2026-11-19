@@ -5,28 +5,21 @@
    File: assets/js/storage.js
 
    Dependencies:
-   1. Supabase JS SDK v2
-   2. assets/js/supabase-client.js
-   3. assets/js/auth.js
+   - Supabase JS SDK v2
+   - assets/js/supabase-client.js
+   - assets/js/auth.js
 
-   Storage buckets to create in Supabase:
-   - profile-images
-   - photo-submissions
-   - competition-entries
-   - exhibition-images
+   Photography storage:
+   - pod-submissions-private: private new submissions
+   - pod-photos: public approved photographs
 
-   IMPORTANT:
-   Storage policies must enforce access permissions.
    Never use the service-role key in browser code.
    ===================================================== */
 
 (function () {
   "use strict";
 
-  // ----------------------------------------------------
   // 1. DEPENDENCY CHECK
-  // ----------------------------------------------------
-
   if (
     !window.LensCircle ||
     !window.LensCircle.configured ||
@@ -41,33 +34,25 @@
   const db = window.LensCircle.db;
   const Storage = window.LensCircleStorage = {};
 
-  // ----------------------------------------------------
   // 2. STORAGE CONFIGURATION
-  // ----------------------------------------------------
-
   const BUCKETS = Object.freeze({
     profiles: "profile-images",
-    submissions: "photo-submissions",
+    submissions: "pod-submissions-private",
+    podPhotos: "pod-photos",
     competitions: "competition-entries",
     exhibitions: "exhibition-images"
   });
 
   const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
-  const ALLOWED_TYPES = [
+  const ALLOWED_TYPES = Object.freeze([
     "image/jpeg",
     "image/png",
     "image/webp"
-  ];
+  ]);
 
-  // ----------------------------------------------------
   // 3. FILE VALIDATION
-  // ----------------------------------------------------
-
-  Storage.validateImage = function (
-    file,
-    options
-  ) {
+  Storage.validateImage = function (file, options) {
     options = options || {};
 
     if (!file) {
@@ -86,23 +71,20 @@
       );
     }
 
+    if (!Number.isFinite(file.size) || file.size <= 0) {
+      throw new Error("The selected image is empty.");
+    }
+
     if (file.size > maxSize) {
       throw new Error(
         "Image exceeds the permitted file size."
       );
     }
 
-    if (file.size <= 0) {
-      throw new Error("The selected image is empty.");
-    }
-
     return true;
   };
 
-  // ----------------------------------------------------
-  // 4. GENERATE SAFE FILE NAME
-  // ----------------------------------------------------
-
+  // 4. SAFE FILE NAME
   Storage.createFileName = function (file) {
     const extensionMap = {
       "image/jpeg": "jpg",
@@ -116,22 +98,15 @@
       throw new Error("Unsupported image format.");
     }
 
-    return (
-      crypto.randomUUID() +
-      "." +
-      extension
-    );
+    return crypto.randomUUID() + "." + extension;
   };
 
-  // ----------------------------------------------------
-  // 5. GET AUTHENTICATED USER
-  // ----------------------------------------------------
-
+  // 5. AUTHENTICATED USER
   async function getUserId() {
     const user =
       await window.LensCircleAuth.getUser();
 
-    if (!user) {
+    if (!user || !user.id) {
       throw new Error(
         "Please sign in before uploading images."
       );
@@ -140,10 +115,30 @@
     return user.id;
   }
 
-  // ----------------------------------------------------
-  // 6. UPLOAD IMAGE
-  // ----------------------------------------------------
+  // 6. VALIDATE BUCKET
+  function validateBucket(bucket) {
+    if (!Object.values(BUCKETS).includes(bucket)) {
+      throw new Error("Invalid storage bucket.");
+    }
+  }
 
+  // 7. VALIDATE FOLDER
+  function validateFolder(folder) {
+    if (
+      typeof folder !== "string" ||
+      !folder ||
+      folder.startsWith("/") ||
+      folder.endsWith("/") ||
+      folder.includes("..") ||
+      !/^[a-zA-Z0-9_-]+(?:\/[a-zA-Z0-9_-]+)*$/.test(folder)
+    ) {
+      throw new Error("Invalid storage folder.");
+    }
+
+    return folder;
+  }
+
+  // 8. GENERIC IMAGE UPLOAD
   Storage.uploadImage = async function (
     bucket,
     file,
@@ -151,30 +146,24 @@
   ) {
     options = options || {};
 
-    const validBuckets = Object.values(BUCKETS);
-
-    if (!validBuckets.includes(bucket)) {
-      throw new Error("Invalid storage bucket.");
-    }
-
+    validateBucket(bucket);
     Storage.validateImage(file, options);
 
     const userId = await getUserId();
 
-    const fileName = Storage.createFileName(file);
+    // Private POD uploads must always belong to
+    // the authenticated user's own top-level folder.
+    let folder;
 
-    const folder = options.folder || userId;
-
-    // Prevent path traversal and unexpected characters.
-    if (
-      typeof folder !== "string" ||
-      !/^[a-zA-Z0-9_-]+$/.test(folder)
-    ) {
-      throw new Error("Invalid storage folder.");
+    if (bucket === BUCKETS.submissions) {
+      folder = userId;
+    } else {
+      folder = options.folder || userId;
+      validateFolder(folder);
     }
 
-    const filePath =
-      folder + "/" + fileName;
+    const fileName = Storage.createFileName(file);
+    const filePath = folder + "/" + fileName;
 
     const { data, error } = await db.storage
       .from(bucket)
@@ -197,10 +186,7 @@
     };
   };
 
-  // ----------------------------------------------------
-  // 7. PROFILE IMAGE UPLOAD
-  // ----------------------------------------------------
-
+  // 9. PROFILE IMAGE UPLOAD
   Storage.uploadProfileImage = async function (file) {
     const userId = await getUserId();
 
@@ -214,26 +200,18 @@
     );
   };
 
-  // ----------------------------------------------------
-  // 8. PHOTOGRAPHY SUBMISSION UPLOAD
-  // ----------------------------------------------------
-
+  // 10. PRIVATE PHOTOGRAPHY SUBMISSION
   Storage.uploadSubmission = async function (file) {
-    const userId = await getUserId();
-
     return Storage.uploadImage(
       BUCKETS.submissions,
       file,
       {
-        folder: userId
+        maxSize: MAX_FILE_SIZE
       }
     );
   };
 
-  // ----------------------------------------------------
-  // 9. COMPETITION ENTRY UPLOAD
-  // ----------------------------------------------------
-
+  // 11. COMPETITION ENTRY UPLOAD
   Storage.uploadCompetitionEntry = async function (
     competitionId,
     file
@@ -244,7 +222,9 @@
       typeof competitionId !== "string" ||
       !/^[a-zA-Z0-9_-]+$/.test(competitionId)
     ) {
-      throw new Error("Invalid competition identifier.");
+      throw new Error(
+        "Invalid competition identifier."
+      );
     }
 
     return Storage.uploadImage(
@@ -256,10 +236,7 @@
     );
   };
 
-  // ----------------------------------------------------
-  // 10. EXHIBITION IMAGE UPLOAD
-  // ----------------------------------------------------
-
+  // 12. EXHIBITION IMAGE UPLOAD
   Storage.uploadExhibitionImage = async function (
     exhibitionId,
     file
@@ -279,7 +256,9 @@
       typeof exhibitionId !== "string" ||
       !/^[a-zA-Z0-9_-]+$/.test(exhibitionId)
     ) {
-      throw new Error("Invalid exhibition identifier.");
+      throw new Error(
+        "Invalid exhibition identifier."
+      );
     }
 
     return Storage.uploadImage(
@@ -291,18 +270,24 @@
     );
   };
 
-  // ----------------------------------------------------
-  // 11. GET PUBLIC IMAGE URL
-  // ----------------------------------------------------
-
+  // 13. GET PUBLIC IMAGE URL
   Storage.getPublicUrl = function (
     bucket,
     filePath
   ) {
-    const validBuckets = Object.values(BUCKETS);
+    validateBucket(bucket);
 
-    if (!validBuckets.includes(bucket)) {
-      throw new Error("Invalid storage bucket.");
+    if (bucket === BUCKETS.submissions) {
+      throw new Error(
+        "Private submissions cannot use public URLs. Use getSignedUrl."
+      );
+    }
+
+    if (
+      typeof filePath !== "string" ||
+      !filePath.trim()
+    ) {
+      throw new Error("Invalid image path.");
     }
 
     const { data } = db.storage
@@ -312,27 +297,36 @@
     return data.publicUrl;
   };
 
-  // ----------------------------------------------------
-  // 12. GET SIGNED IMAGE URL
-  // ----------------------------------------------------
-
+  // 14. GET SIGNED IMAGE URL
   Storage.getSignedUrl = async function (
     bucket,
     filePath,
     expiresIn
   ) {
-    const validBuckets = Object.values(BUCKETS);
+    validateBucket(bucket);
 
-    if (!validBuckets.includes(bucket)) {
-      throw new Error("Invalid storage bucket.");
+    if (
+      typeof filePath !== "string" ||
+      !filePath.trim()
+    ) {
+      throw new Error("Invalid image path.");
+    }
+
+    const duration = Number(expiresIn) || 3600;
+
+    if (
+      !Number.isInteger(duration) ||
+      duration < 1 ||
+      duration > 86400
+    ) {
+      throw new Error(
+        "Signed URL duration must be between 1 and 86400 seconds."
+      );
     }
 
     const { data, error } = await db.storage
       .from(bucket)
-      .createSignedUrl(
-        filePath,
-        expiresIn || 3600
-      );
+      .createSignedUrl(filePath, duration);
 
     if (error) {
       throw error;
@@ -341,28 +335,44 @@
     return data.signedUrl;
   };
 
-  // ----------------------------------------------------
-  // 13. DELETE OWN IMAGE
-  // ----------------------------------------------------
-
+  // 15. DELETE OWN IMAGE
   Storage.deleteOwnImage = async function (
     bucket,
     filePath
   ) {
-    const validBuckets = Object.values(BUCKETS);
+    validateBucket(bucket);
 
-    if (!validBuckets.includes(bucket)) {
-      throw new Error("Invalid storage bucket.");
+    if (
+      typeof filePath !== "string" ||
+      !filePath.trim()
+    ) {
+      throw new Error("Invalid image path.");
     }
 
     const userId = await getUserId();
 
+    // Private POD and profile files use userId as
+    // their first folder.
     if (
-      typeof filePath !== "string" ||
-      !filePath.startsWith(userId + "/")
+      bucket === BUCKETS.submissions ||
+      bucket === BUCKETS.profiles
     ) {
+      if (!filePath.startsWith(userId + "/")) {
+        throw new Error(
+          "You can only request deletion of your own files."
+        );
+      }
+    } else if (bucket === BUCKETS.competitions) {
+      const parts = filePath.split("/");
+
+      if (parts.length < 2 || parts[1] !== userId) {
+        throw new Error(
+          "You can only request deletion of your own competition files."
+        );
+      }
+    } else {
       throw new Error(
-        "You can only request deletion of your own files."
+        "Deletion from this bucket requires an authorised workflow."
       );
     }
 
@@ -377,10 +387,7 @@
     return data;
   };
 
-  // ----------------------------------------------------
-  // 14. CREATE LOCAL IMAGE PREVIEW
-  // ----------------------------------------------------
-
+  // 16. LOCAL IMAGE PREVIEW
   Storage.createPreview = function (file) {
     Storage.validateImage(file);
 
@@ -396,10 +403,7 @@
     }
   };
 
-  // ----------------------------------------------------
-  // 15. EXPOSE BUCKET NAMES
-  // ----------------------------------------------------
-
+  // 17. EXPOSE CONFIGURATION
   Storage.buckets = BUCKETS;
 
   console.info(

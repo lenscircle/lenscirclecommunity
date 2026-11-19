@@ -1,0 +1,1006 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#252722">
+  <title>Competitions | Director — Lens Circle</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --paper: #f7f6f2;
+      --white: #fff;
+      --ink: #252722;
+      --muted: #777970;
+      --line: #e7e4dc;
+      --accent: #a85e42;
+      --accent-light: #f3e8e1;
+      --sidebar: #252722;
+      --serif: "Playfair Display", Georgia, serif;
+      --sans: "DM Sans", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 245px;
+      flex-shrink: 0;
+      background: var(--sidebar);
+      color: white;
+      padding: 29px 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand {
+      font: 700 25px var(--serif);
+      padding: 0 10px;
+    }
+
+    .brand span {
+      color: #d18b6d;
+    }
+
+    .portal-label {
+      padding: 9px 10px 26px;
+      color: #bcbdb5;
+      font-size: 9px;
+      letter-spacing: 1.7px;
+      text-transform: uppercase;
+    }
+
+    .nav-heading {
+      padding: 17px 10px 10px;
+      color: #898b82;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 11px;
+      margin: 2px 0;
+      border-radius: 4px;
+      color: #d1d2cb;
+      font-size: 11px;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: #393b34;
+      color: white;
+    }
+
+    .nav-link.active {
+      border-left: 3px solid #d18b6d;
+      padding-left: 8px;
+    }
+
+    .nav-icon {
+      width: 18px;
+      text-align: center;
+      color: #d18b6d;
+      font-size: 14px;
+    }
+
+    .sidebar-bottom {
+      margin-top: auto;
+      padding-top: 25px;
+    }
+
+    .sidebar-note {
+      padding: 15px;
+      border: 1px solid #484a43;
+      color: #bfc0b8;
+      font-size: 10px;
+      line-height: 1.8;
+    }
+
+    .sidebar-note strong {
+      display: block;
+      color: white;
+      margin-bottom: 5px;
+    }
+
+    .main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .topbar {
+      height: 75px;
+      padding: 0 38px;
+      background: white;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .breadcrumb {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .breadcrumb strong {
+      color: var(--ink);
+    }
+
+    .role-badge {
+      padding: 8px 11px;
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .content {
+      max-width: 1450px;
+      margin: auto;
+      padding: 40px;
+    }
+
+    .page-heading {
+      margin-bottom: 28px;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font: 500 clamp(34px, 4vw, 43px)/1.15 var(--serif);
+    }
+
+    .intro {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.9;
+      max-width: 690px;
+    }
+
+    .notice {
+      display: flex;
+      gap: 13px;
+      padding: 18px;
+      background: white;
+      border: 1px solid var(--line);
+      margin-bottom: 26px;
+    }
+
+    .notice-icon {
+      color: var(--accent);
+      font-size: 18px;
+    }
+
+    .notice strong {
+      display: block;
+      font-size: 11px;
+      margin-bottom: 6px;
+    }
+
+    .notice p {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.8;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 30px;
+    }
+
+    .stat {
+      padding: 20px;
+      background: white;
+      border: 1px solid var(--line);
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 10px;
+      margin-bottom: 13px;
+    }
+
+    .stat-value {
+      font: 30px var(--serif);
+    }
+
+    .stat-foot {
+      color: var(--muted);
+      font-size: 9px;
+      margin-top: 8px;
+    }
+
+    .section-heading {
+      margin: 30px 0 16px;
+    }
+
+    .section-heading h2 {
+      font: 500 25px var(--serif);
+    }
+
+    .section-heading p {
+      color: var(--muted);
+      font-size: 9px;
+      margin-top: 5px;
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .category-card {
+      padding: 23px;
+      background: white;
+      border: 1px solid var(--line);
+    }
+
+    .category-icon {
+      color: var(--accent);
+      font: 27px var(--serif);
+      margin-bottom: 15px;
+    }
+
+    .category-card h3 {
+      font: 500 22px var(--serif);
+      margin-bottom: 9px;
+    }
+
+    .category-card p {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.9;
+    }
+
+    .category-tag {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 6px 9px;
+      background: #f2f0e9;
+      color: #777970;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: .5px;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid var(--line);
+      margin-top: 25px;
+    }
+
+    .panel-header {
+      padding: 21px 23px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-header h2 {
+      font: 500 23px var(--serif);
+    }
+
+    .panel-header p {
+      color: var(--muted);
+      font-size: 9px;
+      margin-top: 5px;
+    }
+
+    .panel-body {
+      padding: 23px;
+    }
+
+    .workflow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .step {
+      padding: 18px;
+      background: #f5f4ef;
+    }
+
+    .step-number {
+      color: var(--accent);
+      font: 22px var(--serif);
+      margin-bottom: 12px;
+    }
+
+    .step strong {
+      display: block;
+      font-size: 10px;
+      margin-bottom: 7px;
+    }
+
+    .step p {
+      color: var(--muted);
+      font-size: 9px;
+      line-height: 1.8;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 35px 20px;
+      border: 1px dashed #d9d6cd;
+      background: #fcfbf8;
+    }
+
+    .empty-state h3 {
+      font: 500 21px var(--serif);
+      margin-bottom: 8px;
+    }
+
+    .empty-state p {
+      max-width: 410px;
+      margin: auto;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.9;
+    }
+
+    .rules {
+      margin-top: 25px;
+      padding: 22px;
+      background: var(--ink);
+      color: white;
+    }
+
+    .rules h2 {
+      font: 500 22px var(--serif);
+      margin-bottom: 13px;
+    }
+
+    .rules ul {
+      padding-left: 18px;
+      color: #d1d2cb;
+      font-size: 10px;
+      line-height: 2.1;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-top: 28px;
+      padding: 20px 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 9px;
+    }
+
+    .logout {
+      border: 0;
+      background: transparent;
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .loading-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      background: var(--paper);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 25px;
+    }
+
+    .loading-screen h2 {
+      font: 500 28px var(--serif);
+      margin-bottom: 10px;
+    }
+
+    .loading-screen p {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.8;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media(max-width: 1100px) {
+      .sidebar {
+        width: 215px;
+      }
+
+      .content {
+        padding: 28px;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .workflow {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media(max-width: 700px) {
+      .layout {
+        display: block;
+      }
+
+      .sidebar {
+        width: 100%;
+        padding: 16px 18px;
+      }
+
+      .portal-label,
+      .sidebar nav,
+      .sidebar-bottom {
+        display: none;
+      }
+
+      .topbar {
+        height: 60px;
+        padding: 0 20px;
+      }
+
+      .content {
+        padding: 25px 18px;
+      }
+
+      .stats,
+      .category-grid,
+      .workflow {
+        grid-template-columns: 1fr;
+      }
+
+      .footer {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="loading-screen" id="loadingScreen">
+    <div>
+      <h2>Verifying Director access</h2>
+      <p>Please wait while we check your permissions.</p>
+    </div>
+  </div>
+
+  <div class="layout hidden" id="app">
+
+    <aside class="sidebar">
+
+      <a href="../index.html" class="brand">
+        Lens <span>Circle</span>
+      </a>
+
+      <div class="portal-label">Director workspace</div>
+
+      <nav>
+        <div class="nav-heading">Workspace</div>
+
+        <a href="dashboard.html" class="nav-link">
+          <span class="nav-icon">⌂</span>
+          Dashboard
+        </a>
+
+        <a href="team.html" class="nav-link">
+          <span class="nav-icon">♧</span>
+          My team
+        </a>
+
+        <a href="assignments.html" class="nav-link">
+          <span class="nav-icon">▤</span>
+          Assignments
+        </a>
+
+        <div class="nav-heading">Department</div>
+
+        <a href="activities.html" class="nav-link">
+          <span class="nav-icon">◎</span>
+          Activities
+        </a>
+
+        <a href="competitions.html" class="nav-link active">
+          <span class="nav-icon">✧</span>
+          Competitions
+        </a>
+
+        <a href="reports.html" class="nav-link">
+          <span class="nav-icon">⚑</span>
+          Reports
+        </a>
+
+        <a href="members.html" class="nav-link">
+          <span class="nav-icon">♙</span>
+          Members
+        </a>
+
+        <a href="analytics.html" class="nav-link">
+          <span class="nav-icon">▥</span>
+          Analytics
+        </a>
+
+        <div class="nav-heading">Account</div>
+
+        <a href="profile.html" class="nav-link">
+          <span class="nav-icon">◉</span>
+          My profile
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="sidebar-note">
+          <strong>Fair creative competition</strong>
+          Protect the integrity of every
+          competition and participant.
+        </div>
+      </div>
+
+    </aside>
+
+    <main class="main">
+
+      <header class="topbar">
+        <div class="breadcrumb">
+          Lens Circle / Director / <strong>Competitions</strong>
+        </div>
+
+        <div class="role-badge">DIRECTOR</div>
+      </header>
+
+      <div class="content">
+
+        <section class="page-heading">
+          <div class="eyebrow">Competition leadership</div>
+
+          <h1>Competitions.</h1>
+
+          <p class="intro">
+            Supervise photography competitions, coordinate
+            operational teams and maintain fair competition standards.
+          </p>
+        </section>
+
+        <section class="notice">
+          <div class="notice-icon">✦</div>
+
+          <div>
+            <strong>Competition management workspace</strong>
+            <p>
+              This page establishes the management structure.
+              Competition records, participant entries, judging,
+              results and publication workflows will be connected
+              through Supabase later.
+            </p>
+          </div>
+        </section>
+
+        <section class="stats">
+
+          <article class="stat">
+            <div class="stat-label">Total competitions</div>
+            <div class="stat-value">—</div>
+            <div class="stat-foot">Awaiting competition records</div>
+          </article>
+
+          <article class="stat">
+            <div class="stat-label">Active competitions</div>
+            <div class="stat-value">—</div>
+            <div class="stat-foot">Awaiting live schedules</div>
+          </article>
+
+          <article class="stat">
+            <div class="stat-label">Entries received</div>
+            <div class="stat-value">—</div>
+            <div class="stat-foot">Awaiting submission records</div>
+          </article>
+
+          <article class="stat">
+            <div class="stat-label">Pending judging</div>
+            <div class="stat-value">—</div>
+            <div class="stat-foot">Awaiting judging records</div>
+          </article>
+
+        </section>
+
+        <section>
+
+          <div class="section-heading">
+            <h2>Competition categories</h2>
+            <p>Core photography competition categories</p>
+          </div>
+
+          <div class="category-grid">
+
+            <article class="category-card">
+              <div class="category-icon">◇</div>
+              <h3>Nature & Wildlife</h3>
+              <p>
+                Landscapes, wildlife, birds, macro photography
+                and the natural world.
+              </p>
+              <span class="category-tag">PHOTOGRAPHY CATEGORY</span>
+            </article>
+
+            <article class="category-card">
+              <div class="category-icon">◉</div>
+              <h3>Portrait Photography</h3>
+              <p>
+                Environmental portraits, candid expressions,
+                character studies and human stories.
+              </p>
+              <span class="category-tag">PHOTOGRAPHY CATEGORY</span>
+            </article>
+
+            <article class="category-card">
+              <div class="category-icon">▧</div>
+              <h3>Street & Documentary</h3>
+              <p>
+                Everyday life, culture, architecture,
+                documentary moments and visual storytelling.
+              </p>
+              <span class="category-tag">PHOTOGRAPHY CATEGORY</span>
+            </article>
+
+            <article class="category-card">
+              <div class="category-icon">✧</div>
+              <h3>Creative & Experimental</h3>
+              <p>
+                Abstract photography, conceptual work,
+                creative techniques and visual experimentation.
+              </p>
+              <span class="category-tag">PHOTOGRAPHY CATEGORY</span>
+            </article>
+
+          </div>
+
+        </section>
+
+        <section class="panel">
+
+          <div class="panel-header">
+            <h2>Competition operations</h2>
+            <p>Department-level competition administration</p>
+          </div>
+
+          <div class="panel-body">
+
+            <div class="empty-state">
+              <h3>No competition records connected</h3>
+
+              <p>
+                Competition creation, editing, schedules,
+                entries, judging assignments and results
+                will become available after backend integration.
+              </p>
+            </div>
+
+          </div>
+
+        </section>
+
+        <section class="panel">
+
+          <div class="panel-header">
+            <h2>Competition lifecycle</h2>
+            <p>Standard operational workflow</p>
+          </div>
+
+          <div class="panel-body">
+
+            <div class="workflow">
+
+              <div class="step">
+                <div class="step-number">01</div>
+                <strong>Plan</strong>
+                <p>
+                  Define the theme, categories,
+                  eligibility and competition rules.
+                </p>
+              </div>
+
+              <div class="step">
+                <div class="step-number">02</div>
+                <strong>Announce</strong>
+                <p>
+                  Publish the competition and communicate
+                  deadlines and participation requirements.
+                </p>
+              </div>
+
+              <div class="step">
+                <div class="step-number">03</div>
+                <strong>Collect entries</strong>
+                <p>
+                  Coordinate submissions and verify
+                  compliance with published rules.
+                </p>
+              </div>
+
+              <div class="step">
+                <div class="step-number">04</div>
+                <strong>Judge</strong>
+                <p>
+                  Coordinate impartial judging and
+                  maintain a documented review process.
+                </p>
+              </div>
+
+              <div class="step">
+                <div class="step-number">05</div>
+                <strong>Publish results</strong>
+                <p>
+                  Verify approved results and coordinate
+                  winner announcements.
+                </p>
+              </div>
+
+              <div class="step">
+                <div class="step-number">06</div>
+                <strong>Archive</strong>
+                <p>
+                  Preserve competition records and
+                  approved highlights for future reference.
+                </p>
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+        <section class="panel">
+
+          <div class="panel-header">
+            <h2>Judging standards</h2>
+            <p>Principles for trustworthy competition operations</p>
+          </div>
+
+          <div class="panel-body">
+
+            <div class="workflow">
+
+              <div class="step">
+                <div class="step-number">A</div>
+                <strong>Originality</strong>
+                <p>
+                  Respect original creative work
+                  and published entry requirements.
+                </p>
+              </div>
+
+              <div class="step">
+                <div class="step-number">B</div>
+                <strong>Technical quality</strong>
+                <p>
+                  Consider focus, exposure, composition
+                  and appropriate technique.
+                </p>
+              </div>
+
+              <div class="step">
+                <div class="step-number">C</div>
+                <strong>Creative vision</strong>
+                <p>
+                  Recognise storytelling, interpretation
+                  and originality of approach.
+                </p>
+              </div>
+
+              <div class="step">
+                <div class="step-number">D</div>
+                <strong>Fair evaluation</strong>
+                <p>
+                  Apply consistent criteria and
+                  avoid conflicts of interest.
+                </p>
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+        <section class="rules">
+
+          <h2>Director responsibilities</h2>
+
+          <ul>
+            <li>Coordinate competition operations within your assigned department.</li>
+            <li>Ensure competition rules are communicated before entries open.</li>
+            <li>Maintain participant privacy and protect unpublished entries.</li>
+            <li>Ensure judging processes are fair and documented.</li>
+            <li>Escalate serious disputes, disqualifications and exceptional cases to Admin.</li>
+            <li>Never alter judging outcomes for personal or preferential reasons.</li>
+          </ul>
+
+        </section>
+
+        <footer class="footer">
+          <span>
+            © <span id="year"></span> Lens Circle · Director workspace
+          </span>
+
+          <button class="logout" id="logoutButton">
+            Sign out securely →
+          </button>
+        </footer>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
+    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY";
+
+    const configured =
+      SUPABASE_URL.startsWith("https://") &&
+      !SUPABASE_URL.includes("YOUR_SUPABASE") &&
+      SUPABASE_ANON_KEY.length > 20 &&
+      !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE");
+
+    const client = configured && window.supabase
+      ? window.supabase.createClient(
+          SUPABASE_URL,
+          SUPABASE_ANON_KEY,
+          {
+            auth: {
+              persistSession: true,
+              autoRefreshToken: true,
+              detectSessionInUrl: true
+            }
+          }
+        )
+      : null;
+
+    const loadingScreen =
+      document.getElementById("loadingScreen");
+
+    const app =
+      document.getElementById("app");
+
+    function showBlockingMessage(title, description) {
+      loadingScreen.innerHTML = `
+        <div>
+          <h2>${title}</h2>
+          <p>${description}</p>
+          <p style="margin-top:22px;">
+            <a href="login.html" style="color:#a85e42;font-weight:700;">
+              Return to Director sign in →
+            </a>
+          </p>
+        </div>
+      `;
+    }
+
+    async function verifyAccess() {
+      if (!client) {
+        showBlockingMessage(
+          "Configuration required",
+          "Configure Supabase before accessing this page."
+        );
+        return;
+      }
+
+      try {
+        const { data, error } =
+          await client.auth.getSession();
+
+        if (error) throw error;
+
+        if (!data.session) {
+          window.location.replace("login.html");
+          return;
+        }
+
+        const { data: authorised, error: roleError } =
+          await client.rpc("has_staff_role", {
+            required_role: "director"
+          });
+
+        if (roleError) {
+          throw new Error(
+            "Director permissions could not be verified."
+          );
+        }
+
+        if (authorised !== true) {
+          await client.auth.signOut();
+          window.location.replace("login.html");
+          return;
+        }
+
+        document.getElementById("year").textContent =
+          new Date().getFullYear();
+
+        app.classList.remove("hidden");
+        loadingScreen.classList.add("hidden");
+
+      } catch (error) {
+        console.error("Competition access error:", error);
+
+        await client.auth.signOut();
+
+        showBlockingMessage(
+          "Access verification failed",
+          error.message || "Unable to verify Director permissions."
+        );
+      }
+    }
+
+    document.getElementById("logoutButton")
+      .addEventListener("click", async () => {
+
+        const button =
+          document.getElementById("logoutButton");
+
+        button.disabled = true;
+        button.textContent = "Signing out...";
+
+        if (client) {
+          await client.auth.signOut();
+        }
+
+        window.location.replace("login.html");
+      });
+
+    verifyAccess();
+  </script>
+
+</body>
+</html>

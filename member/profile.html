@@ -1,0 +1,1123 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f7f6f2">
+
+  <title>My Profile | Lens Circle</title>
+  <meta name="description" content="Manage your Lens Circle photography profile.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --paper: #f7f6f2;
+      --white: #fff;
+      --ink: #252722;
+      --muted: #777970;
+      --line: #e7e4dc;
+      --accent: #a85e42;
+      --accent-light: #f3e8e1;
+      --soft: #eeeae2;
+      --serif: "Playfair Display", Georgia, serif;
+      --sans: "DM Sans", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      min-height: 100vh;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button, input, textarea, select {
+      font: inherit;
+    }
+
+    .topbar {
+      height: 72px;
+      padding: 0 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--white);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      font-family: var(--serif);
+      font-size: 25px;
+      font-weight: 700;
+    }
+
+    .brand span {
+      color: var(--accent);
+    }
+
+    .topbar a.back {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .topbar a.back:hover {
+      color: var(--accent);
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 45px 25px 70px;
+    }
+
+    .page-heading {
+      margin-bottom: 32px;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-family: var(--serif);
+      font-size: 43px;
+      font-weight: 500;
+      line-height: 1.15;
+      margin-bottom: 10px;
+    }
+
+    .page-heading p {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .profile-layout {
+      display: grid;
+      grid-template-columns: 290px minmax(0, 1fr);
+      gap: 25px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--line);
+      padding: 27px;
+    }
+
+    .avatar-section {
+      text-align: center;
+    }
+
+    .avatar {
+      width: 112px;
+      height: 112px;
+      border-radius: 50%;
+      background: var(--accent-light);
+      color: var(--accent);
+      display: grid;
+      place-items: center;
+      font-family: var(--serif);
+      font-size: 42px;
+      margin: 5px auto 17px;
+      overflow: hidden;
+      background-position: center;
+      background-size: cover;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .avatar-section h2 {
+      font-family: var(--serif);
+      font-size: 23px;
+      font-weight: 500;
+      margin-bottom: 5px;
+      overflow-wrap: anywhere;
+    }
+
+    .username-display {
+      color: var(--accent);
+      font-size: 11px;
+      margin-bottom: 15px;
+    }
+
+    .member-label {
+      display: inline-block;
+      padding: 7px 11px;
+      background: var(--soft);
+      color: #66675f;
+      font-size: 9px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .avatar-actions {
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .upload-button {
+      display: inline-block;
+      padding: 11px 15px;
+      background: var(--ink);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .upload-button:hover {
+      background: var(--accent);
+    }
+
+    .remove-photo {
+      display: block;
+      margin: 13px auto 0;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .upload-note {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 9px;
+      line-height: 1.7;
+    }
+
+    .profile-tips {
+      margin-top: 20px;
+      background: var(--soft);
+      padding: 19px;
+    }
+
+    .profile-tips h3 {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .profile-tips p {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.8;
+    }
+
+    .form-card h2 {
+      font-family: var(--serif);
+      font-size: 25px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .form-intro {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.7;
+      margin-bottom: 25px;
+    }
+
+    .form-section-title {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 18px 0 14px;
+      border-top: 1px solid var(--line);
+      margin-top: 5px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 17px;
+    }
+
+    label {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--ink);
+      font-size: 11px;
+      outline: none;
+      border-radius: 0;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--accent);
+    }
+
+    input:disabled {
+      background: #f3f1ec;
+      color: #85867e;
+      cursor: not-allowed;
+    }
+
+    textarea {
+      min-height: 115px;
+      resize: vertical;
+      line-height: 1.7;
+    }
+
+    .field-note {
+      color: var(--muted);
+      font-size: 9px;
+      line-height: 1.6;
+      margin-top: 7px;
+    }
+
+    .interests {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 5px;
+    }
+
+    .interest-option {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      border: 1px solid var(--line);
+      padding: 10px;
+      cursor: pointer;
+      font-size: 10px;
+      font-weight: 500;
+    }
+
+    .interest-option input {
+      width: auto;
+      accent-color: var(--accent);
+    }
+
+    .interest-option:has(input:checked) {
+      background: var(--accent-light);
+      border-color: #d7b5a5;
+    }
+
+    .form-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-top: 27px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+    }
+
+    .save-button {
+      border: 0;
+      background: var(--ink);
+      color: white;
+      padding: 14px 22px;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .save-button:hover {
+      background: var(--accent);
+    }
+
+    .save-button:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    .cancel-link {
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .status {
+      display: none;
+      margin-top: 18px;
+      padding: 13px;
+      font-size: 10px;
+      line-height: 1.7;
+      overflow-wrap: anywhere;
+    }
+
+    .status.success {
+      display: block;
+      background: #eff7ef;
+      border: 1px solid #cfe2cf;
+      color: #32633a;
+    }
+
+    .status.error {
+      display: block;
+      background: #fff2ef;
+      border: 1px solid #efd0c8;
+      color: #a33c2c;
+    }
+
+    .status.info {
+      display: block;
+      background: #fbf5e9;
+      border: 1px solid #e9dcc2;
+      color: #71532e;
+    }
+
+    .loading {
+      padding: 70px 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .error-card {
+      max-width: 500px;
+      margin: 70px auto;
+      padding: 35px;
+      background: white;
+      border: 1px solid var(--line);
+      text-align: center;
+    }
+
+    .error-card h2 {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+
+    .error-card p {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.8;
+      margin-bottom: 18px;
+    }
+
+    .error-card a {
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    @media(max-width: 800px) {
+      .profile-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-sidebar {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+      }
+
+      .profile-tips {
+        margin-top: 0;
+      }
+    }
+
+    @media(max-width: 560px) {
+      .container {
+        padding: 32px 16px 50px;
+      }
+
+      h1 {
+        font-size: 36px;
+      }
+
+      .card {
+        padding: 21px;
+      }
+
+      .profile-sidebar {
+        grid-template-columns: 1fr;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .interests {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .form-actions {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .save-button {
+        width: 100%;
+      }
+
+      .cancel-link {
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <a href="../index.html" class="brand">
+      Lens <span>Circle</span>
+    </a>
+
+    <a href="dashboard.html" class="back">
+      ← Back to dashboard
+    </a>
+  </header>
+
+  <main class="container" id="mainContent">
+
+    <div class="loading" id="loading">
+      Loading your profile...
+    </div>
+
+    <section class="error-card" id="errorCard" hidden>
+      <h2>Profile unavailable.</h2>
+      <p id="errorText">
+        Please sign in to access your member profile.
+      </p>
+      <a href="login.html">Go to member sign in →</a>
+    </section>
+
+    <div id="profileContent" hidden>
+
+      <section class="page-heading">
+        <div class="eyebrow">Your identity at Lens Circle</div>
+        <h1>My profile.</h1>
+        <p>
+          Introduce yourself to the photography community.
+          Your profile is the beginning of your creator identity.
+        </p>
+      </section>
+
+      <div class="profile-layout">
+
+        <!-- PROFILE PREVIEW -->
+        <aside class="profile-sidebar">
+
+          <section class="card avatar-section">
+
+            <div class="avatar" id="avatarPreview">
+              M
+            </div>
+
+            <h2 id="previewName">Member Name</h2>
+            <div class="username-display" id="previewUsername">
+              @username
+            </div>
+
+            <span class="member-label">Lens Circle Member</span>
+
+            <div class="avatar-actions">
+
+              <label for="profilePhoto" class="upload-button">
+                Choose profile photo
+              </label>
+
+              <input
+                type="file"
+                id="profilePhoto"
+                accept="image/jpeg,image/png,image/webp"
+                hidden>
+
+              <button
+                type="button"
+                class="remove-photo"
+                id="removePhoto">
+                Remove preview photo
+              </button>
+
+              <p class="upload-note">
+                JPG, PNG or WebP. Maximum 2 MB.
+                This is currently a local preview;
+                permanent photo storage will be added with Supabase Storage.
+              </p>
+
+            </div>
+
+          </section>
+
+          <section class="profile-tips">
+            <h3>Make it yours.</h3>
+            <p>
+              Share your photographic interests, creative approach
+              and the stories behind your work. Keep personal
+              information private if you do not want it public.
+            </p>
+          </section>
+
+        </aside>
+
+        <!-- PROFILE FORM -->
+        <section class="card form-card">
+
+          <h2>Profile information</h2>
+
+          <p class="form-intro">
+            Update your member information and creator introduction.
+            Changes are saved to your authenticated account metadata.
+          </p>
+
+          <form id="profileForm">
+
+            <div class="form-section-title">
+              Basic information
+            </div>
+
+            <div class="form-row">
+
+              <div class="form-group">
+                <label for="fullName">Display name *</label>
+                <input
+                  type="text"
+                  id="fullName"
+                  maxlength="80"
+                  autocomplete="name"
+                  required>
+              </div>
+
+              <div class="form-group">
+                <label for="username">Username *</label>
+                <input
+                  type="text"
+                  id="username"
+                  minlength="3"
+                  maxlength="24"
+                  pattern="[A-Za-z0-9_]+"
+                  required>
+                <p class="field-note">
+                  3–24 letters, numbers or underscores.
+                </p>
+              </div>
+
+            </div>
+
+            <div class="form-group">
+              <label for="email">Registered email</label>
+              <input
+                type="email"
+                id="email"
+                disabled>
+              <p class="field-note">
+                Email address is managed through account authentication.
+              </p>
+            </div>
+
+            <div class="form-row">
+
+              <div class="form-group">
+                <label for="location">Location</label>
+                <input
+                  type="text"
+                  id="location"
+                  maxlength="100"
+                  placeholder="City, Country">
+              </div>
+
+              <div class="form-group">
+                <label for="website">Portfolio or website</label>
+                <input
+                  type="url"
+                  id="website"
+                  maxlength="250"
+                  placeholder="https://example.com">
+              </div>
+
+            </div>
+
+            <div class="form-section-title">
+              Your photography identity
+            </div>
+
+            <div class="form-group">
+              <label for="bio">About you</label>
+              <textarea
+                id="bio"
+                maxlength="500"
+                placeholder="Tell the community about yourself, your photography journey and what inspires you..."></textarea>
+              <p class="field-note">
+                Maximum 500 characters.
+                <span id="bioCount">0 / 500</span>
+              </p>
+            </div>
+
+            <div class="form-group">
+              <label>Photography interests</label>
+
+              <div class="interests">
+
+                <label class="interest-option">
+                  <input type="checkbox" value="Landscape">
+                  Landscape
+                </label>
+
+                <label class="interest-option">
+                  <input type="checkbox" value="Portrait">
+                  Portrait
+                </label>
+
+                <label class="interest-option">
+                  <input type="checkbox" value="Street">
+                  Street
+                </label>
+
+                <label class="interest-option">
+                  <input type="checkbox" value="Wildlife">
+                  Wildlife
+                </label>
+
+                <label class="interest-option">
+                  <input type="checkbox" value="Architecture">
+                  Architecture
+                </label>
+
+                <label class="interest-option">
+                  <input type="checkbox" value="Macro">
+                  Macro
+                </label>
+
+                <label class="interest-option">
+                  <input type="checkbox" value="Travel">
+                  Travel
+                </label>
+
+                <label class="interest-option">
+                  <input type="checkbox" value="Documentary">
+                  Documentary
+                </label>
+
+                <label class="interest-option">
+                  <input type="checkbox" value="Minimalism">
+                  Minimalism
+                </label>
+
+                <label class="interest-option">
+                  <input type="checkbox" value="Fine Art">
+                  Fine Art
+                </label>
+
+                <label class="interest-option">
+                  <input type="checkbox" value="Astrophotography">
+                  Astrophotography
+                </label>
+
+                <label class="interest-option">
+                  <input type="checkbox" value="Other">
+                  Other
+                </label>
+
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button
+                type="submit"
+                class="save-button"
+                id="saveButton">
+                Save profile changes →
+              </button>
+
+              <a href="dashboard.html" class="cancel-link">
+                Cancel and return
+              </a>
+            </div>
+
+            <div
+              class="status"
+              id="statusMessage"
+              role="status"
+              aria-live="polite">
+            </div>
+
+          </form>
+
+        </section>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer>
+    © <span id="year"></span> Lens Circle. The world, through your lens.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    /*
+      SUPABASE CONFIGURATION
+
+      Use your project's URL and publishable/anon key.
+      Never place the service_role key in frontend code.
+    */
+
+    const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
+    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY";
+
+    const isConfigured =
+      SUPABASE_URL.startsWith("https://") &&
+      !SUPABASE_URL.includes("YOUR_SUPABASE") &&
+      SUPABASE_ANON_KEY.length > 20 &&
+      !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE");
+
+    let supabaseClient = null;
+    let currentUser = null;
+    let previewObjectUrl = null;
+
+    if (isConfigured && window.supabase) {
+      supabaseClient = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+      );
+    }
+
+    const loading = document.getElementById("loading");
+    const profileContent = document.getElementById("profileContent");
+    const errorCard = document.getElementById("errorCard");
+    const errorText = document.getElementById("errorText");
+
+    const fullNameInput = document.getElementById("fullName");
+    const usernameInput = document.getElementById("username");
+    const emailInput = document.getElementById("email");
+    const locationInput = document.getElementById("location");
+    const websiteInput = document.getElementById("website");
+    const bioInput = document.getElementById("bio");
+    const avatarPreview = document.getElementById("avatarPreview");
+
+    const form = document.getElementById("profileForm");
+    const saveButton = document.getElementById("saveButton");
+    const statusMessage = document.getElementById("statusMessage");
+
+    function showError(message) {
+      loading.hidden = true;
+      profileContent.hidden = true;
+      errorCard.hidden = false;
+      errorText.textContent = message;
+    }
+
+    function showStatus(message, type) {
+      statusMessage.textContent = message;
+      statusMessage.className = "status " + type;
+    }
+
+    function updatePreview() {
+      const name = fullNameInput.value.trim() || "Member";
+      const username = usernameInput.value.trim() || "username";
+
+      document.getElementById("previewName").textContent = name;
+      document.getElementById("previewUsername").textContent =
+        "@" + username;
+
+      if (!previewObjectUrl) {
+        avatarPreview.textContent = name.charAt(0).toUpperCase();
+      }
+    }
+
+    function updateBioCount() {
+      document.getElementById("bioCount").textContent =
+        bioInput.value.length + " / 500";
+    }
+
+    function getSelectedInterests() {
+      return Array.from(
+        document.querySelectorAll(".interest-option input:checked")
+      ).map(input => input.value);
+    }
+
+    function setSelectedInterests(interests) {
+      const selected = Array.isArray(interests) ? interests : [];
+
+      document.querySelectorAll(".interest-option input").forEach(input => {
+        input.checked = selected.includes(input.value);
+      });
+    }
+
+    function populateProfile(user) {
+      const metadata = user.user_metadata || {};
+
+      fullNameInput.value = metadata.full_name || "";
+      usernameInput.value = metadata.username || "";
+      emailInput.value = user.email || "";
+
+      locationInput.value = metadata.location || "";
+      websiteInput.value = metadata.website || "";
+      bioInput.value = metadata.bio || "";
+
+      setSelectedInterests(metadata.photography_interests || []);
+
+      if (metadata.avatar_url) {
+        avatarPreview.innerHTML = "";
+
+        const image = document.createElement("img");
+        image.src = metadata.avatar_url;
+        image.alt = "Profile photo";
+
+        avatarPreview.appendChild(image);
+      }
+
+      updatePreview();
+      updateBioCount();
+
+      loading.hidden = true;
+      profileContent.hidden = false;
+    }
+
+    async function initializeProfile() {
+      if (!supabaseClient) {
+        showError(
+          "Supabase is not configured. Add your project URL and publishable/anon key to this file."
+        );
+        return;
+      }
+
+      try {
+        const { data, error } =
+          await supabaseClient.auth.getSession();
+
+        if (error) throw error;
+
+        if (!data.session) {
+          window.location.replace("login.html");
+          return;
+        }
+
+        currentUser = data.session.user;
+        populateProfile(currentUser);
+
+      } catch (error) {
+        showError(
+          error.message || "Unable to load your member profile."
+        );
+      }
+    }
+
+    // Update live preview
+    fullNameInput.addEventListener("input", updatePreview);
+    usernameInput.addEventListener("input", () => {
+      usernameInput.value = usernameInput.value
+        .replace(/[^A-Za-z0-9_]/g, "")
+        .toLowerCase();
+
+      updatePreview();
+    });
+
+    bioInput.addEventListener("input", updateBioCount);
+
+    // Local-only profile photo preview
+    document.getElementById("profilePhoto").addEventListener(
+      "change",
+      event => {
+        const file = event.target.files[0];
+
+        if (!file) return;
+
+        const allowedTypes = [
+          "image/jpeg",
+          "image/png",
+          "image/webp"
+        ];
+
+        if (!allowedTypes.includes(file.type)) {
+          showStatus(
+            "Please select a JPG, PNG or WebP image.",
+            "error"
+          );
+          event.target.value = "";
+          return;
+        }
+
+        if (file.size > 2 * 1024 * 1024) {
+          showStatus(
+            "Your image must be smaller than 2 MB.",
+            "error"
+          );
+          event.target.value = "";
+          return;
+        }
+
+        if (previewObjectUrl) {
+          URL.revokeObjectURL(previewObjectUrl);
+        }
+
+        previewObjectUrl = URL.createObjectURL(file);
+
+        avatarPreview.innerHTML = "";
+
+        const image = document.createElement("img");
+        image.src = previewObjectUrl;
+        image.alt = "Selected profile photo preview";
+
+        avatarPreview.appendChild(image);
+
+        showStatus(
+          "Photo preview updated. Permanent photo upload will be enabled after Storage integration.",
+          "info"
+        );
+      }
+    );
+
+    // Remove local preview
+    document.getElementById("removePhoto").addEventListener(
+      "click",
+      () => {
+        if (previewObjectUrl) {
+          URL.revokeObjectURL(previewObjectUrl);
+          previewObjectUrl = null;
+        }
+
+        document.getElementById("profilePhoto").value = "";
+
+        const name = fullNameInput.value.trim() || "Member";
+        avatarPreview.textContent = name.charAt(0).toUpperCase();
+
+        showStatus(
+          "Local photo preview removed. No stored profile photo was changed.",
+          "info"
+        );
+      }
+    );
+
+    // Save profile metadata
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+
+      if (!supabaseClient || !currentUser) {
+        showStatus(
+          "Your account session is unavailable. Please sign in again.",
+          "error"
+        );
+        return;
+      }
+
+      const fullName = fullNameInput.value.trim();
+      const username = usernameInput.value.trim().toLowerCase();
+      const location = locationInput.value.trim();
+      const website = websiteInput.value.trim();
+      const bio = bioInput.value.trim();
+      const interests = getSelectedInterests();
+
+      if (fullName.length < 2) {
+        showStatus("Please enter a valid display name.", "error");
+        return;
+      }
+
+      if (!/^[a-z0-9_]{3,24}$/.test(username)) {
+        showStatus(
+          "Username must contain 3–24 letters, numbers or underscores.",
+          "error"
+        );
+        return;
+      }
+
+      if (website && !/^https?:\/\/.+/i.test(website)) {
+        showStatus(
+          "Enter a valid website URL beginning with https:// or http://.",
+          "error"
+        );
+        return;
+      }
+
+      saveButton.disabled = true;
+      saveButton.textContent = "Saving changes...";
+
+      try {
+        const { data, error } =
+          await supabaseClient.auth.updateUser({
+            data: {
+              full_name: fullName,
+              username: username,
+              location: location,
+              website: website,
+              bio: bio,
+              photography_interests: interests
+            }
+          });
+
+        if (error) throw error;
+
+        currentUser = data.user || currentUser;
+
+        populateProfile(currentUser);
+
+        showStatus(
+          "Your profile information has been saved to your account.",
+          "success"
+        );
+
+      } catch (error) {
+        showStatus(
+          error.message || "Unable to save your profile.",
+          "error"
+        );
+
+      } finally {
+        saveButton.disabled = false;
+        saveButton.textContent = "Save profile changes →";
+      }
+    });
+
+    // Keep the profile page protected
+    if (supabaseClient) {
+      supabaseClient.auth.onAuthStateChange((event, session) => {
+        if (event === "SIGNED_OUT" || !session) {
+          window.location.replace("login.html");
+        }
+      });
+    }
+
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+
+    initializeProfile();
+  </script>
+
+</body>
+</html>

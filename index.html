@@ -1,0 +1,2123 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f7f6f2">
+
+  <title>Lens Circle | A Global Photography Community</title>
+
+  <meta name="description" content="Lens Circle is a global photography community for discovering exceptional photography, participating in creative challenges, exhibiting work and connecting with photographers.">
+  <meta name="author" content="Lens Circle">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Lens Circle | A Global Photography Community">
+  <meta property="og:description" content="Where every frame finds its people.">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1600&q=85">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://images.unsplash.com">
+
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --paper: #f7f6f2;
+      --paper-dark: #eeece5;
+      --white: #ffffff;
+      --ink: #252722;
+      --ink-soft: #494b44;
+      --muted: #85867e;
+      --line: #e3e1d9;
+      --accent: #a85e42;
+      --accent-light: #c48a70;
+      --dark: #22241f;
+
+      --serif: "Playfair Display", Georgia, serif;
+      --sans: "DM Sans", Arial, sans-serif;
+
+      --container: 1380px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 100px;
+    }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    body.menu-open {
+      overflow: hidden;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      object-fit: cover;
+    }
+
+    button {
+      font-family: inherit;
+    }
+
+    .container {
+      width: min(var(--container), calc(100% - 100px));
+      margin-inline: auto;
+    }
+
+    .serif {
+      font-family: var(--serif);
+      font-weight: 400;
+    }
+
+    .eyebrow {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2.4px;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .section {
+      padding: 115px 0;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 30px;
+      margin-bottom: 48px;
+    }
+
+    .section-heading {
+      font-family: var(--serif);
+      font-size: clamp(39px, 4.3vw, 59px);
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -1.3px;
+      margin-top: 12px;
+    }
+
+    .section-description {
+      max-width: 370px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.9;
+    }
+
+    .text-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 700;
+      padding-bottom: 7px;
+      border-bottom: 1px solid var(--accent);
+      transition: color .25s;
+      white-space: nowrap;
+    }
+
+    .text-link span {
+      color: var(--accent);
+      font-size: 16px;
+      transition: transform .25s;
+    }
+
+    .text-link:hover {
+      color: var(--accent);
+    }
+
+    .text-link:hover span {
+      transform: translateX(5px);
+    }
+
+    .button {
+      display: inline-flex;
+      min-height: 49px;
+      padding: 0 24px;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .7px;
+      text-transform: uppercase;
+      border: 1px solid transparent;
+      transition: all .25s;
+      cursor: pointer;
+    }
+
+    .button-dark {
+      background: var(--ink);
+      color: white;
+    }
+
+    .button-dark:hover {
+      background: var(--accent);
+    }
+
+    .button-light {
+      color: white;
+      border-color: rgba(255,255,255,.65);
+    }
+
+    .button-light:hover {
+      background: white;
+      color: var(--ink);
+    }
+
+    .button-accent {
+      background: var(--accent);
+      color: white;
+    }
+
+    .button-accent:hover {
+      background: #874832;
+    }
+
+    .button-white {
+      background: white;
+      color: var(--ink);
+    }
+
+    .button-white:hover {
+      background: var(--ink);
+      color: white;
+    }
+
+    /* ANNOUNCEMENT */
+
+    .announcement {
+      min-height: 33px;
+      background: var(--dark);
+      color: #d8d7cf;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 6px 18px;
+      font-size: 9px;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+    }
+
+    .announcement span {
+      color: #d8a18a;
+      margin-left: 6px;
+    }
+
+    /* HEADER */
+
+    .header {
+      background: rgba(247,246,242,.97);
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(12px);
+    }
+
+    .navigation {
+      min-height: 91px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 30px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .brand-symbol {
+      position: relative;
+      width: 38px;
+      height: 38px;
+      border: 1px solid var(--accent);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+    }
+
+    .brand-symbol::before {
+      content: "";
+      width: 15px;
+      height: 15px;
+      border: 1px solid var(--accent);
+      border-radius: 50%;
+    }
+
+    .brand-symbol::after {
+      content: "";
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+
+    .brand-name {
+      display: block;
+      font-family: var(--serif);
+      color: var(--ink);
+      font-size: 23px;
+      line-height: 1.2;
+      letter-spacing: -.6px;
+    }
+
+    .brand-tagline {
+      display: block;
+      color: var(--muted);
+      text-transform: uppercase;
+      font-size: 7px;
+      letter-spacing: 1.65px;
+      margin-top: 3px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: clamp(17px, 2.4vw, 33px);
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 10px;
+      color: var(--ink-soft);
+      font-weight: 600;
+      transition: color .2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-shrink: 0;
+    }
+
+    .login-link {
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .nav-join {
+      min-height: 42px;
+      padding: 0 17px;
+      font-size: 9px;
+    }
+
+    .menu-toggle {
+      display: none;
+      border: none;
+      color: var(--ink);
+      background: transparent;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    /* HERO */
+
+    .hero {
+      padding: 28px 0 0;
+    }
+
+    .hero-frame {
+      position: relative;
+      min-height: 700px;
+      height: min(760px, 77vh);
+      background: #343831;
+      overflow: hidden;
+      color: white;
+    }
+
+    .hero-background {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 52%;
+    }
+
+    .hero-frame::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(
+          90deg,
+          rgba(20,22,19,.80) 0%,
+          rgba(20,22,19,.53) 43%,
+          rgba(20,22,19,.08) 100%
+        ),
+        linear-gradient(
+          0deg,
+          rgba(20,22,19,.36),
+          transparent 32%
+        );
+    }
+
+    .hero-content {
+      position: absolute;
+      z-index: 2;
+      left: 9%;
+      top: 47%;
+      transform: translateY(-50%);
+      width: min(680px, 76%);
+    }
+
+    .hero-kicker {
+      color: #e4b49f;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(68px, 8vw, 111px);
+      line-height: 1.02;
+      font-weight: 400;
+      letter-spacing: -3px;
+      margin: 25px 0;
+    }
+
+    .hero-title em {
+      color: #d8aa94;
+      font-weight: 400;
+    }
+
+    .hero-copy {
+      max-width: 450px;
+      font-size: 12px;
+      line-height: 2;
+      color: rgba(255,255,255,.82);
+      margin-bottom: 33px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 13px;
+    }
+
+    .hero-bottom {
+      position: absolute;
+      z-index: 2;
+      bottom: 29px;
+      left: 9%;
+      right: 9%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      border-top: 1px solid rgba(255,255,255,.25);
+      padding-top: 17px;
+    }
+
+    .hero-bottom p {
+      font-size: 8px;
+      letter-spacing: 1.7px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.7);
+    }
+
+    /* BRAND STATEMENT */
+
+    .statement {
+      padding: 42px 0 45px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .statement-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 35px;
+    }
+
+    .statement-text {
+      font-family: var(--serif);
+      font-size: clamp(20px, 2.6vw, 29px);
+      color: var(--ink);
+    }
+
+    .statement-text em {
+      color: var(--accent);
+    }
+
+    .statement-side {
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-size: 8px;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* DISCOVER */
+
+    .discover-grid {
+      display: grid;
+      grid-template-columns: 1.2fr .82fr .82fr;
+      gap: 22px;
+    }
+
+    .image-card {
+      min-width: 0;
+    }
+
+    .image-card-visual {
+      position: relative;
+      height: 390px;
+      overflow: hidden;
+      background: var(--paper-dark);
+    }
+
+    .image-card:first-child .image-card-visual {
+      height: 460px;
+    }
+
+    .image-card-visual img {
+      width: 100%;
+      height: 100%;
+      transition: transform .7s cubic-bezier(.2,.7,.2,1);
+    }
+
+    .image-card:hover .image-card-visual img {
+      transform: scale(1.045);
+    }
+
+    .image-card-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 24px;
+      color: white;
+      background: linear-gradient(
+        transparent 52%,
+        rgba(0,0,0,.63)
+      );
+    }
+
+    .image-card-overlay span {
+      font-size: 8px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #ebc0a9;
+    }
+
+    .image-card-overlay h3 {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 400;
+      margin-top: 5px;
+    }
+
+    .image-card-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 15px 1px 0;
+      font-size: 9px;
+      color: var(--muted);
+    }
+
+    .image-card-meta strong {
+      font-weight: 600;
+      color: var(--ink-soft);
+    }
+
+    /* MANIFESTO */
+
+    .manifesto {
+      background: var(--dark);
+      color: white;
+      padding: 105px 0;
+    }
+
+    .manifesto-inner {
+      display: grid;
+      grid-template-columns: .8fr 1.3fr;
+      align-items: start;
+      gap: 90px;
+    }
+
+    .manifesto .eyebrow {
+      color: #dba18a;
+    }
+
+    .manifesto-label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: #a5a69b;
+      text-transform: uppercase;
+    }
+
+    .manifesto h2 {
+      font-family: var(--serif);
+      font-size: clamp(40px, 5vw, 68px);
+      font-weight: 400;
+      line-height: 1.18;
+      margin: 20px 0;
+    }
+
+    .manifesto h2 em {
+      color: #d8a58d;
+      font-weight: 400;
+    }
+
+    .manifesto-copy {
+      font-size: 12px;
+      line-height: 2;
+      color: #b5b7ac;
+      max-width: 600px;
+      margin-bottom: 25px;
+    }
+
+    /* ACTIVITIES */
+
+    .activity-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .activity-card {
+      padding: 37px 31px 38px 0;
+      position: relative;
+    }
+
+    .activity-card + .activity-card {
+      border-left: 1px solid var(--line);
+      padding-left: 31px;
+    }
+
+    .activity-number {
+      font-family: var(--serif);
+      font-size: 31px;
+      color: var(--accent);
+    }
+
+    .activity-card h3 {
+      font-family: var(--serif);
+      font-size: 27px;
+      font-weight: 400;
+      margin: 20px 0 12px;
+    }
+
+    .activity-card p {
+      font-size: 11px;
+      line-height: 1.9;
+      color: var(--muted);
+      min-height: 82px;
+      margin-bottom: 25px;
+    }
+
+    /* DAILY FEATURE */
+
+    .daily-feature {
+      display: grid;
+      grid-template-columns: 1.13fr .87fr;
+      background: var(--paper-dark);
+    }
+
+    .daily-image {
+      min-height: 510px;
+    }
+
+    .daily-image img {
+      height: 100%;
+      min-height: 510px;
+    }
+
+    .daily-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: clamp(35px, 6vw, 80px);
+    }
+
+    .daily-content h2 {
+      font-family: var(--serif);
+      font-size: clamp(39px, 4.5vw, 57px);
+      font-weight: 400;
+      line-height: 1.18;
+      margin: 19px 0;
+    }
+
+    .daily-content p {
+      font-size: 12px;
+      line-height: 1.95;
+      color: var(--muted);
+      max-width: 430px;
+      margin-bottom: 29px;
+    }
+
+    /* COMPETITIONS */
+
+    .competition-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+
+    .competition-card {
+      position: relative;
+      height: 420px;
+      overflow: hidden;
+      background: #343831;
+      color: white;
+    }
+
+    .competition-card > img {
+      height: 100%;
+      transition: transform .7s;
+    }
+
+    .competition-card:hover > img {
+      transform: scale(1.05);
+    }
+
+    .competition-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        transparent 25%,
+        rgba(0,0,0,.78)
+      );
+    }
+
+    .competition-content {
+      position: absolute;
+      z-index: 2;
+      bottom: 30px;
+      left: 31px;
+      right: 31px;
+    }
+
+    .competition-content span {
+      font-size: 8px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #edbaa0;
+    }
+
+    .competition-content h3 {
+      font-family: var(--serif);
+      font-size: 36px;
+      font-weight: 400;
+      margin: 8px 0;
+    }
+
+    .competition-content p {
+      font-size: 10px;
+      color: rgba(255,255,255,.75);
+      margin-bottom: 19px;
+    }
+
+    .competition-content .text-link {
+      color: white;
+    }
+
+    /* EXHIBITION */
+
+    .exhibition {
+      background: #eeece5;
+    }
+
+    .exhibition-inner {
+      display: grid;
+      grid-template-columns: .85fr 1.15fr;
+      gap: 75px;
+      align-items: center;
+    }
+
+    .exhibition-content h2 {
+      font-family: var(--serif);
+      font-size: clamp(42px, 5vw, 67px);
+      font-weight: 400;
+      line-height: 1.12;
+      margin: 18px 0;
+    }
+
+    .exhibition-content p {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.95;
+      margin-bottom: 28px;
+      max-width: 390px;
+    }
+
+    .exhibition-image {
+      height: 505px;
+      position: relative;
+    }
+
+    .exhibition-image img {
+      height: 100%;
+    }
+
+    .exhibition-caption {
+      position: absolute;
+      left: -20px;
+      bottom: 25px;
+      background: var(--paper);
+      padding: 14px 20px;
+      font-size: 8px;
+      letter-spacing: 1.6px;
+      text-transform: uppercase;
+    }
+
+    /* CATEGORIES */
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .category-card {
+      position: relative;
+      height: 350px;
+      overflow: hidden;
+      background: #454740;
+    }
+
+    .category-card img {
+      height: 100%;
+      transition: transform .7s;
+    }
+
+    .category-card:hover img {
+      transform: scale(1.055);
+    }
+
+    .category-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        transparent 45%,
+        rgba(0,0,0,.75)
+      );
+    }
+
+    .category-content {
+      position: absolute;
+      bottom: 20px;
+      left: 19px;
+      z-index: 2;
+      color: white;
+    }
+
+    .category-content h3 {
+      font-family: var(--serif);
+      font-size: 24px;
+      font-weight: 400;
+    }
+
+    .category-content span {
+      font-size: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #eac5b0;
+    }
+
+    /* JOURNAL */
+
+    .journal {
+      background: var(--paper);
+      border-top: 1px solid var(--line);
+    }
+
+    .journal-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+    }
+
+    .journal-image {
+      height: 235px;
+      overflow: hidden;
+      margin-bottom: 20px;
+      background: var(--paper-dark);
+    }
+
+    .journal-image img {
+      height: 100%;
+      transition: transform .6s;
+    }
+
+    .journal-card:hover img {
+      transform: scale(1.045);
+    }
+
+    .journal-category {
+      color: var(--accent);
+      font-size: 8px;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .journal-card h3 {
+      font-family: var(--serif);
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.35;
+      margin: 11px 0;
+    }
+
+    .journal-card p {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.9;
+      margin-bottom: 15px;
+    }
+
+    /* JOIN */
+
+    .join {
+      position: relative;
+      overflow: hidden;
+      padding: 105px 0;
+      background: var(--accent);
+      color: white;
+      text-align: center;
+    }
+
+    .join .eyebrow {
+      color: #f3d5c5;
+    }
+
+    .join h2 {
+      font-family: var(--serif);
+      font-size: clamp(42px, 5.4vw, 70px);
+      font-weight: 400;
+      line-height: 1.15;
+      margin: 17px 0;
+    }
+
+    .join p {
+      max-width: 490px;
+      font-size: 11px;
+      line-height: 2;
+      color: rgba(255,255,255,.85);
+      margin: 0 auto 29px;
+    }
+
+    /* FOOTER */
+
+    .footer {
+      background: #22241f;
+      color: white;
+      padding: 76px 0 25px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 48px;
+      padding-bottom: 55px;
+    }
+
+    .footer .brand-name {
+      color: white;
+    }
+
+    .footer-description {
+      max-width: 300px;
+      font-size: 10px;
+      line-height: 2;
+      color: #a7a99e;
+      margin-top: 20px;
+    }
+
+    .footer-column h4 {
+      font-size: 9px;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: #d5a28b;
+      margin-bottom: 22px;
+    }
+
+    .footer-column ul {
+      list-style: none;
+    }
+
+    .footer-column li {
+      margin-bottom: 13px;
+    }
+
+    .footer-column a {
+      color: #b5b6ad;
+      font-size: 10px;
+      transition: color .2s;
+    }
+
+    .footer-column a:hover {
+      color: white;
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      padding-top: 23px;
+      border-top: 1px solid #43453e;
+      color: #898b81;
+      font-size: 9px;
+    }
+
+    .footer-socials {
+      display: flex;
+      gap: 21px;
+    }
+
+    /* ACCESSIBILITY */
+
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: 15px;
+      background: white;
+      color: black;
+      padding: 12px;
+      z-index: 2000;
+    }
+
+    .skip-link:focus {
+      top: 10px;
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+    }
+
+    /* RESPONSIVE */
+
+    @media(max-width: 1100px) {
+      .container {
+        width: calc(100% - 64px);
+      }
+
+      .nav-links {
+        gap: 16px;
+      }
+
+      .nav-links a {
+        font-size: 9px;
+      }
+
+      .discover-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .image-card:first-child .image-card-visual {
+        height: 390px;
+      }
+
+      .category-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .category-card {
+        height: 330px;
+      }
+
+      .footer-grid {
+        gap: 30px;
+      }
+    }
+
+    @media(max-width: 800px) {
+      .container {
+        width: calc(100% - 42px);
+      }
+
+      .section {
+        padding: 78px 0;
+      }
+
+      .navigation {
+        min-height: 73px;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .nav-links {
+        position: fixed;
+        inset: 106px 0 0;
+        background: var(--paper);
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding: 28px 28px 50px;
+        overflow-y: auto;
+        border-top: 1px solid var(--line);
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .nav-links li {
+        border-bottom: 1px solid var(--line);
+      }
+
+      .nav-links a {
+        display: block;
+        padding: 16px 0;
+        font-size: 13px;
+      }
+
+      .nav-actions {
+        gap: 12px;
+      }
+
+      .login-link {
+        display: none;
+      }
+
+      .nav-join {
+        min-height: 38px;
+        padding: 0 13px;
+        font-size: 8px;
+      }
+
+      .hero {
+        padding-top: 15px;
+      }
+
+      .hero-frame {
+        min-height: 610px;
+        height: 75vh;
+      }
+
+      .hero-content {
+        left: 7%;
+        width: 86%;
+      }
+
+      .hero-title {
+        font-size: clamp(58px, 10vw, 83px);
+      }
+
+      .hero-bottom {
+        left: 7%;
+        right: 7%;
+      }
+
+      .statement-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+
+      .section-description {
+        max-width: 520px;
+      }
+
+      .manifesto-inner {
+        grid-template-columns: 1fr;
+        gap: 25px;
+      }
+
+      .activity-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .activity-card,
+      .activity-card + .activity-card {
+        padding: 29px 0;
+        border-left: 0;
+      }
+
+      .activity-card + .activity-card {
+        border-top: 1px solid var(--line);
+      }
+
+      .activity-card p {
+        min-height: auto;
+      }
+
+      .daily-feature {
+        grid-template-columns: 1fr;
+      }
+
+      .daily-image,
+      .daily-image img {
+        min-height: 370px;
+        height: 370px;
+      }
+
+      .daily-content {
+        padding: 39px 30px;
+      }
+
+      .exhibition-inner {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+
+      .exhibition-image {
+        height: 410px;
+      }
+
+      .journal-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .footer-grid > div:first-child {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media(max-width: 520px) {
+      .container {
+        width: calc(100% - 34px);
+      }
+
+      .announcement {
+        font-size: 7px;
+        letter-spacing: .9px;
+      }
+
+      .brand-name {
+        font-size: 20px;
+      }
+
+      .brand-tagline {
+        font-size: 6px;
+      }
+
+      .brand-symbol {
+        height: 33px;
+        width: 33px;
+      }
+
+      .hero-frame {
+        min-height: 590px;
+      }
+
+      .hero-title {
+        font-size: 58px;
+        letter-spacing: -1.5px;
+      }
+
+      .hero-copy {
+        font-size: 11px;
+      }
+
+      .hero-buttons {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .hero-bottom p {
+        font-size: 7px;
+        letter-spacing: 1px;
+      }
+
+      .discover-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .image-card-visual,
+      .image-card:first-child .image-card-visual {
+        height: 370px;
+      }
+
+      .competition-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .competition-card {
+        height: 335px;
+      }
+
+      .competition-content h3 {
+        font-size: 29px;
+      }
+
+      .category-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .category-card {
+        height: 245px;
+      }
+
+      .category-content h3 {
+        font-size: 19px;
+      }
+
+      .journal-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .journal-image {
+        height: 235px;
+      }
+
+      .exhibition-image {
+        height: 330px;
+      }
+
+      .exhibition-caption {
+        left: 10px;
+      }
+
+      .footer-grid {
+        gap: 35px 18px;
+      }
+
+      .footer-column a {
+        font-size: 9px;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media(prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *, *::before, *::after {
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <a href="#main" class="skip-link">Skip to main content</a>
+
+  <!-- ANNOUNCEMENT -->
+
+  <div class="announcement">
+    A global space for photography and creative expression.
+    <span>Discover Lens Circle</span>
+  </div>
+
+  <!-- HEADER -->
+
+  <header class="header">
+    <div class="container navigation">
+
+      <a href="index.html" class="brand" aria-label="Lens Circle home">
+        <span class="brand-symbol" aria-hidden="true"></span>
+        <span>
+          <span class="brand-name">Lens Circle</span>
+          <span class="brand-tagline">A Global Photography Community</span>
+        </span>
+      </a>
+
+      <nav aria-label="Main navigation">
+        <ul class="nav-links" id="navLinks">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="discover.html">Discover</a></li>
+          <li><a href="#activities">Activities</a></li>
+          <li><a href="competitions.html">Competitions</a></li>
+          <li><a href="exhibitions.html">Exhibitions</a></li>
+          <li><a href="creators.html">Creators</a></li>
+          <li><a href="stories.html">Journal</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="member/login.html" class="login-link">Sign in</a>
+        <a href="member/register.html" class="button button-dark nav-join">
+          Join the community
+        </a>
+
+        <button
+          class="menu-toggle"
+          id="menuToggle"
+          type="button"
+          aria-label="Open navigation"
+          aria-expanded="false"
+          aria-controls="navLinks"
+        >☰</button>
+      </div>
+
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- HERO -->
+
+    <section class="hero">
+      <div class="container">
+
+        <div class="hero-frame">
+
+          <img
+            class="hero-background"
+            src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=2200&q=90"
+            alt="A vast mountain landscape reflecting in a quiet lake"
+            fetchpriority="high"
+          >
+
+          <div class="hero-content">
+            <div class="hero-kicker">
+              An independent photography community
+            </div>
+
+            <h1 class="hero-title">
+              The world,<br>
+              through <em>your lens.</em>
+            </h1>
+
+            <p class="hero-copy">
+              A place for photographers to discover inspiring work,
+              share their perspectives, explore creative opportunities
+              and connect through a common passion for photography.
+            </p>
+
+            <div class="hero-buttons">
+              <a href="discover.html" class="button button-accent">
+                Explore photography <span>→</span>
+              </a>
+
+              <a href="member/register.html" class="button button-light">
+                Become a member
+              </a>
+            </div>
+          </div>
+
+          <div class="hero-bottom">
+            <p>Photography · Creativity · Community</p>
+            <p>Open to photographers everywhere</p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- BRAND STATEMENT -->
+
+    <section class="statement">
+      <div class="container statement-inner">
+        <p class="statement-text">
+          Different perspectives. One shared <em>passion.</em>
+        </p>
+
+        <p class="statement-side">
+          A place to see, share and belong.
+        </p>
+      </div>
+    </section>
+
+    <!-- DISCOVER -->
+
+    <section class="section" id="discover">
+      <div class="container">
+
+        <div class="section-header">
+          <div>
+            <div class="eyebrow">Explore visual perspectives</div>
+            <h2 class="section-heading">
+              Discover the art<br>of seeing.
+            </h2>
+          </div>
+
+          <div>
+            <p class="section-description">
+              From quiet landscapes to extraordinary everyday moments,
+              explore the many ways photographers interpret the world.
+            </p>
+            <br>
+            <a href="discover.html" class="text-link">
+              Explore the gallery <span>→</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="discover-grid">
+
+          <article class="image-card">
+            <a href="discover.html">
+              <div class="image-card-visual">
+                <img
+                  src="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=1100&q=85"
+                  alt="Sunrise illuminating a peaceful landscape"
+                  loading="lazy"
+                >
+
+                <div class="image-card-overlay">
+                  <span>01 / Landscapes</span>
+                  <h3>Worlds of wonder.</h3>
+                </div>
+              </div>
+            </a>
+
+            <div class="image-card-meta">
+              <strong>Nature & Landscape</strong>
+              <span>Explore</span>
+            </div>
+          </article>
+
+          <article class="image-card">
+            <a href="discover.html">
+              <div class="image-card-visual">
+                <img
+                  src="https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=900&q=85"
+                  alt="Star-filled night sky"
+                  loading="lazy"
+                >
+
+                <div class="image-card-overlay">
+                  <span>02 / Night photography</span>
+                  <h3>Beyond the ordinary.</h3>
+                </div>
+              </div>
+            </a>
+
+            <div class="image-card-meta">
+              <strong>Night & Astrophotography</strong>
+              <span>Explore</span>
+            </div>
+          </article>
+
+          <article class="image-card">
+            <a href="discover.html">
+              <div class="image-card-visual">
+                <img
+                  src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=900&q=85"
+                  alt="City architecture and urban life"
+                  loading="lazy"
+                >
+
+                <div class="image-card-overlay">
+                  <span>03 / Urban photography</span>
+                  <h3>Stories in the streets.</h3>
+                </div>
+              </div>
+            </a>
+
+            <div class="image-card-meta">
+              <strong>Street & Architecture</strong>
+              <span>Explore</span>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- MANIFESTO -->
+
+    <section class="manifesto">
+      <div class="container manifesto-inner">
+
+        <div>
+          <div class="eyebrow">Our philosophy</div>
+          <p class="manifesto-label">More than an image.</p>
+        </div>
+
+        <div>
+          <h2>
+            Photography is not just about
+            capturing a moment.
+            It is about <em>how you see it.</em>
+          </h2>
+
+          <p class="manifesto-copy">
+            We believe every photographer has a perspective worth
+            sharing. Lens Circle brings together different experiences,
+            creative voices and ways of seeing through a welcoming
+            photography community.
+          </p>
+
+          <a href="about.html" class="text-link" style="color:white">
+            Discover our story <span>→</span>
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- COMMUNITY ACTIVITIES -->
+
+    <section class="section" id="activities">
+      <div class="container">
+
+        <div class="section-header">
+          <div>
+            <div class="eyebrow">Participate and create</div>
+            <h2 class="section-heading">
+              Make photography<br>an experience.
+            </h2>
+          </div>
+
+          <p class="section-description">
+            Find opportunities to share your work, develop your
+            creativity and take part in a community that celebrates
+            photography.
+          </p>
+        </div>
+
+        <div class="activity-grid">
+
+          <article class="activity-card">
+            <div class="activity-number">01</div>
+            <h3>Photo of the Day</h3>
+
+            <p>
+              A daily opportunity to share one photograph,
+              explore different perspectives and participate
+              in our signature community activity.
+            </p>
+
+            <a href="photo-of-the-day.html" class="text-link">
+              Discover the activity <span>→</span>
+            </a>
+          </article>
+
+          <article class="activity-card">
+            <div class="activity-number">02</div>
+            <h3>Creative Challenges</h3>
+
+            <p>
+              Explore fresh themes and creative prompts.
+              Experiment with unfamiliar techniques and
+              approach photography from new perspectives.
+            </p>
+
+            <a href="activities.html" class="text-link">
+              Explore challenges <span>→</span>
+            </a>
+          </article>
+
+          <article class="activity-card">
+            <div class="activity-number">03</div>
+            <h3>Competitions</h3>
+
+            <p>
+              Participate in organised photography competitions,
+              discover new opportunities and receive recognition
+              for your creative work.
+            </p>
+
+            <a href="competitions.html" class="text-link">
+              Explore competitions <span>→</span>
+            </a>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- PHOTO OF THE DAY -->
+
+    <section class="section" style="padding-top:0">
+      <div class="container">
+
+        <div class="daily-feature">
+
+          <div class="daily-image">
+            <img
+              src="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1300&q=85"
+              alt="Expansive mountain scenery in beautiful natural light"
+              loading="lazy"
+            >
+          </div>
+
+          <div class="daily-content">
+            <div class="eyebrow">A Lens Circle community activity</div>
+
+            <h2>
+              One frame.<br>
+              A thousand<br>
+              perspectives.
+            </h2>
+
+            <p>
+              Every photograph tells a story. Share yours through
+              Photo of the Day, discover other submissions and
+              become part of a daily creative tradition.
+            </p>
+
+            <a href="photo-of-the-day.html" class="button button-dark">
+              Explore Photo of the Day <span>→</span>
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- COMPETITIONS -->
+
+    <section class="section" style="padding-top:10px">
+      <div class="container">
+
+        <div class="section-header">
+          <div>
+            <div class="eyebrow">Creative opportunities</div>
+            <h2 class="section-heading">
+              Every challenge<br>begins with a frame.
+            </h2>
+          </div>
+
+          <a href="competitions.html" class="text-link">
+            All competitions <span>→</span>
+          </a>
+        </div>
+
+        <div class="competition-grid">
+
+          <article class="competition-card">
+            <img
+              src="https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&fit=crop&w=1200&q=85"
+              alt="Wild animals in a natural landscape"
+              loading="lazy"
+            >
+
+            <div class="competition-content">
+              <span>Photography theme</span>
+              <h3>Wild & Wonderful</h3>
+              <p>Explore the beauty, diversity and stories of wildlife.</p>
+
+              <a href="competitions.html" class="text-link">
+                Explore this theme <span>→</span>
+              </a>
+            </div>
+          </article>
+
+          <article class="competition-card">
+            <img
+              src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=1200&q=85"
+              alt="An urban cityscape"
+              loading="lazy"
+            >
+
+            <div class="competition-content">
+              <span>Photography theme</span>
+              <h3>City in Frames</h3>
+              <p>Find extraordinary stories in ordinary urban life.</p>
+
+              <a href="competitions.html" class="text-link">
+                Explore this theme <span>→</span>
+              </a>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- EXHIBITIONS -->
+
+    <section class="section exhibition" id="exhibitions">
+      <div class="container exhibition-inner">
+
+        <div class="exhibition-content">
+          <div class="eyebrow">Curated perspectives</div>
+
+          <h2>
+            A place for<br>
+            photographs<br>
+            to be seen.
+          </h2>
+
+          <p>
+            Discover themed photographic exhibitions that bring
+            different creators and perspectives together.
+            Every collection is an opportunity to appreciate
+            photography beyond individual images.
+          </p>
+
+          <a href="exhibitions.html" class="button button-dark">
+            Explore exhibitions <span>→</span>
+          </a>
+        </div>
+
+        <div class="exhibition-image">
+          <img
+            src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1300&q=85"
+            alt="Expansive scenic landscape for a photography collection"
+            loading="lazy"
+          >
+
+          <div class="exhibition-caption">
+            Lens Circle / Curated photography
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- GENRES -->
+
+    <section class="section">
+      <div class="container">
+
+        <div class="section-header">
+          <div>
+            <div class="eyebrow">Find your perspective</div>
+            <h2 class="section-heading">
+              Explore the many<br>worlds of photography.
+            </h2>
+          </div>
+
+          <a href="discover.html" class="text-link">
+            Explore all photography <span>→</span>
+          </a>
+        </div>
+
+        <div class="category-grid">
+
+          <a href="discover.html" class="category-card">
+            <img
+              src="https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?auto=format&fit=crop&w=700&q=85"
+              alt="Nature landscape"
+              loading="lazy"
+            >
+            <div class="category-content">
+              <span>01 / The natural world</span>
+              <h3>Nature</h3>
+            </div>
+          </a>
+
+          <a href="discover.html" class="category-card">
+            <img
+              src="https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=700&q=85"
+              alt="City architecture"
+              loading="lazy"
+            >
+            <div class="category-content">
+              <span>02 / Life and movement</span>
+              <h3>Street</h3>
+            </div>
+          </a>
+
+          <a href="discover.html" class="category-card">
+            <img
+              src="https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&fit=crop&w=700&q=85"
+              alt="Wildlife in nature"
+              loading="lazy"
+            >
+            <div class="category-content">
+              <span>03 / The living world</span>
+              <h3>Wildlife</h3>
+            </div>
+          </a>
+
+          <a href="discover.html" class="category-card">
+            <img
+              src="https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=700&q=85"
+              alt="Stars in a night sky"
+              loading="lazy"
+            >
+            <div class="category-content">
+              <span>04 / Beyond the visible</span>
+              <h3>Night Sky</h3>
+            </div>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- JOURNAL -->
+
+    <section class="section journal" id="stories">
+      <div class="container">
+
+        <div class="section-header">
+          <div>
+            <div class="eyebrow">Ideas and inspiration</div>
+            <h2 class="section-heading">
+              The photography journal.
+            </h2>
+          </div>
+
+          <a href="stories.html" class="text-link">
+            Visit the journal <span>→</span>
+          </a>
+        </div>
+
+        <div class="journal-grid">
+
+          <article class="journal-card">
+            <div class="journal-image">
+              <img
+                src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?auto=format&fit=crop&w=900&q=85"
+                alt="A camera used for photography"
+                loading="lazy"
+              >
+            </div>
+
+            <span class="journal-category">The art of seeing</span>
+
+            <h3>Learning to see before learning to shoot.</h3>
+
+            <p>
+              Develop your creative eye, observe the details
+              around you and learn to find photographs in
+              everyday experiences.
+            </p>
+
+            <a href="stories.html" class="text-link">
+              Explore the journal <span>→</span>
+            </a>
+          </article>
+
+          <article class="journal-card">
+            <div class="journal-image">
+              <img
+                src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=900&q=85"
+                alt="Photography equipment and camera"
+                loading="lazy"
+              >
+            </div>
+
+            <span class="journal-category">Creative practice</span>
+
+            <h3>The story behind every photograph.</h3>
+
+            <p>
+              Discover the ideas, decisions and creative
+              processes that give photographs their meaning.
+            </p>
+
+            <a href="stories.html" class="text-link">
+              Explore the journal <span>→</span>
+            </a>
+          </article>
+
+          <article class="journal-card">
+            <div class="journal-image">
+              <img
+                src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=900&q=85"
+                alt="Creative community gathering"
+                loading="lazy"
+              >
+            </div>
+
+            <span class="journal-category">Community</span>
+
+            <h3>Why creative communities matter.</h3>
+
+            <p>
+              Explore the importance of sharing ideas,
+              learning from others and finding inspiration
+              in a community.
+            </p>
+
+            <a href="stories.html" class="text-link">
+              Explore the journal <span>→</span>
+            </a>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- COMMUNITY INVITATION -->
+
+    <section class="join">
+      <div class="container">
+
+        <div class="eyebrow">Your perspective belongs here</div>
+
+        <h2>
+          See the world.<br>
+          Share your perspective.
+        </h2>
+
+        <p>
+          Join photographers from around the world in a
+          community built around creativity, participation,
+          discovery and a shared love of photography.
+        </p>
+
+        <a href="member/register.html" class="button button-white">
+          Join Lens Circle <span>→</span>
+        </a>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+
+  <footer class="footer">
+    <div class="container">
+
+      <div class="footer-grid">
+
+        <div>
+          <a href="index.html" class="brand">
+            <span class="brand-symbol" aria-hidden="true"></span>
+            <span>
+              <span class="brand-name">Lens Circle</span>
+              <span class="brand-tagline">A Global Photography Community</span>
+            </span>
+          </a>
+
+          <p class="footer-description">
+            An independent photography community connecting
+            creative minds, celebrating different perspectives
+            and providing a place for photographers to share
+            their work with the world.
+          </p>
+        </div>
+
+        <div class="footer-column">
+          <h4>Discover</h4>
+          <ul>
+            <li><a href="discover.html">Photography gallery</a></li>
+            <li><a href="creators.html">Creators</a></li>
+            <li><a href="exhibitions.html">Exhibitions</a></li>
+            <li><a href="stories.html">Journal</a></li>
+            <li><a href="about.html">Our story</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h4>Participate</h4>
+          <ul>
+            <li><a href="photo-of-the-day.html">Photo of the Day</a></li>
+            <li><a href="activities.html">Challenges</a></li>
+            <li><a href="competitions.html">Competitions</a></li>
+            <li><a href="member/register.html">Become a member</a></li>
+            <li><a href="member/login.html">Member login</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h4>Information</h4>
+          <ul>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="legal/guidelines.html">Community guidelines</a></li>
+            <li><a href="legal/privacy.html">Privacy policy</a></li>
+            <li><a href="legal/terms.html">Terms of use</a></li>
+            <li><a href="about.html">About Lens Circle</a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <p>
+          © <span id="year"></span> Lens Circle. All rights reserved.
+        </p>
+
+        <div class="footer-socials">
+          <!-- Replace with official Lens Circle account URLs -->
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">Instagram</a>
+          <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer">YouTube</a>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <script>
+    const menuToggle = document.getElementById("menuToggle");
+    const navLinks = document.getElementById("navLinks");
+
+    function closeMenu() {
+      navLinks.classList.remove("active");
+      document.body.classList.remove("menu-open");
+
+      menuToggle.setAttribute("aria-expanded", "false");
+      menuToggle.setAttribute("aria-label", "Open navigation");
+      menuToggle.textContent = "☰";
+    }
+
+    menuToggle.addEventListener("click", function () {
+      const opened = navLinks.classList.toggle("active");
+
+      document.body.classList.toggle("menu-open", opened);
+
+      menuToggle.setAttribute("aria-expanded", String(opened));
+      menuToggle.setAttribute(
+        "aria-label",
+        opened ? "Close navigation" : "Open navigation"
+      );
+      menuToggle.textContent = opened ? "✕" : "☰";
+    });
+
+    navLinks.querySelectorAll("a").forEach(function (link) {
+      link.addEventListener("click", closeMenu);
+    });
+
+    window.addEventListener("resize", function () {
+      if (window.innerWidth > 800) {
+        closeMenu();
+      }
+    });
+
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,973 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#252722">
+  <title>Reports | Director — Lens Circle</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --paper: #f7f6f2;
+      --white: #fff;
+      --ink: #252722;
+      --muted: #777970;
+      --line: #e7e4dc;
+      --accent: #a85e42;
+      --accent-light: #f3e8e1;
+      --sidebar: #252722;
+      --serif: "Playfair Display", Georgia, serif;
+      --sans: "DM Sans", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 245px;
+      flex-shrink: 0;
+      background: var(--sidebar);
+      color: white;
+      padding: 29px 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand {
+      font: 700 25px var(--serif);
+      padding: 0 10px;
+    }
+
+    .brand span {
+      color: #d18b6d;
+    }
+
+    .portal-label {
+      padding: 9px 10px 26px;
+      color: #bcbdb5;
+      font-size: 9px;
+      letter-spacing: 1.7px;
+      text-transform: uppercase;
+    }
+
+    .nav-heading {
+      padding: 17px 10px 10px;
+      color: #898b82;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 11px;
+      margin: 2px 0;
+      border-radius: 4px;
+      color: #d1d2cb;
+      font-size: 11px;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: #393b34;
+      color: white;
+    }
+
+    .nav-link.active {
+      border-left: 3px solid #d18b6d;
+      padding-left: 8px;
+    }
+
+    .nav-icon {
+      width: 18px;
+      text-align: center;
+      color: #d18b6d;
+      font-size: 14px;
+    }
+
+    .sidebar-bottom {
+      margin-top: auto;
+      padding-top: 25px;
+    }
+
+    .sidebar-note {
+      padding: 15px;
+      border: 1px solid #484a43;
+      color: #bfc0b8;
+      font-size: 10px;
+      line-height: 1.8;
+    }
+
+    .sidebar-note strong {
+      display: block;
+      color: white;
+      margin-bottom: 5px;
+    }
+
+    .main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .topbar {
+      height: 75px;
+      padding: 0 38px;
+      background: white;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .breadcrumb {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .breadcrumb strong {
+      color: var(--ink);
+    }
+
+    .role-badge {
+      padding: 8px 11px;
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .content {
+      max-width: 1450px;
+      margin: auto;
+      padding: 40px;
+    }
+
+    .page-heading {
+      margin-bottom: 28px;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font: 500 clamp(34px, 4vw, 43px)/1.15 var(--serif);
+    }
+
+    .intro {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.9;
+      max-width: 690px;
+    }
+
+    .notice {
+      display: flex;
+      gap: 13px;
+      padding: 18px;
+      background: white;
+      border: 1px solid var(--line);
+      margin-bottom: 26px;
+    }
+
+    .notice-icon {
+      color: var(--accent);
+      font-size: 18px;
+    }
+
+    .notice strong {
+      display: block;
+      font-size: 11px;
+      margin-bottom: 6px;
+    }
+
+    .notice p {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.8;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 30px;
+    }
+
+    .stat {
+      padding: 20px;
+      background: white;
+      border: 1px solid var(--line);
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 10px;
+      margin-bottom: 13px;
+    }
+
+    .stat-value {
+      font: 30px var(--serif);
+    }
+
+    .stat-foot {
+      color: var(--muted);
+      font-size: 9px;
+      margin-top: 8px;
+    }
+
+    .panel {
+      background: white;
+      border: 1px solid var(--line);
+      margin-bottom: 24px;
+    }
+
+    .panel-header {
+      padding: 21px 23px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-header h2 {
+      font: 500 23px var(--serif);
+    }
+
+    .panel-header p {
+      color: var(--muted);
+      font-size: 9px;
+      margin-top: 5px;
+    }
+
+    .panel-body {
+      padding: 23px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .search, .filter {
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--muted);
+      font: 10px var(--sans);
+    }
+
+    .search {
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .filter {
+      min-width: 145px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      border: 1px dashed #d9d6cd;
+      background: #fcfbf8;
+    }
+
+    .empty-icon {
+      font: 35px var(--serif);
+      color: var(--accent);
+      margin-bottom: 13px;
+    }
+
+    .empty-state h3 {
+      font: 500 21px var(--serif);
+      margin-bottom: 8px;
+    }
+
+    .empty-state p {
+      max-width: 410px;
+      margin: auto;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.9;
+    }
+
+    .report-types {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .report-type {
+      padding: 18px;
+      background: #f5f4ef;
+    }
+
+    .report-type strong {
+      display: block;
+      font-size: 10px;
+      margin-bottom: 7px;
+    }
+
+    .report-type p {
+      color: var(--muted);
+      font-size: 9px;
+      line-height: 1.8;
+    }
+
+    .workflow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .step {
+      padding: 18px;
+      background: #f5f4ef;
+    }
+
+    .step-number {
+      color: var(--accent);
+      font: 22px var(--serif);
+      margin-bottom: 12px;
+    }
+
+    .step strong {
+      display: block;
+      font-size: 10px;
+      margin-bottom: 7px;
+    }
+
+    .step p {
+      color: var(--muted);
+      font-size: 9px;
+      line-height: 1.8;
+    }
+
+    .rules {
+      padding: 22px;
+      background: var(--ink);
+      color: white;
+    }
+
+    .rules h2 {
+      font: 500 22px var(--serif);
+      margin-bottom: 13px;
+    }
+
+    .rules ul {
+      padding-left: 18px;
+      color: #d1d2cb;
+      font-size: 10px;
+      line-height: 2.1;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-top: 28px;
+      padding: 20px 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 9px;
+    }
+
+    .logout {
+      border: 0;
+      background: transparent;
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .loading-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      background: var(--paper);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 25px;
+    }
+
+    .loading-screen h2 {
+      font: 500 28px var(--serif);
+      margin-bottom: 10px;
+    }
+
+    .loading-screen p {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.8;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media(max-width: 1100px) {
+      .sidebar {
+        width: 215px;
+      }
+
+      .content {
+        padding: 28px;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .workflow {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media(max-width: 700px) {
+      .layout {
+        display: block;
+      }
+
+      .sidebar {
+        width: 100%;
+        padding: 16px 18px;
+      }
+
+      .portal-label,
+      .sidebar nav,
+      .sidebar-bottom {
+        display: none;
+      }
+
+      .topbar {
+        height: 60px;
+        padding: 0 20px;
+      }
+
+      .content {
+        padding: 25px 18px;
+      }
+
+      .stats,
+      .report-types,
+      .workflow {
+        grid-template-columns: 1fr;
+      }
+
+      .footer {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="loading-screen" id="loadingScreen">
+    <div>
+      <h2>Verifying Director access</h2>
+      <p>Please wait while we check your permissions.</p>
+    </div>
+  </div>
+
+  <div class="layout hidden" id="app">
+
+    <aside class="sidebar">
+
+      <a href="../index.html" class="brand">
+        Lens <span>Circle</span>
+      </a>
+
+      <div class="portal-label">Director workspace</div>
+
+      <nav>
+        <div class="nav-heading">Workspace</div>
+
+        <a href="dashboard.html" class="nav-link">
+          <span class="nav-icon">⌂</span>
+          Dashboard
+        </a>
+
+        <a href="team.html" class="nav-link">
+          <span class="nav-icon">♧</span>
+          My team
+        </a>
+
+        <a href="assignments.html" class="nav-link">
+          <span class="nav-icon">▤</span>
+          Assignments
+        </a>
+
+        <div class="nav-heading">Department</div>
+
+        <a href="activities.html" class="nav-link">
+          <span class="nav-icon">◎</span>
+          Activities
+        </a>
+
+        <a href="competitions.html" class="nav-link">
+          <span class="nav-icon">✧</span>
+          Competitions
+        </a>
+
+        <a href="reports.html" class="nav-link active">
+          <span class="nav-icon">⚑</span>
+          Reports
+        </a>
+
+        <a href="members.html" class="nav-link">
+          <span class="nav-icon">♙</span>
+          Members
+        </a>
+
+        <a href="analytics.html" class="nav-link">
+          <span class="nav-icon">▥</span>
+          Analytics
+        </a>
+
+        <div class="nav-heading">Account</div>
+
+        <a href="profile.html" class="nav-link">
+          <span class="nav-icon">◉</span>
+          My profile
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="sidebar-note">
+          <strong>Responsible leadership</strong>
+          Review issues fairly and escalate
+          matters beyond your authority.
+        </div>
+      </div>
+
+    </aside>
+
+    <main class="main">
+
+      <header class="topbar">
+        <div class="breadcrumb">
+          Lens Circle / Director / <strong>Reports</strong>
+        </div>
+
+        <div class="role-badge">DIRECTOR</div>
+      </header>
+
+      <div class="content">
+
+        <section class="page-heading">
+          <div class="eyebrow">Department oversight</div>
+
+          <h1>Reports & escalations.</h1>
+
+          <p class="intro">
+            Review operational reports, moderator escalations
+            and issues requiring department leadership attention.
+          </p>
+        </section>
+
+        <section class="notice">
+          <div class="notice-icon">✦</div>
+
+          <div>
+            <strong>Department-scoped reporting</strong>
+            <p>
+              This workspace is designed for reports within your
+              assigned department. Sensitive matters and issues
+              outside your authority must be escalated to Admin.
+            </p>
+          </div>
+        </section>
+
+        <section class="stats">
+
+          <article class="stat">
+            <div class="stat-label">Total reports</div>
+            <div class="stat-value">—</div>
+            <div class="stat-foot">Awaiting report records</div>
+          </article>
+
+          <article class="stat">
+            <div class="stat-label">Under review</div>
+            <div class="stat-value">—</div>
+            <div class="stat-foot">Awaiting review records</div>
+          </article>
+
+          <article class="stat">
+            <div class="stat-label">Escalated to Admin</div>
+            <div class="stat-value">—</div>
+            <div class="stat-foot">Awaiting escalation records</div>
+          </article>
+
+          <article class="stat">
+            <div class="stat-label">Resolved</div>
+            <div class="stat-value">—</div>
+            <div class="stat-foot">Awaiting resolution records</div>
+          </article>
+
+        </section>
+
+        <section class="panel">
+
+          <div class="panel-header">
+            <h2>Department reports</h2>
+            <p>Reports and operational issues within your authorised scope</p>
+          </div>
+
+          <div class="panel-body">
+
+            <div class="toolbar">
+
+              <input
+                class="search"
+                type="search"
+                placeholder="Search reports..."
+                disabled
+              >
+
+              <select class="filter" disabled>
+                <option>All statuses</option>
+                <option>New</option>
+                <option>Under review</option>
+                <option>Escalated</option>
+                <option>Resolved</option>
+              </select>
+
+              <select class="filter" disabled>
+                <option>All priorities</option>
+                <option>High</option>
+                <option>Medium</option>
+                <option>Low</option>
+              </select>
+
+            </div>
+
+            <div class="empty-state">
+              <div class="empty-icon">⚑</div>
+
+              <h3>No reports available yet</h3>
+
+              <p>
+                Department reports, moderator escalations,
+                review history and resolution records will
+                appear here after database integration.
+              </p>
+            </div>
+
+          </div>
+
+        </section>
+
+        <section class="panel">
+
+          <div class="panel-header">
+            <h2>Report categories</h2>
+            <p>Types of reports that may require Director review</p>
+          </div>
+
+          <div class="panel-body">
+
+            <div class="report-types">
+
+              <div class="report-type">
+                <strong>Moderation escalations</strong>
+                <p>
+                  Difficult moderation cases, repeated
+                  guideline violations and unresolved issues.
+                </p>
+              </div>
+
+              <div class="report-type">
+                <strong>Competition disputes</strong>
+                <p>
+                  Entry disputes, eligibility questions,
+                  judging concerns and procedural complaints.
+                </p>
+              </div>
+
+              <div class="report-type">
+                <strong>Activity operations</strong>
+                <p>
+                  Scheduling conflicts, participation issues,
+                  voting irregularities and event concerns.
+                </p>
+              </div>
+
+              <div class="report-type">
+                <strong>Team performance</strong>
+                <p>
+                  Assignment delays, operational gaps,
+                  coordination problems and workload concerns.
+                </p>
+              </div>
+
+              <div class="report-type">
+                <strong>Member concerns</strong>
+                <p>
+                  Department-related member complaints
+                  and requests requiring leadership attention.
+                </p>
+              </div>
+
+              <div class="report-type">
+                <strong>Copyright and content concerns</strong>
+                <p>
+                  Suspected unauthorised use of photographs,
+                  attribution issues and content disputes.
+                </p>
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+        <section class="panel">
+
+          <div class="panel-header">
+            <h2>Report handling workflow</h2>
+            <p>Standard process for reviewing departmental reports</p>
+          </div>
+
+          <div class="panel-body">
+
+            <div class="workflow">
+
+              <div class="step">
+                <div class="step-number">01</div>
+                <strong>Receive</strong>
+                <p>
+                  Receive a report from an authorised
+                  moderator or department workflow.
+                </p>
+              </div>
+
+              <div class="step">
+                <div class="step-number">02</div>
+                <strong>Review</strong>
+                <p>
+                  Examine relevant information and
+                  identify the issue accurately.
+                </p>
+              </div>
+
+              <div class="step">
+                <div class="step-number">03</div>
+                <strong>Decide or escalate</strong>
+                <p>
+                  Handle matters within your authority
+                  or refer them to Admin.
+                </p>
+              </div>
+
+              <div class="step">
+                <div class="step-number">04</div>
+                <strong>Document</strong>
+                <p>
+                  Record the outcome, action taken
+                  and relevant follow-up.
+                </p>
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+        <section class="rules">
+
+          <h2>Report handling boundaries</h2>
+
+          <ul>
+            <li>Access only reports belonging to your authorised department.</li>
+            <li>Keep sensitive reports confidential.</li>
+            <li>Do not disclose reporter identities unnecessarily.</li>
+            <li>Escalate serious safety, security and legal concerns to Admin.</li>
+            <li>Do not independently change global account permissions.</li>
+            <li>Maintain accurate records of decisions and actions.</li>
+            <li>Never alter or delete report evidence to conceal an incident.</li>
+          </ul>
+
+        </section>
+
+        <footer class="footer">
+          <span>
+            © <span id="year"></span> Lens Circle · Director workspace
+          </span>
+
+          <button class="logout" id="logoutButton">
+            Sign out securely →
+          </button>
+        </footer>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
+    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY";
+
+    const configured =
+      SUPABASE_URL.startsWith("https://") &&
+      !SUPABASE_URL.includes("YOUR_SUPABASE") &&
+      SUPABASE_ANON_KEY.length > 20 &&
+      !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE");
+
+    const client = configured && window.supabase
+      ? window.supabase.createClient(
+          SUPABASE_URL,
+          SUPABASE_ANON_KEY,
+          {
+            auth: {
+              persistSession: true,
+              autoRefreshToken: true,
+              detectSessionInUrl: true
+            }
+          }
+        )
+      : null;
+
+    const loadingScreen =
+      document.getElementById("loadingScreen");
+
+    const app =
+      document.getElementById("app");
+
+    function showBlockingMessage(title, description) {
+      loadingScreen.innerHTML = `
+        <div>
+          <h2>${title}</h2>
+          <p>${description}</p>
+          <p style="margin-top:22px;">
+            <a href="login.html" style="color:#a85e42;font-weight:700;">
+              Return to Director sign in →
+            </a>
+          </p>
+        </div>
+      `;
+    }
+
+    async function verifyAccess() {
+      if (!client) {
+        showBlockingMessage(
+          "Configuration required",
+          "Configure Supabase before accessing this page."
+        );
+        return;
+      }
+
+      try {
+        const { data, error } =
+          await client.auth.getSession();
+
+        if (error) throw error;
+
+        if (!data.session) {
+          window.location.replace("login.html");
+          return;
+        }
+
+        const { data: authorised, error: roleError } =
+          await client.rpc("has_staff_role", {
+            required_role: "director"
+          });
+
+        if (roleError) {
+          throw new Error(
+            "Director permissions could not be verified."
+          );
+        }
+
+        if (authorised !== true) {
+          await client.auth.signOut();
+          window.location.replace("login.html");
+          return;
+        }
+
+        document.getElementById("year").textContent =
+          new Date().getFullYear();
+
+        app.classList.remove("hidden");
+        loadingScreen.classList.add("hidden");
+
+      } catch (error) {
+        console.error("Report access error:", error);
+
+        await client.auth.signOut();
+
+        showBlockingMessage(
+          "Access verification failed",
+          error.message || "Unable to verify Director permissions."
+        );
+      }
+    }
+
+    document.getElementById("logoutButton")
+      .addEventListener("click", async () => {
+
+        const button =
+          document.getElementById("logoutButton");
+
+        button.disabled = true;
+        button.textContent = "Signing out...";
+
+        if (client) {
+          await client.auth.signOut();
+        }
+
+        window.location.replace("login.html");
+      });
+
+    verifyAccess();
+  </script>
+
+</body>
+</html>

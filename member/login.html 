@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#f7f6f2">
 
   <title>Member Login | Lens Circle</title>
-  <meta name="description" content="Sign in to your Lens Circle member account and continue your photography journey.">
+  <meta name="description" content="Sign in to your Lens Circle member account.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,340 +15,334 @@
 
   <style>
     :root {
-      --paper: #f7f6f2;
-      --white: #fff;
-      --ink: #252722;
-      --muted: #777970;
-      --line: #e7e4dc;
-      --accent: #a85e42;
-      --accent-dark: #85472f;
-      --soft: #eeeae2;
-      --dark: #252722;
-      --serif: "Playfair Display", Georgia, serif;
-      --sans: "DM Sans", Arial, sans-serif;
+      --paper:#f7f6f2;
+      --white:#fff;
+      --ink:#252722;
+      --muted:#777970;
+      --line:#e7e4dc;
+      --accent:#a85e42;
+      --serif:"Playfair Display",Georgia,serif;
+      --sans:"DM Sans",Arial,sans-serif;
     }
 
     * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
     }
 
     body {
-      min-height: 100vh;
-      background: var(--paper);
-      color: var(--ink);
-      font-family: var(--sans);
+      min-height:100vh;
+      background:var(--paper);
+      color:var(--ink);
+      font-family:var(--sans);
     }
 
     a {
-      color: inherit;
-      text-decoration: none;
+      color:inherit;
+      text-decoration:none;
     }
 
-    button, input {
-      font: inherit;
+    button,input {
+      font:inherit;
     }
 
     .navbar {
-      height: 76px;
-      border-bottom: 1px solid var(--line);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 6%;
+      height:76px;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:0 6%;
     }
 
     .brand {
-      font-family: var(--serif);
-      font-size: 26px;
-      font-weight: 700;
-      letter-spacing: -.8px;
+      font-family:var(--serif);
+      font-size:26px;
+      font-weight:700;
     }
 
     .brand span {
-      color: var(--accent);
+      color:var(--accent);
     }
 
     .back-link {
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .back-link:hover {
-      color: var(--accent);
+      font-size:12px;
+      color:var(--muted);
     }
 
     .main {
-      min-height: calc(100vh - 76px);
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      min-height:calc(100vh - 76px);
+      display:grid;
+      grid-template-columns:1fr 1fr;
     }
 
     .visual-panel {
-      position: relative;
-      min-height: 680px;
+      min-height:680px;
       background:
-        linear-gradient(rgba(22,24,20,.25), rgba(22,24,20,.72)),
+        linear-gradient(rgba(22,24,20,.25),rgba(22,24,20,.72)),
         url("https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1400&q=85")
         center/cover;
-      display: flex;
-      align-items: flex-end;
-      padding: 65px;
-      color: white;
+      display:flex;
+      align-items:flex-end;
+      padding:65px;
+      color:white;
     }
 
     .visual-content {
-      max-width: 480px;
+      max-width:480px;
     }
 
     .eyebrow {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 2.5px;
-      text-transform: uppercase;
-      color: #d69a7e;
-      margin-bottom: 18px;
+      font-size:10px;
+      font-weight:700;
+      letter-spacing:2.5px;
+      text-transform:uppercase;
+      color:#d69a7e;
+      margin-bottom:18px;
     }
 
     .visual-content h1 {
-      font-family: var(--serif);
-      font-size: clamp(42px, 5vw, 64px);
-      font-weight: 500;
-      line-height: 1.1;
-      margin-bottom: 18px;
+      font-family:var(--serif);
+      font-size:clamp(42px,5vw,64px);
+      font-weight:500;
+      line-height:1.1;
+      margin-bottom:18px;
     }
 
     .visual-content p {
-      font-size: 13px;
-      color: #e0e0da;
-      line-height: 1.8;
+      font-size:13px;
+      color:#e0e0da;
+      line-height:1.8;
     }
 
     .login-panel {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 55px 35px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:55px 35px;
     }
 
     .login-card {
-      width: 100%;
-      max-width: 420px;
+      width:100%;
+      max-width:420px;
     }
 
     .login-heading {
-      margin-bottom: 34px;
+      margin-bottom:34px;
     }
 
     .login-heading .eyebrow {
-      color: var(--accent);
+      color:var(--accent);
     }
 
     .login-heading h2 {
-      font-family: var(--serif);
-      font-weight: 500;
-      font-size: 43px;
-      letter-spacing: -1px;
-      margin-bottom: 10px;
+      font-family:var(--serif);
+      font-weight:500;
+      font-size:43px;
+      margin-bottom:10px;
     }
 
     .login-heading p {
-      color: var(--muted);
-      font-size: 12px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.7;
     }
 
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom:20px;
     }
 
     .form-group label {
-      display: block;
-      font-size: 11px;
-      font-weight: 700;
-      margin-bottom: 9px;
+      display:block;
+      font-size:11px;
+      font-weight:700;
+      margin-bottom:9px;
     }
 
     .form-group input {
-      width: 100%;
-      padding: 15px;
-      border: 1px solid var(--line);
-      background: white;
-      outline: none;
-      font-size: 12px;
-      color: var(--ink);
+      width:100%;
+      padding:15px;
+      border:1px solid var(--line);
+      background:white;
+      outline:none;
+      font-size:13px;
+      color:var(--ink);
     }
 
     .form-group input:focus {
-      border-color: var(--accent);
+      border-color:var(--accent);
     }
 
     .password-wrapper {
-      position: relative;
+      position:relative;
     }
 
     .password-wrapper input {
-      padding-right: 65px;
+      padding-right:70px;
     }
 
     .toggle-password {
-      position: absolute;
-      right: 13px;
-      top: 50%;
-      transform: translateY(-50%);
-      border: 0;
-      background: transparent;
-      color: var(--accent);
-      font-size: 10px;
-      font-weight: 700;
-      cursor: pointer;
+      position:absolute;
+      right:13px;
+      top:50%;
+      transform:translateY(-50%);
+      border:0;
+      background:transparent;
+      color:var(--accent);
+      font-size:10px;
+      font-weight:700;
+      cursor:pointer;
     }
 
     .form-options {
-      display: flex;
-      justify-content: flex-end;
-      margin: -4px 0 23px;
+      display:flex;
+      justify-content:flex-end;
+      margin:-4px 0 23px;
     }
 
     .form-options a {
-      font-size: 11px;
-      color: var(--accent);
+      font-size:11px;
+      color:var(--accent);
     }
 
     .submit-button {
-      width: 100%;
-      border: 0;
-      background: var(--ink);
-      color: white;
-      padding: 16px;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: background .2s;
+      width:100%;
+      border:0;
+      background:var(--ink);
+      color:white;
+      padding:16px;
+      font-size:12px;
+      font-weight:700;
+      cursor:pointer;
     }
 
     .submit-button:hover {
-      background: var(--accent);
+      background:var(--accent);
     }
 
     .submit-button:disabled {
-      opacity: .65;
-      cursor: not-allowed;
+      opacity:.65;
+      cursor:not-allowed;
     }
 
     .status {
-      display: none;
-      margin-top: 17px;
-      padding: 12px 14px;
-      font-size: 11px;
-      line-height: 1.6;
-      border: 1px solid var(--line);
+      display:none;
+      margin-top:17px;
+      padding:12px 14px;
+      font-size:11px;
+      line-height:1.6;
+      border:1px solid var(--line);
     }
 
     .status.error {
-      display: block;
-      background: #fff2ef;
-      color: #a33c2c;
-      border-color: #efd0c8;
+      display:block;
+      background:#fff2ef;
+      color:#a33c2c;
+      border-color:#efd0c8;
     }
 
     .status.success {
-      display: block;
-      background: #eff7ef;
-      color: #32633a;
-      border-color: #cfe2cf;
+      display:block;
+      background:#eff7ef;
+      color:#32633a;
+      border-color:#cfe2cf;
     }
 
     .divider {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      color: #aaa99f;
-      font-size: 10px;
-      margin: 27px 0;
+      display:flex;
+      align-items:center;
+      gap:15px;
+      color:#aaa99f;
+      font-size:10px;
+      margin:27px 0;
     }
 
     .divider::before,
     .divider::after {
-      content: "";
-      flex: 1;
-      height: 1px;
-      background: var(--line);
+      content:"";
+      flex:1;
+      height:1px;
+      background:var(--line);
     }
 
     .register-text {
-      text-align: center;
-      font-size: 12px;
-      color: var(--muted);
+      text-align:center;
+      font-size:12px;
+      color:var(--muted);
     }
 
     .register-text a {
-      color: var(--accent);
-      font-weight: 700;
+      color:var(--accent);
+      font-weight:700;
     }
 
     .security-note {
-      margin-top: 35px;
-      border-top: 1px solid var(--line);
-      padding-top: 20px;
-      font-size: 10px;
-      color: var(--muted);
-      text-align: center;
-      line-height: 1.8;
+      margin-top:35px;
+      border-top:1px solid var(--line);
+      padding-top:20px;
+      font-size:10px;
+      color:var(--muted);
+      text-align:center;
+      line-height:1.8;
+    }
+
+    .security-note a {
+      color:var(--accent);
     }
 
     .footer-note {
-      text-align: center;
-      padding: 18px;
-      font-size: 10px;
-      color: var(--muted);
-      border-top: 1px solid var(--line);
+      text-align:center;
+      padding:18px;
+      font-size:10px;
+      color:var(--muted);
+      border-top:1px solid var(--line);
     }
 
-    @media (max-width: 850px) {
+    @media(max-width:850px) {
       .main {
-        grid-template-columns: 1fr;
+        grid-template-columns:1fr;
       }
 
       .visual-panel {
-        min-height: 310px;
-        padding: 35px;
+        min-height:280px;
+        padding:35px;
       }
 
       .visual-content h1 {
-        font-size: 42px;
+        font-size:42px;
       }
 
       .login-panel {
-        padding: 55px 25px;
+        padding:45px 25px;
       }
     }
 
-    @media (max-width: 480px) {
+    @media(max-width:480px) {
       .navbar {
-        height: 66px;
-        padding: 0 20px;
+        height:66px;
+        padding:0 20px;
       }
 
       .brand {
-        font-size: 23px;
+        font-size:23px;
       }
 
       .visual-panel {
-        min-height: 260px;
-        padding: 28px;
+        min-height:240px;
+        padding:28px;
       }
 
       .visual-content h1 {
-        font-size: 36px;
+        font-size:36px;
       }
 
       .login-heading h2 {
-        font-size: 36px;
+        font-size:36px;
       }
 
       .login-panel {
-        padding: 45px 22px;
+        padding:40px 22px;
       }
     }
   </style>
@@ -356,279 +350,296 @@
 
 <body>
 
-  <header class="navbar">
-    <a href="../index.html" class="brand">
-      Lens <span>Circle</span>
-    </a>
+<header class="navbar">
+  <a href="../index.html" class="brand">
+    Lens <span>Circle</span>
+  </a>
 
-    <a href="../index.html" class="back-link">
-      ← Back to website
-    </a>
-  </header>
+  <a href="../index.html" class="back-link">
+    ← Back to website
+  </a>
+</header>
 
-  <main class="main">
+<main class="main">
 
-    <!-- LEFT VISUAL PANEL -->
-    <section class="visual-panel">
-      <div class="visual-content">
-        <div class="eyebrow">Welcome back</div>
+  <section class="visual-panel">
+    <div class="visual-content">
+      <div class="eyebrow">Welcome back</div>
 
-        <h1>Your world.<br>Your perspective.</h1>
+      <h1>Your world.<br>Your perspective.</h1>
 
-        <p>
-          Continue exploring photography, connecting with
-          creators and participating in the Lens Circle community.
-        </p>
+      <p>
+        Continue exploring photography, connecting with
+        creators and participating in the Lens Circle community.
+      </p>
+    </div>
+  </section>
+
+  <section class="login-panel">
+    <div class="login-card">
+
+      <div class="login-heading">
+        <div class="eyebrow">Member access</div>
+        <h2>Sign in.</h2>
+        <p>Enter your account details to continue.</p>
       </div>
-    </section>
 
-    <!-- LOGIN PANEL -->
-    <section class="login-panel">
-      <div class="login-card">
+      <form id="loginForm">
 
-        <div class="login-heading">
-          <div class="eyebrow">Member access</div>
-          <h2>Sign in.</h2>
-          <p>
-            Enter your account details to continue.
-          </p>
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input
+            type="email"
+            id="email"
+            autocomplete="username"
+            placeholder="Enter your email address"
+            required>
         </div>
 
-        <form id="loginForm">
+        <div class="form-group">
+          <label for="password">Password</label>
 
-          <div class="form-group">
-            <label for="email">Email address</label>
+          <div class="password-wrapper">
             <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Enter your email address"
-              autocomplete="username"
+              type="password"
+              id="password"
+              autocomplete="current-password"
+              placeholder="Enter your password"
               required>
+
+            <button
+              type="button"
+              class="toggle-password"
+              id="togglePassword">
+              SHOW
+            </button>
           </div>
-
-          <div class="form-group">
-            <label for="password">Password</label>
-
-            <div class="password-wrapper">
-              <input
-                type="password"
-                id="password"
-                name="password"
-                placeholder="Enter your password"
-                autocomplete="current-password"
-                required>
-
-              <button
-                type="button"
-                class="toggle-password"
-                id="togglePassword">
-                SHOW
-              </button>
-            </div>
-          </div>
-
-          <div class="form-options">
-            <a href="#" id="forgotPassword">
-              Forgot password?
-            </a>
-          </div>
-
-          <button
-            type="submit"
-            class="submit-button"
-            id="submitButton">
-            Sign in to your account →
-          </button>
-
-          <div class="status" id="statusMessage" aria-live="polite"></div>
-
-        </form>
-
-        <div class="divider">OR</div>
-
-        <p class="register-text">
-          New to Lens Circle?
-          <a href="register.html">Create an account</a>
-        </p>
-
-        <div class="security-note">
-          Your account is protected through secure authentication.
-          Never share your password or verification codes with anyone.
-          <br><br>
-          <a href="../legal/privacy.html">Privacy Policy</a>
-          &nbsp;·&nbsp;
-          <a href="../legal/terms.html">Terms of Service</a>
         </div>
 
+        <div class="form-options">
+          <a href="#" id="forgotPassword">Forgot password?</a>
+        </div>
+
+        <button
+          type="submit"
+          class="submit-button"
+          id="submitButton">
+          Sign in to your account →
+        </button>
+
+        <div
+          class="status"
+          id="statusMessage"
+          role="status"
+          aria-live="polite">
+        </div>
+
+      </form>
+
+      <div class="divider">OR</div>
+
+      <p class="register-text">
+        New to Lens Circle?
+        <a href="register.html">Create an account</a>
+      </p>
+
+      <div class="security-note">
+        Your account is protected through secure authentication.
+        Never share your password or verification codes.
+        <br><br>
+        <a href="../legal/privacy.html">Privacy Policy</a>
+        &nbsp;·&nbsp;
+        <a href="../legal/terms.html">Terms of Service</a>
       </div>
-    </section>
 
-  </main>
+    </div>
+  </section>
 
-  <footer class="footer-note">
-    © <span id="year"></span> Lens Circle. All rights reserved.
-  </footer>
+</main>
 
-  <!-- Supabase JavaScript SDK -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<footer class="footer-note">
+  © <span id="year"></span> Lens Circle. All rights reserved.
+</footer>
 
-  <script>
-    /*
-      SUPABASE CONFIGURATION
+<!-- Load Supabase SDK first -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-      Replace these two values with your actual Supabase
-      project URL and publishable/anon key.
+<!-- Load shared Supabase client -->
+<script src="../assets/js/supabase-client.js"></script>
 
-      Never place the Supabase service_role key in frontend code.
-    */
+<script>
+(function () {
+  "use strict";
 
-    const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
-    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY";
+  const loginForm = document.getElementById("loginForm");
+  const emailInput = document.getElementById("email");
+  const passwordInput = document.getElementById("password");
+  const submitButton = document.getElementById("submitButton");
+  const statusMessage = document.getElementById("statusMessage");
+  const togglePassword = document.getElementById("togglePassword");
 
-    const isConfigured =
-      SUPABASE_URL.startsWith("https://") &&
-      !SUPABASE_URL.includes("YOUR_SUPABASE") &&
-      SUPABASE_ANON_KEY.length > 20 &&
-      !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE");
+  const client = window.LensCircle;
 
-    let supabaseClient = null;
+  document.getElementById("year").textContent =
+    new Date().getFullYear();
 
-    if (isConfigured && window.supabase) {
-      supabaseClient = window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_ANON_KEY
+  function showStatus(message, type) {
+    statusMessage.textContent = message;
+    statusMessage.className = "status " + type;
+  }
+
+  function clearStatus() {
+    statusMessage.textContent = "";
+    statusMessage.className = "status";
+  }
+
+  function setLoading(loading) {
+    submitButton.disabled = loading;
+    submitButton.textContent = loading
+      ? "Signing in..."
+      : "Sign in to your account →";
+  }
+
+  if (!client || !client.configured || !client.db) {
+    showStatus(
+      "The shared Supabase client could not load. Check the SDK and supabase-client.js paths.",
+      "error"
+    );
+    submitButton.disabled = true;
+    return;
+  }
+
+  const db = client.db;
+
+  togglePassword.addEventListener("click", function () {
+    const show = passwordInput.type === "password";
+
+    passwordInput.type = show ? "text" : "password";
+    togglePassword.textContent = show ? "HIDE" : "SHOW";
+  });
+
+  async function verifyMemberRole() {
+    const { data, error } = await db.rpc("get_my_role");
+
+    if (error) {
+      throw new Error(
+        "Your account role could not be verified. Please contact Lens Circle support."
       );
     }
 
-    const loginForm = document.getElementById("loginForm");
-    const emailInput = document.getElementById("email");
-    const passwordInput = document.getElementById("password");
-    const submitButton = document.getElementById("submitButton");
-    const statusMessage = document.getElementById("statusMessage");
+    if (data !== "member") {
+      await db.auth.signOut();
 
-    function showStatus(message, type) {
-      statusMessage.textContent = message;
-      statusMessage.className = "status " + type;
+      throw new Error(
+        "This is not a Member account. Please use the correct staff portal."
+      );
     }
 
-    function clearStatus() {
-      statusMessage.textContent = "";
-      statusMessage.className = "status";
-    }
+    return true;
+  }
 
-    // Password visibility
-    document.getElementById("togglePassword").addEventListener("click", () => {
-      const isPassword = passwordInput.type === "password";
+  async function checkExistingSession() {
+    try {
+      const { data, error } = await db.auth.getSession();
 
-      passwordInput.type = isPassword ? "text" : "password";
+      if (error) throw error;
 
-      document.getElementById("togglePassword").textContent =
-        isPassword ? "HIDE" : "SHOW";
-    });
+      if (!data.session) return;
 
-    // Existing session check
-    async function checkExistingSession() {
-      if (!supabaseClient) return;
+      await verifyMemberRole();
 
-      const { data, error } = await supabaseClient.auth.getSession();
+      window.location.replace("dashboard.html");
 
-      if (error) return;
-
-      if (data.session) {
-        window.location.replace("dashboard.html");
+    } catch (error) {
+      if (error.message) {
+        showStatus(error.message, "error");
       }
     }
+  }
 
-    // Member sign-in
-    loginForm.addEventListener("submit", async (event) => {
+  loginForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+    clearStatus();
+
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+
+    if (!email || !password) {
+      showStatus(
+        "Please enter your email address and password.",
+        "error"
+      );
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const { data, error } = await db.auth.signInWithPassword({
+        email: email,
+        password: password
+      });
+
+      if (error) throw error;
+
+      if (!data.session) {
+        throw new Error("A login session could not be created.");
+      }
+
+      await verifyMemberRole();
+
+      showStatus(
+        "Sign-in successful. Opening your dashboard...",
+        "success"
+      );
+
+      window.location.replace("dashboard.html");
+
+    } catch (error) {
+      let message = error.message || "Unable to sign in.";
+
+      if (
+        message.toLowerCase().includes("invalid login credentials")
+      ) {
+        message = "Incorrect email or password. Please try again.";
+      }
+
+      showStatus(message, "error");
+      setLoading(false);
+    }
+  });
+
+  document.getElementById("forgotPassword")
+    .addEventListener("click", async function (event) {
       event.preventDefault();
       clearStatus();
-
-      if (!supabaseClient) {
-        showStatus(
-          "Supabase is not configured yet. Add your project URL and publishable/anon key in this file.",
-          "error"
-        );
-        return;
-      }
-
-      const email = emailInput.value.trim();
-      const password = passwordInput.value;
-
-      if (!email || !password) {
-        showStatus("Please enter your email address and password.", "error");
-        return;
-      }
-
-      submitButton.disabled = true;
-      submitButton.textContent = "Signing in...";
-
-      try {
-        const { data, error } =
-          await supabaseClient.auth.signInWithPassword({
-            email,
-            password
-          });
-
-        if (error) {
-          throw error;
-        }
-
-        if (!data.session) {
-          throw new Error("Your session could not be established. Please try again.");
-        }
-
-        showStatus("Sign-in successful. Opening your dashboard...", "success");
-
-        window.location.replace("dashboard.html");
-
-      } catch (error) {
-        let message = error.message || "Unable to sign in.";
-
-        if (message.toLowerCase().includes("invalid login credentials")) {
-          message = "Incorrect email or password. Please check your details.";
-        }
-
-        showStatus(message, "error");
-
-        submitButton.disabled = false;
-        submitButton.textContent = "Sign in to your account →";
-      }
-    });
-
-    // Password recovery
-    document.getElementById("forgotPassword").addEventListener("click", async (event) => {
-      event.preventDefault();
-      clearStatus();
-
-      if (!supabaseClient) {
-        showStatus("Password recovery will be available after Supabase is configured.", "error");
-        return;
-      }
 
       const email = emailInput.value.trim();
 
       if (!email) {
-        showStatus("Enter your registered email address first.", "error");
+        showStatus(
+          "Enter your registered email address first.",
+          "error"
+        );
         emailInput.focus();
         return;
       }
 
       try {
-        const { error } =
-          await supabaseClient.auth.resetPasswordForEmail(email, {
-            redirectTo: window.location.origin +
-              window.location.pathname.replace(
-                /login\.html$/,
-                "reset-password.html"
-              )
-          });
+        const redirectUrl = new URL(
+          "reset-password.html",
+          window.location.href
+        ).href;
+
+        const { error } = await db.auth.resetPasswordForEmail(
+          email,
+          { redirectTo: redirectUrl }
+        );
 
         if (error) throw error;
 
         showStatus(
-          "If an account exists for this address, password recovery instructions will be sent to it.",
+          "If an account exists for this address, password recovery instructions will be sent.",
           "success"
         );
 
@@ -640,11 +651,10 @@
       }
     });
 
-    document.getElementById("year").textContent =
-      new Date().getFullYear();
+  checkExistingSession();
 
-    checkExistingSession();
-  </script>
+})();
+</script>
 
 </body>
 </html>

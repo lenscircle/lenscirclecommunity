@@ -1,0 +1,730 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#252722">
+  <title>Director Login | Lens Circle</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --paper: #f7f6f2;
+      --white: #fff;
+      --ink: #252722;
+      --muted: #777970;
+      --line: #e7e4dc;
+      --accent: #a85e42;
+      --accent-light: #f3e8e1;
+      --serif: "Playfair Display", Georgia, serif;
+      --sans: "DM Sans", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input {
+      font: inherit;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .visual {
+      position: relative;
+      min-height: 100vh;
+      overflow: hidden;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(20, 22, 18, .12),
+          rgba(20, 22, 18, .82)
+        ),
+        url("https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1800&q=85")
+        center / cover;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 42px;
+      color: white;
+    }
+
+    .brand {
+      font: 700 29px var(--serif);
+    }
+
+    .brand span {
+      color: #e1a284;
+    }
+
+    .visual-content {
+      max-width: 480px;
+      padding-bottom: 30px;
+    }
+
+    .visual-eyebrow {
+      color: #e1a284;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      margin-bottom: 19px;
+    }
+
+    .visual h1 {
+      font: 500 clamp(40px, 5vw, 65px)/1.1 var(--serif);
+      margin-bottom: 19px;
+    }
+
+    .visual-content p {
+      color: rgba(255,255,255,.78);
+      font-size: 12px;
+      line-height: 2;
+      max-width: 390px;
+    }
+
+    .visual-footer {
+      color: rgba(255,255,255,.65);
+      font-size: 9px;
+    }
+
+    .form-side {
+      display: grid;
+      place-items: center;
+      padding: 40px;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .mobile-brand {
+      display: none;
+      font: 700 25px var(--serif);
+      margin-bottom: 48px;
+    }
+
+    .mobile-brand span {
+      color: var(--accent);
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 15px;
+    }
+
+    .login-box h2 {
+      font: 500 39px/1.2 var(--serif);
+      margin-bottom: 12px;
+    }
+
+    .description {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.9;
+      margin-bottom: 30px;
+    }
+
+    .security-banner {
+      padding: 14px 15px;
+      margin-bottom: 25px;
+      background: var(--accent-light);
+      border-left: 3px solid var(--accent);
+    }
+
+    .security-banner strong {
+      display: block;
+      font-size: 10px;
+      margin-bottom: 5px;
+    }
+
+    .security-banner p {
+      color: #795847;
+      font-size: 9px;
+      line-height: 1.7;
+    }
+
+    .field {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      margin-bottom: 9px;
+    }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    input {
+      width: 100%;
+      height: 48px;
+      padding: 0 13px;
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--ink);
+      outline: none;
+      font-size: 11px;
+      border-radius: 0;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+    }
+
+    .password-input {
+      padding-right: 75px;
+    }
+
+    .toggle-password {
+      position: absolute;
+      top: 0;
+      right: 12px;
+      height: 48px;
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .forgot-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: -7px;
+      margin-bottom: 23px;
+    }
+
+    .forgot-row a {
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .submit-button {
+      width: 100%;
+      min-height: 49px;
+      border: 1px solid var(--ink);
+      background: var(--ink);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: .5px;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+
+    .submit-button:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .submit-button:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    .message {
+      display: none;
+      margin-bottom: 18px;
+      padding: 13px;
+      font-size: 10px;
+      line-height: 1.7;
+    }
+
+    .message.error {
+      display: block;
+      background: #f8e9e5;
+      color: #943d2c;
+    }
+
+    .message.success {
+      display: block;
+      background: #edf4ed;
+      color: #315c36;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      margin: 27px 0;
+      color: #a0a197;
+      font-size: 9px;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: "";
+      height: 1px;
+      flex: 1;
+      background: var(--line);
+    }
+
+    .portal-links {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .portal-link {
+      padding: 12px 8px;
+      text-align: center;
+      border: 1px solid var(--line);
+      background: white;
+      font-size: 9px;
+      font-weight: 600;
+      transition: .2s ease;
+    }
+
+    .portal-link:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .bottom-note {
+      margin-top: 29px;
+      color: var(--muted);
+      font-size: 9px;
+      line-height: 1.9;
+      text-align: center;
+    }
+
+    .bottom-note a {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .loading-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      background: var(--paper);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 25px;
+    }
+
+    .loading-screen h2 {
+      font: 500 28px var(--serif);
+      margin-bottom: 10px;
+    }
+
+    .loading-screen p {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.8;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media(max-width: 850px) {
+      .page {
+        grid-template-columns: 1fr;
+      }
+
+      .visual {
+        display: none;
+      }
+
+      .form-side {
+        min-height: 100vh;
+        padding: 35px 25px;
+      }
+
+      .mobile-brand {
+        display: block;
+      }
+
+      .login-box {
+        max-width: 440px;
+      }
+    }
+
+    @media(max-width: 420px) {
+      .form-side {
+        padding: 28px 20px;
+      }
+
+      .login-box h2 {
+        font-size: 34px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="loading-screen" id="loadingScreen">
+    <div>
+      <h2>Preparing secure access</h2>
+      <p>Please wait while Lens Circle checks your session.</p>
+    </div>
+  </div>
+
+  <div class="page hidden" id="page">
+
+    <section class="visual">
+
+      <a href="../index.html" class="brand">
+        Lens <span>Circle</span>
+      </a>
+
+      <div class="visual-content">
+        <div class="visual-eyebrow">Department leadership</div>
+
+        <h1>Inspire teams. Shape the community.</h1>
+
+        <p>
+          The Lens Circle Director portal is designed for
+          authorised department leaders who coordinate teams,
+          supervise moderators and lead community programmes.
+        </p>
+      </div>
+
+      <div class="visual-footer">
+        © <span id="visualYear"></span> Lens Circle · Director access
+      </div>
+
+    </section>
+
+    <main class="form-side">
+
+      <div class="login-box">
+
+        <a href="../index.html" class="mobile-brand">
+          Lens <span>Circle</span>
+        </a>
+
+        <div class="eyebrow">Restricted leadership portal</div>
+
+        <h2>Director sign in.</h2>
+
+        <p class="description">
+          Sign in using your authorised Director account.
+          Your department permissions will be verified before
+          access is granted.
+        </p>
+
+        <div class="security-banner">
+          <strong>Authorised personnel only</strong>
+          <p>
+            Director accounts are created or appointed by
+            authorised administrators. Public registration
+            is not available.
+          </p>
+        </div>
+
+        <div id="message" class="message" role="alert"></div>
+
+        <form id="loginForm">
+
+          <div class="field">
+            <label for="email">Director email</label>
+
+            <input
+              type="email"
+              id="email"
+              autocomplete="username"
+              placeholder="Enter your Director email"
+              required
+            >
+          </div>
+
+          <div class="field">
+            <label for="password">Password</label>
+
+            <div class="input-wrap">
+              <input
+                type="password"
+                id="password"
+                class="password-input"
+                autocomplete="current-password"
+                placeholder="Enter your password"
+                required
+              >
+
+              <button
+                type="button"
+                class="toggle-password"
+                id="togglePassword"
+              >
+                SHOW
+              </button>
+            </div>
+          </div>
+
+          <div class="forgot-row">
+            <a href="reset-password.html">Forgot password?</a>
+          </div>
+
+          <button
+            type="submit"
+            class="submit-button"
+            id="submitButton"
+          >
+            SIGN IN TO DIRECTOR PORTAL
+          </button>
+
+        </form>
+
+        <div class="divider">OTHER PORTALS</div>
+
+        <div class="portal-links">
+          <a href="../member/login.html" class="portal-link">
+            Member login
+          </a>
+
+          <a href="../moderator/login.html" class="portal-link">
+            Moderator login
+          </a>
+
+          <a href="../admin/login.html" class="portal-link" style="grid-column:1/-1;">
+            Administrator login
+          </a>
+        </div>
+
+        <div class="bottom-note">
+          Need Director access?
+          Contact an authorised Lens Circle administrator.
+          <br>
+          <a href="../index.html">Return to Lens Circle website →</a>
+        </div>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
+    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY";
+
+    const configured =
+      SUPABASE_URL.startsWith("https://") &&
+      !SUPABASE_URL.includes("YOUR_SUPABASE") &&
+      SUPABASE_ANON_KEY.length > 20 &&
+      !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE");
+
+    const client = configured && window.supabase
+      ? window.supabase.createClient(
+          SUPABASE_URL,
+          SUPABASE_ANON_KEY,
+          {
+            auth: {
+              persistSession: true,
+              autoRefreshToken: true,
+              detectSessionInUrl: true
+            }
+          }
+        )
+      : null;
+
+    const page = document.getElementById("page");
+    const loadingScreen = document.getElementById("loadingScreen");
+    const message = document.getElementById("message");
+    const form = document.getElementById("loginForm");
+    const submitButton = document.getElementById("submitButton");
+
+    document.getElementById("visualYear").textContent =
+      new Date().getFullYear();
+
+    function showMessage(text, type = "error") {
+      message.textContent = text;
+      message.className = "message " + type;
+    }
+
+    function showLoginPage() {
+      loadingScreen.classList.add("hidden");
+      page.classList.remove("hidden");
+    }
+
+    async function verifyDirectorRole() {
+      const { data, error } = await client.rpc(
+        "has_staff_role",
+        {
+          required_role: "director"
+        }
+      );
+
+      if (error) {
+        throw new Error(
+          "Director permissions could not be verified."
+        );
+      }
+
+      return data === true;
+    }
+
+    async function checkExistingSession() {
+      if (!client) {
+        showLoginPage();
+
+        showMessage(
+          "Supabase is not configured. Add your project URL and publishable/anon key before signing in."
+        );
+
+        return;
+      }
+
+      try {
+        const { data, error } =
+          await client.auth.getSession();
+
+        if (error) throw error;
+
+        if (!data.session) {
+          showLoginPage();
+          return;
+        }
+
+        const authorised = await verifyDirectorRole();
+
+        if (authorised) {
+          window.location.replace("dashboard.html");
+          return;
+        }
+
+        await client.auth.signOut();
+        showLoginPage();
+
+        showMessage(
+          "This account is not authorised to access the Director portal."
+        );
+
+      } catch (error) {
+        console.error("Director session verification:", error);
+
+        await client.auth.signOut();
+
+        showLoginPage();
+
+        showMessage(
+          "Unable to verify Director access. Please try again."
+        );
+      }
+    }
+
+    document.getElementById("togglePassword")
+      .addEventListener("click", () => {
+
+        const password =
+          document.getElementById("password");
+
+        const toggle =
+          document.getElementById("togglePassword");
+
+        const isPassword =
+          password.type === "password";
+
+        password.type = isPassword ? "text" : "password";
+        toggle.textContent = isPassword ? "HIDE" : "SHOW";
+      });
+
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+
+      if (!client) {
+        showMessage("Supabase configuration is missing.");
+        return;
+      }
+
+      const email =
+        document.getElementById("email").value.trim();
+
+      const password =
+        document.getElementById("password").value;
+
+      if (!email || !password) {
+        showMessage("Enter your email address and password.");
+        return;
+      }
+
+      submitButton.disabled = true;
+      submitButton.textContent = "VERIFYING ACCESS...";
+
+      message.className = "message";
+      message.textContent = "";
+
+      try {
+        const { data, error } =
+          await client.auth.signInWithPassword({
+            email,
+            password
+          });
+
+        if (error) throw error;
+
+        if (!data.user || !data.session) {
+          throw new Error(
+            "Unable to establish an authenticated session."
+          );
+        }
+
+        const authorised = await verifyDirectorRole();
+
+        if (!authorised) {
+          await client.auth.signOut();
+
+          throw new Error(
+            "Access denied. This account does not have Director permissions."
+          );
+        }
+
+        window.location.replace("dashboard.html");
+
+      } catch (error) {
+        console.error("Director login error:", error);
+
+        showMessage(
+          error.message ||
+          "Sign in failed. Please verify your credentials and try again."
+        );
+
+        submitButton.disabled = false;
+        submitButton.textContent = "SIGN IN TO DIRECTOR PORTAL";
+      }
+    });
+
+    checkExistingSession();
+  </script>
+
+</body>
+</html>

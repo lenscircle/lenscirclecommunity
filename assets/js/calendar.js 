@@ -1,0 +1,940 @@
+
+/* =========================================================
+   LENS CIRCLE — CALENDAR MODULE
+   File: assets/js/calendar.js
+
+   FEATURES
+   - Monthly calendar
+   - Previous/next month navigation
+   - Today highlighting
+   - Event category filtering
+   - Event detail panel
+   - Upcoming events list
+   - Calendar data from Supabase RPC
+   - Responsive calendar rendering
+
+   EXPECTED SUPABASE RPC CONTRACTS
+   - get_lens_circle_calendar_events
+   - get_lens_circle_event_details
+
+   EXPECTED EVENT FIELDS
+   id, title, description, category,
+   starts_at, ends_at, location, details_url
+
+   SECURITY
+   - Only published public events are displayed.
+   - Private staff events require separate authorised access.
+   - Event visibility is controlled by backend policies.
+   ========================================================= */
+
+(function (window, document) {
+  "use strict";
+
+  const LC = window.LensCircle = window.LensCircle || {};
+  const Calendar = {};
+
+  const CATEGORY_LABELS = {
+    photography: "Photography",
+    competition: "Competition",
+    exhibition: "Exhibition",
+    workshop: "Workshop",
+    community: "Community",
+    webinar: "Webinar",
+    meetup: "Meetup",
+    activity: "Activity",
+    other: "Other"
+  };
+
+  const state = {
+    events: [],
+    selectedDate: null,
+    selectedEvent: null,
+    currentMonth: new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      1
+    ),
+    categories: ["all"],
+    loading: false,
+    initialised: false
+  };
+
+  /* ---------------------------------------------------------
+     HELPERS
+  --------------------------------------------------------- */
+
+  function clean(value, maxLength) {
+    return String(value == null ? "" : value)
+      .trim()
+      .slice(0, maxLength || 500);
+  }
+
+  function array(value) {
+    return Array.isArray(value) ? value : [];
+  }
+
+  function db() {
+    if (LC.db) return LC.db;
+
+    if (
+      LC.supabase &&
+      typeof LC.supabase.rpc === "function"
+    ) {
+      return LC.supabase;
+    }
+
+    throw new Error("Supabase client is unavailable.");
+  }
+
+  function notify(message, type) {
+    if (
+      LC.forms &&
+      typeof LC.forms.notify === "function"
+    ) {
+      LC.forms.notify(message, type || "info");
+    } else {
+      console.info("[Lens Circle Calendar]", message);
+    }
+  }
+
+  function element(tag, className, text) {
+    const node = document.createElement(tag);
+
+    if (className) node.className = className;
+
+    if (text !== undefined) {
+      node.textContent = clean(text, 2000);
+    }
+
+    return node;
+  }
+
+  function dateKey(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1)
+      .padStart(2, "0");
+    const day = String(date.getDate())
+      .padStart(2, "0");
+
+    return year + "-" + month + "-" + day;
+  }
+
+  function parseDate(value) {
+    if (!value) return null;
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) return null;
+
+    return date;
+  }
+
+  function sameDay(a, b) {
+    return dateKey(a) === dateKey(b);
+  }
+
+  function formatDate(value) {
+    const date = parseDate(value);
+
+    if (!date) return "Date to be announced";
+
+    return date.toLocaleDateString(undefined, {
+      weekday: "long",
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    });
+  }
+
+  function formatTime(value) {
+    const date = parseDate(value);
+
+    if (!date) return "";
+
+    return date.toLocaleTimeString(undefined, {
+      hour: "numeric",
+      minute: "2-digit"
+    });
+  }
+
+  function monthLabel(date) {
+    return date.toLocaleDateString(undefined, {
+      month: "long",
+      year: "numeric"
+    });
+  }
+
+  function today() {
+    const now = new Date();
+
+    return new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    );
+  }
+
+  function categoryClass(category) {
+    const value = clean(category, 30).toLowerCase();
+
+    return Object.prototype.hasOwnProperty.call(
+      CATEGORY_LABELS,
+      value
+    )
+      ? "calendar-" + value
+      : "calendar-other";
+  }
+
+  /* ---------------------------------------------------------
+     RPC
+  --------------------------------------------------------- */
+
+  Calendar.rpc = async function (name, params) {
+    const { data, error } = await db().rpc(
+      name,
+      params || {}
+    );
+
+    if (error) {
+      console.error("[Calendar RPC]", name, error);
+      throw error;
+    }
+
+    return data;
+  };
+
+  /* ---------------------------------------------------------
+     LOAD EVENTS
+  --------------------------------------------------------- */
+
+  Calendar.loadEvents = async function (options) {
+    if (state.loading) return state.events;
+
+    state.loading = true;
+
+    const settings = options || {};
+
+    const monthStart = new Date(
+      state.currentMonth.getFullYear(),
+      state.currentMonth.getMonth(),
+      1
+    );
+
+    const monthEnd = new Date(
+      state.currentMonth.getFullYear(),
+      state.currentMonth.getMonth() + 1,
+      1
+    );
+
+    try {
+      const data = await Calendar.rpc(
+        "get_lens_circle_calendar_events",
+        {
+          p_start_date: dateKey(monthStart),
+          p_end_date: dateKey(monthEnd),
+          p_category:
+            settings.category &&
+            settings.category !== "all"
+              ? settings.category
+              : null
+        }
+      );
+
+      state.events = array(data).filter(function (event) {
+        return Boolean(parseDate(event.starts_at));
+      });
+
+      state.categories = [
+        "all",
+        ...new Set(
+          state.events.map(function (event) {
+            return clean(event.category, 30).toLowerCase();
+          })
+        )
+      ];
+
+      Calendar.render();
+      Calendar.renderUpcoming();
+
+      return state.events;
+
+    } finally {
+      state.loading = false;
+    }
+  };
+
+  /* ---------------------------------------------------------
+     MONTH NAVIGATION
+  --------------------------------------------------------- */
+
+  Calendar.previousMonth = async function () {
+    state.currentMonth = new Date(
+      state.currentMonth.getFullYear(),
+      state.currentMonth.getMonth() - 1,
+      1
+    );
+
+    await Calendar.loadEvents();
+  };
+
+  Calendar.nextMonth = async function () {
+    state.currentMonth = new Date(
+      state.currentMonth.getFullYear(),
+      state.currentMonth.getMonth() + 1,
+      1
+    );
+
+    await Calendar.loadEvents();
+  };
+
+  Calendar.goToToday = async function () {
+    const current = today();
+
+    state.currentMonth = new Date(
+      current.getFullYear(),
+      current.getMonth(),
+      1
+    );
+
+    state.selectedDate = current;
+
+    await Calendar.loadEvents();
+    Calendar.renderSelectedDate();
+  };
+
+  /* ---------------------------------------------------------
+     FILTERS
+  --------------------------------------------------------- */
+
+  Calendar.filterCategory = async function (category) {
+    const selected = clean(category, 30).toLowerCase();
+
+    await Calendar.loadEvents({
+      category: selected
+    });
+  };
+
+  /* ---------------------------------------------------------
+     EVENT DETAILS
+  --------------------------------------------------------- */
+
+  Calendar.getEventDetails = async function (eventId) {
+    const id = clean(eventId, 100);
+
+    if (!id) {
+      throw new Error("Event ID is required.");
+    }
+
+    const data = await Calendar.rpc(
+      "get_lens_circle_event_details",
+      {
+        p_event_id: id
+      }
+    );
+
+    state.selectedEvent = Array.isArray(data)
+      ? data[0] || null
+      : data;
+
+    Calendar.renderEventDetails();
+
+    return state.selectedEvent;
+  };
+
+  Calendar.renderEventDetails = function () {
+    const container = document.querySelector(
+      "[data-calendar-event-details]"
+    );
+
+    if (!container) return;
+
+    container.replaceChildren();
+
+    const event = state.selectedEvent;
+
+    if (!event) {
+      container.appendChild(
+        element(
+          "p",
+          "calendar-empty",
+          "Select an event to see its details."
+        )
+      );
+
+      return;
+    }
+
+    const title = element(
+      "h3",
+      "calendar-event-title",
+      event.title
+    );
+
+    const category = element(
+      "span",
+      categoryClass(event.category),
+      CATEGORY_LABELS[event.category] || "Event"
+    );
+
+    const description = element(
+      "p",
+      "calendar-event-description",
+      event.description
+    );
+
+    const date = element(
+      "p",
+      "calendar-event-date",
+      formatDate(event.starts_at)
+    );
+
+    const time = element(
+      "p",
+      "calendar-event-time",
+      formatTime(event.starts_at)
+    );
+
+    const location = element(
+      "p",
+      "calendar-event-location",
+      event.location || "Location to be announced"
+    );
+
+    container.append(
+      category,
+      title,
+      description,
+      date,
+      time,
+      location
+    );
+
+    if (event.details_url) {
+      const link = document.createElement("a");
+
+      const url = new URL(
+        event.details_url,
+        window.location.href
+      );
+
+      if (url.origin === window.location.origin) {
+        link.href = url.href;
+        link.textContent = "View event";
+        container.appendChild(link);
+      }
+    }
+  };
+
+  /* ---------------------------------------------------------
+     DAY SELECTION
+  --------------------------------------------------------- */
+
+  Calendar.selectDate = function (date) {
+    state.selectedDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate()
+    );
+
+    Calendar.render();
+    Calendar.renderSelectedDate();
+  };
+
+  Calendar.getEventsForDate = function (date) {
+    return state.events.filter(function (event) {
+      const starts = parseDate(event.starts_at);
+
+      if (!starts) return false;
+
+      const ends = parseDate(event.ends_at) || starts;
+
+      const selected = new Date(
+        date.getFullYear(),
+        date.getMonth(),
+        date.getDate()
+      );
+
+      const startDay = new Date(
+        starts.getFullYear(),
+        starts.getMonth(),
+        starts.getDate()
+      );
+
+      const endDay = new Date(
+        ends.getFullYear(),
+        ends.getMonth(),
+        ends.getDate()
+      );
+
+      return selected >= startDay && selected <= endDay;
+    });
+  };
+
+  Calendar.renderSelectedDate = function () {
+    const container = document.querySelector(
+      "[data-calendar-selected-events]"
+    );
+
+    if (!container) return;
+
+    container.replaceChildren();
+
+    if (!state.selectedDate) {
+      container.appendChild(
+        element(
+          "p",
+          "calendar-empty",
+          "Choose a date to explore events."
+        )
+      );
+
+      return;
+    }
+
+    const heading = element(
+      "h3",
+      "calendar-selected-date",
+      formatDate(state.selectedDate)
+    );
+
+    container.appendChild(heading);
+
+    const records = Calendar.getEventsForDate(
+      state.selectedDate
+    );
+
+    if (!records.length) {
+      container.appendChild(
+        element(
+          "p",
+          "calendar-empty",
+          "No scheduled events on this date."
+        )
+      );
+
+      return;
+    }
+
+    records.forEach(function (event) {
+      const item = element(
+        "article",
+        "calendar-selected-event"
+      );
+
+      const title = element(
+        "h4",
+        "",
+        event.title
+      );
+
+      const time = element(
+        "p",
+        "",
+        formatTime(event.starts_at)
+      );
+
+      const button = element(
+        "button",
+        "",
+        "View details"
+      );
+
+      button.type = "button";
+
+      button.addEventListener("click", function () {
+        Calendar.getEventDetails(event.id)
+          .catch(function (error) {
+            notify(error.message, "error");
+          });
+      });
+
+      item.append(title, time, button);
+      container.appendChild(item);
+    });
+  };
+
+  /* ---------------------------------------------------------
+     CALENDAR GRID
+  --------------------------------------------------------- */
+
+  Calendar.render = function () {
+    const container = document.querySelector(
+      "[data-lens-calendar]"
+    );
+
+    if (!container) return;
+
+    container.replaceChildren();
+
+    const year = state.currentMonth.getFullYear();
+    const month = state.currentMonth.getMonth();
+
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+
+    const startOffset = firstDay.getDay();
+    const daysInMonth = lastDay.getDate();
+
+    const header = element(
+      "div",
+      "calendar-header"
+    );
+
+    const previous = element(
+      "button",
+      "calendar-previous",
+      "Previous"
+    );
+
+    previous.type = "button";
+
+    previous.addEventListener("click", function () {
+      Calendar.previousMonth().catch(function (error) {
+        notify(error.message, "error");
+      });
+    });
+
+    const label = element(
+      "h2",
+      "calendar-month-label",
+      monthLabel(state.currentMonth)
+    );
+
+    const next = element(
+      "button",
+      "calendar-next",
+      "Next"
+    );
+
+    next.type = "button";
+
+    next.addEventListener("click", function () {
+      Calendar.nextMonth().catch(function (error) {
+        notify(error.message, "error");
+      });
+    });
+
+    const todayButton = element(
+      "button",
+      "calendar-today",
+      "Today"
+    );
+
+    todayButton.type = "button";
+
+    todayButton.addEventListener("click", function () {
+      Calendar.goToToday().catch(function (error) {
+        notify(error.message, "error");
+      });
+    });
+
+    header.append(
+      previous,
+      label,
+      next,
+      todayButton
+    );
+
+    container.appendChild(header);
+
+    const grid = element(
+      "div",
+      "calendar-grid"
+    );
+
+    grid.setAttribute("role", "grid");
+
+    const weekdays = [
+      "Sun",
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat"
+    ];
+
+    weekdays.forEach(function (weekday) {
+      const day = element(
+        "div",
+        "calendar-weekday",
+        weekday
+      );
+
+      day.setAttribute("role", "columnheader");
+      grid.appendChild(day);
+    });
+
+    for (let i = 0; i < startOffset; i += 1) {
+      const blank = element(
+        "div",
+        "calendar-day calendar-day-empty"
+      );
+
+      blank.setAttribute("aria-hidden", "true");
+      grid.appendChild(blank);
+    }
+
+    for (let dayNumber = 1;
+      dayNumber <= daysInMonth;
+      dayNumber += 1) {
+
+      const date = new Date(
+        year,
+        month,
+        dayNumber
+      );
+
+      const key = dateKey(date);
+
+      const dayEvents = Calendar.getEventsForDate(
+        date
+      );
+
+      const cell = element(
+        "button",
+        "calendar-day"
+      );
+
+      cell.type = "button";
+      cell.setAttribute("role", "gridcell");
+
+      const isToday = sameDay(date, today());
+
+      const isSelected =
+        state.selectedDate &&
+        sameDay(date, state.selectedDate);
+
+      if (isToday) cell.classList.add("is-today");
+      if (isSelected) cell.classList.add("is-selected");
+
+      cell.setAttribute(
+        "aria-label",
+        formatDate(date) +
+        ", " +
+        dayEvents.length +
+        " events"
+      );
+
+      const number = element(
+        "span",
+        "calendar-day-number",
+        String(dayNumber)
+      );
+
+      cell.appendChild(number);
+
+      if (dayEvents.length) {
+        const dots = element(
+          "span",
+          "calendar-event-dots"
+        );
+
+        dayEvents.slice(0, 3).forEach(function (event) {
+          const dot = element(
+            "span",
+            "calendar-event-dot " +
+            categoryClass(event.category)
+          );
+
+          dot.setAttribute(
+            "aria-label",
+            CATEGORY_LABELS[event.category] || "Event"
+          );
+
+          dots.appendChild(dot);
+        });
+
+        cell.appendChild(dots);
+
+        const count = element(
+          "span",
+          "calendar-event-count",
+          String(dayEvents.length)
+        );
+
+        cell.appendChild(count);
+      }
+
+      cell.addEventListener("click", function () {
+        Calendar.selectDate(date);
+      });
+
+      cell.dataset.date = key;
+
+      grid.appendChild(cell);
+    }
+
+    container.appendChild(grid);
+  };
+
+  /* ---------------------------------------------------------
+     UPCOMING EVENTS
+  --------------------------------------------------------- */
+
+  Calendar.renderUpcoming = function () {
+    const container = document.querySelector(
+      "[data-calendar-upcoming]"
+    );
+
+    if (!container) return;
+
+    container.replaceChildren();
+
+    const now = new Date();
+
+    const upcoming = state.events
+      .filter(function (event) {
+        const date = parseDate(event.starts_at);
+
+        return date && date >= now;
+      })
+      .sort(function (a, b) {
+        return new Date(a.starts_at) -
+          new Date(b.starts_at);
+      })
+      .slice(0, 8);
+
+    if (!upcoming.length) {
+      container.appendChild(
+        element(
+          "p",
+          "calendar-empty",
+          "No upcoming events are listed yet."
+        )
+      );
+
+      return;
+    }
+
+    upcoming.forEach(function (event) {
+      const card = element(
+        "article",
+        "calendar-upcoming-card"
+      );
+
+      const date = element(
+        "small",
+        "calendar-upcoming-date",
+        formatDate(event.starts_at)
+      );
+
+      const title = element(
+        "h3",
+        "calendar-upcoming-title",
+        event.title
+      );
+
+      const category = element(
+        "span",
+        categoryClass(event.category),
+        CATEGORY_LABELS[event.category] || "Event"
+      );
+
+      const button = element(
+        "button",
+        "calendar-upcoming-details",
+        "Explore"
+      );
+
+      button.type = "button";
+
+      button.addEventListener("click", function () {
+        Calendar.getEventDetails(event.id)
+          .catch(function (error) {
+            notify(error.message, "error");
+          });
+      });
+
+      card.append(date, title, category, button);
+      container.appendChild(card);
+    });
+  };
+
+  /* ---------------------------------------------------------
+     CATEGORY LEGEND
+  --------------------------------------------------------- */
+
+  Calendar.renderLegend = function () {
+    const container = document.querySelector(
+      "[data-calendar-legend]"
+    );
+
+    if (!container) return;
+
+    container.replaceChildren();
+
+    Object.entries(CATEGORY_LABELS).forEach(
+      function (entry) {
+        const item = element(
+          "span",
+          "calendar-legend-item"
+        );
+
+        const dot = element(
+          "span",
+          "calendar-event-dot " +
+          categoryClass(entry[0])
+        );
+
+        const label = element(
+          "span",
+          "",
+          entry[1]
+        );
+
+        item.append(dot, label);
+        container.appendChild(item);
+      }
+    );
+  };
+
+  /* ---------------------------------------------------------
+     FILTER CONTROL
+  --------------------------------------------------------- */
+
+  Calendar.bindCategoryFilter = function () {
+    const select = document.querySelector(
+      "[data-calendar-category-filter]"
+    );
+
+    if (!select || select.dataset.bound) return;
+
+    select.dataset.bound = "true";
+
+    select.addEventListener("change", function () {
+      Calendar.filterCategory(select.value)
+        .catch(function (error) {
+          notify(error.message, "error");
+        });
+    });
+  };
+
+  /* ---------------------------------------------------------
+     INITIALISATION
+  --------------------------------------------------------- */
+
+  Calendar.init = async function () {
+    Calendar.bindCategoryFilter();
+    Calendar.renderLegend();
+
+    await Calendar.loadEvents();
+
+    if (!state.selectedDate) {
+      state.selectedDate = today();
+    }
+
+    Calendar.render();
+    Calendar.renderSelectedDate();
+
+    state.initialised = true;
+
+    return true;
+  };
+
+  /* ---------------------------------------------------------
+     STATE
+  --------------------------------------------------------- */
+
+  Calendar.getState = function () {
+    retu

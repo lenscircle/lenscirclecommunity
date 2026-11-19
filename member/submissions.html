@@ -1,0 +1,629 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f7f6f2">
+
+  <title>My Submissions | Lens Circle</title>
+  <meta name="description" content="View your photography submissions and competition entries on Lens Circle.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --paper: #f7f6f2;
+      --white: #fff;
+      --ink: #252722;
+      --muted: #777970;
+      --line: #e7e4dc;
+      --accent: #a85e42;
+      --accent-light: #f3e8e1;
+      --soft: #eeeae2;
+      --serif: "Playfair Display", Georgia, serif;
+      --sans: "DM Sans", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .topbar {
+      height: 72px;
+      background: white;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5%;
+    }
+
+    .brand {
+      font-family: var(--serif);
+      font-size: 25px;
+      font-weight: 700;
+    }
+
+    .brand span {
+      color: var(--accent);
+    }
+
+    .back {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .back:hover {
+      color: var(--accent);
+    }
+
+    .container {
+      max-width: 1250px;
+      margin: auto;
+      padding: 43px 25px 70px;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-family: var(--serif);
+      font-size: 43px;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+
+    .intro {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.8;
+      max-width: 620px;
+    }
+
+    .page-heading {
+      margin-bottom: 32px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      padding: 21px;
+      background: white;
+      border: 1px solid var(--line);
+    }
+
+    .stat-card span {
+      display: block;
+      font-size: 10px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .stat-card strong {
+      display: block;
+      font-family: var(--serif);
+      font-size: 29px;
+      font-weight: 500;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    .tab {
+      border: 1px solid var(--line);
+      padding: 10px 14px;
+      background: white;
+      color: var(--muted);
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .tab.active,
+    .tab:hover {
+      background: var(--ink);
+      color: white;
+      border-color: var(--ink);
+    }
+
+    .search {
+      width: 220px;
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      outline: none;
+      font-size: 10px;
+      background: white;
+    }
+
+    .search:focus {
+      border-color: var(--accent);
+    }
+
+    .submission-list {
+      display: grid;
+      gap: 13px;
+    }
+
+    .submission-card {
+      background: white;
+      border: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 145px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 20px;
+      padding: 15px;
+    }
+
+    .submission-image {
+      width: 145px;
+      height: 115px;
+      object-fit: cover;
+      background: var(--soft);
+    }
+
+    .submission-info h2 {
+      font-family: var(--serif);
+      font-size: 21px;
+      font-weight: 500;
+      margin-bottom: 7px;
+    }
+
+    .submission-info p {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.7;
+    }
+
+    .submission-meta {
+      display: flex;
+      gap: 13px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      color: #888980;
+      font-size: 9px;
+    }
+
+    .submission-status {
+      display: inline-block;
+      padding: 7px 10px;
+      background: var(--soft);
+      color: #65665d;
+      font-size: 9px;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .empty-state {
+      background: white;
+      border: 1px solid var(--line);
+      text-align: center;
+      padding: 65px 25px;
+    }
+
+    .empty-icon {
+      font-size: 34px;
+      margin-bottom: 18px;
+    }
+
+    .empty-state h2 {
+      font-family: var(--serif);
+      font-size: 27px;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+
+    .empty-state p {
+      max-width: 430px;
+      margin: 0 auto 22px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.8;
+    }
+
+    .primary-link {
+      display: inline-block;
+      background: var(--ink);
+      color: white;
+      padding: 13px 19px;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .primary-link:hover {
+      background: var(--accent);
+    }
+
+    .information {
+      margin-top: 27px;
+      padding: 17px 19px;
+      background: #fbf6ec;
+      border: 1px solid #e9dcc2;
+      color: #705d40;
+      font-size: 10px;
+      line-height: 1.8;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .loading {
+      padding: 60px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .error {
+      padding: 30px;
+      margin: 50px auto;
+      max-width: 480px;
+      background: white;
+      border: 1px solid var(--line);
+      text-align: center;
+    }
+
+    .error h2 {
+      font-family: var(--serif);
+      font-size: 27px;
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    .error p {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 17px;
+    }
+
+    .error a {
+      color: var(--accent);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    @media(max-width: 750px) {
+      .submission-card {
+        grid-template-columns: 110px minmax(0, 1fr);
+      }
+
+      .submission-image {
+        width: 110px;
+        height: 100px;
+      }
+
+      .submission-status {
+        grid-column: 2;
+        justify-self: start;
+      }
+    }
+
+    @media(max-width: 520px) {
+      .container {
+        padding: 32px 16px 50px;
+      }
+
+      h1 {
+        font-size: 36px;
+      }
+
+      .stats {
+        gap: 8px;
+      }
+
+      .stat-card {
+        padding: 14px 11px;
+      }
+
+      .stat-card strong {
+        font-size: 24px;
+      }
+
+      .stat-card span {
+        font-size: 9px;
+      }
+
+      .toolbar {
+        align-items: stretch;
+      }
+
+      .search {
+        width: 100%;
+      }
+
+      .submission-card {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .submission-image {
+        width: 100%;
+        height: 185px;
+      }
+
+      .submission-status {
+        grid-column: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <a href="../index.html" class="brand">
+      Lens <span>Circle</span>
+    </a>
+
+    <a href="dashboard.html" class="back">
+      ← Member dashboard
+    </a>
+  </header>
+
+  <main class="container">
+
+    <section id="loading" class="loading">
+      Loading your submissions...
+    </section>
+
+    <section id="error" class="error" hidden>
+      <h2>Unable to load submissions.</h2>
+      <p id="errorText">Please sign in to continue.</p>
+      <a href="login.html">Go to sign in →</a>
+    </section>
+
+    <div id="pageContent" hidden>
+
+      <section class="page-heading">
+        <div class="eyebrow">Your photography journey</div>
+        <h1>My submissions.</h1>
+        <p class="intro">
+          A dedicated space for your photographs, creative entries
+          and competition participation. Your submissions will
+          appear here once the submission system is connected.
+        </p>
+      </section>
+
+      <section class="stats">
+        <div class="stat-card">
+          <span>Total submissions</span>
+          <strong id="totalCount">0</strong>
+        </div>
+
+        <div class="stat-card">
+          <span>Under review</span>
+          <strong id="reviewCount">0</strong>
+        </div>
+
+        <div class="stat-card">
+          <span>Selected entries</span>
+          <strong id="selectedCount">0</strong>
+        </div>
+      </section>
+
+      <section>
+
+        <div class="toolbar">
+
+          <div class="tabs">
+            <button class="tab active" data-filter="all">
+              All
+            </button>
+
+            <button class="tab" data-filter="photo">
+              Photo of the Day
+            </button>
+
+            <button class="tab" data-filter="competition">
+              Competitions
+            </button>
+          </div>
+
+          <input
+            type="search"
+            class="search"
+            id="searchInput"
+            placeholder="Search your submissions..."
+            aria-label="Search submissions">
+
+        </div>
+
+        <div id="submissionList" class="submission-list">
+
+          <div class="empty-state">
+            <div class="empty-icon">📷</div>
+
+            <h2>Your gallery starts here.</h2>
+
+            <p>
+              You haven't connected any photography submissions yet.
+              Explore our community activities and start participating.
+            </p>
+
+            <a href="../photo-of-the-day.html" class="primary-link">
+              Explore Photo of the Day →
+            </a>
+          </div>
+
+        </div>
+
+      </section>
+
+      <div class="information">
+        <strong>Submission system development:</strong>
+        This page currently displays an empty state. It does not
+        contain fabricated entries or sample submission records.
+        Once the Supabase submission tables, image storage,
+        review workflow and RLS policies are implemented,
+        your real submissions and statuses will appear here.
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer>
+    © <span id="year"></span> Lens Circle. The world, through your lens.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    // Supabase configuration
+    const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
+    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY";
+
+    const isConfigured =
+      SUPABASE_URL.startsWith("https://") &&
+      !SUPABASE_URL.includes("YOUR_SUPABASE") &&
+      SUPABASE_ANON_KEY.length > 20 &&
+      !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE");
+
+    let supabaseClient = null;
+
+    if (isConfigured && window.supabase) {
+      supabaseClient = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+      );
+    }
+
+    const loading = document.getElementById("loading");
+    const pageContent = document.getElementById("pageContent");
+    const error = document.getElementById("error");
+    const errorText = document.getElementById("errorText");
+
+    function showError(message) {
+      loading.hidden = true;
+      pageContent.hidden = true;
+      error.hidden = false;
+      errorText.textContent = message;
+    }
+
+    async function initializePage() {
+      if (!supabaseClient) {
+        showError(
+          "Supabase is not configured. Add your project URL and publishable/anon key to this file."
+        );
+        return;
+      }
+
+      try {
+        const { data, error: sessionError } =
+          await supabaseClient.auth.getSession();
+
+        if (sessionError) throw sessionError;
+
+        if (!data.session) {
+          window.location.replace("login.html");
+          return;
+        }
+
+        loading.hidden = true;
+        pageContent.hidden = false;
+
+      } catch (err) {
+        showError(
+          err.message || "Unable to verify your account session."
+        );
+      }
+    }
+
+    // Filtering interface is ready for real records.
+    let activeFilter = "all";
+
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".tab").forEach(item => {
+          item.classList.remove("active");
+        });
+
+        tab.classList.add("active");
+        activeFilter = tab.dataset.filter;
+
+        // No records are loaded until the database integration stage.
+        // This filter will be connected to actual submission records later.
+      });
+    });
+
+    // Search input is prepared for database-backed records.
+    document.getElementById("searchInput").addEventListener(
+      "input",
+      event => {
+        const query = event.target.value.trim();
+
+        if (query.length > 0) {
+          // Search will operate on real submissions after integration.
+        }
+      }
+    );
+
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+
+    if (isConfigured && window.supabase) {
+      const client = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+      );
+
+      client.auth.onAuthStateChange((event, session) => {
+        if (event === "SIGNED_OUT" || !session) {
+          window.location.replace("login.html");
+        }
+      });
+    }
+
+    initializePage();
+  </script>
+
+</body>
+</html>

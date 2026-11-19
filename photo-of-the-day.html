@@ -1,0 +1,1087 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f7f6f2">
+
+  <title>Photo of the Day | Lens Circle</title>
+  <meta name="description" content="Participate in Lens Circle Photo of the Day. Share your photography, explore creative perspectives and vote for your favourite photograph.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --paper: #f7f6f2;
+      --white: #fff;
+      --ink: #252722;
+      --muted: #777970;
+      --line: #e7e4dc;
+      --accent: #a85e42;
+      --accent-dark: #85472f;
+      --soft: #eeeae2;
+      --dark: #252722;
+      --serif: "Playfair Display", Georgia, serif;
+      --sans: "DM Sans", Arial, sans-serif;
+      --container: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.6;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .container {
+      width: min(var(--container), calc(100% - 48px));
+      margin: auto;
+    }
+
+    .announcement {
+      background: var(--dark);
+      color: var(--paper);
+      text-align: center;
+      padding: 9px 15px;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(247,246,242,.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-inner {
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 25px;
+    }
+
+    .brand {
+      font-family: var(--serif);
+      font-size: 25px;
+      font-weight: 700;
+      letter-spacing: -.8px;
+      white-space: nowrap;
+    }
+
+    .brand span {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 12px;
+      color: #55574f;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--accent);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .nav-join {
+      background: var(--ink);
+      color: white;
+      padding: 11px 18px;
+    }
+
+    .nav-join:hover {
+      background: var(--accent);
+    }
+
+    .menu-toggle {
+      display: none;
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      font-size: 25px;
+      cursor: pointer;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2.4px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    h1, h2, h3 {
+      font-family: var(--serif);
+      font-weight: 500;
+      line-height: 1.15;
+    }
+
+    .hero {
+      padding: 85px 0;
+      background: var(--soft);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 55px;
+      align-items: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(45px, 6vw, 72px);
+      letter-spacing: -2px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 span {
+      color: var(--accent);
+    }
+
+    .hero-copy {
+      color: #66685f;
+      font-size: 14px;
+      max-width: 500px;
+      margin-bottom: 27px;
+    }
+
+    .hero-image {
+      width: 100%;
+      height: 450px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent);
+      color: white;
+      padding: 14px 23px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 0;
+      cursor: pointer;
+      transition: background .2s;
+    }
+
+    .button:hover {
+      background: var(--accent-dark);
+    }
+
+    .button-dark {
+      background: var(--ink);
+    }
+
+    .button-dark:hover {
+      background: var(--accent);
+    }
+
+    .text-link {
+      display: inline-block;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 700;
+      margin-left: 17px;
+    }
+
+    .section {
+      padding: 78px 0;
+    }
+
+    .section-heading {
+      max-width: 650px;
+      margin-bottom: 35px;
+    }
+
+    .section-heading h2 {
+      font-size: clamp(34px, 4vw, 48px);
+      margin-bottom: 15px;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* Activity schedule */
+
+    .schedule-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .schedule-card {
+      background: white;
+      border: 1px solid var(--line);
+      padding: 28px;
+    }
+
+    .schedule-number {
+      font-family: var(--serif);
+      color: var(--accent);
+      font-size: 38px;
+      margin-bottom: 15px;
+    }
+
+    .schedule-card h3 {
+      font-size: 23px;
+      margin-bottom: 9px;
+    }
+
+    .schedule-card p {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* Theme */
+
+    .theme-section {
+      background: var(--dark);
+      color: white;
+    }
+
+    .theme-section .eyebrow {
+      color: #d69a7e;
+    }
+
+    .theme-section .section-heading p {
+      color: #b8bab1;
+    }
+
+    .theme-card {
+      background: #343730;
+      padding: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 30px;
+    }
+
+    .theme-card h3 {
+      font-size: 34px;
+      margin-bottom: 10px;
+    }
+
+    .theme-card p {
+      color: #c5c7bf;
+      font-size: 12px;
+    }
+
+    .theme-label {
+      border: 1px solid #76796e;
+      padding: 10px 15px;
+      font-size: 10px;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* Steps */
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .step {
+      border-top: 2px solid var(--accent);
+      padding-top: 20px;
+    }
+
+    .step span {
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .step h3 {
+      font-size: 22px;
+      margin: 12px 0 9px;
+    }
+
+    .step p {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* Featured photography */
+
+    .featured-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+
+    .featured-card {
+      background: white;
+      border: 1px solid var(--line);
+    }
+
+    .featured-card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .featured-card-content {
+      padding: 19px;
+    }
+
+    .featured-card h3 {
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+
+    .featured-card p {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .demo-label {
+      display: inline-block;
+      color: var(--accent);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      margin-bottom: 9px;
+    }
+
+    /* Rules */
+
+    .rules-section {
+      background: var(--soft);
+    }
+
+    .rules-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 35px;
+    }
+
+    .rules-card {
+      background: var(--paper);
+      padding: 30px;
+    }
+
+    .rules-card h3 {
+      font-size: 25px;
+      margin-bottom: 16px;
+    }
+
+    .rules-card ul {
+      padding-left: 20px;
+    }
+
+    .rules-card li {
+      color: #62645c;
+      font-size: 12px;
+      padding: 7px 0;
+    }
+
+    /* Voting */
+
+    .voting-box {
+      background: white;
+      border: 1px solid var(--line);
+      padding: 35px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .voting-box h3 {
+      font-size: 29px;
+      margin-bottom: 10px;
+    }
+
+    .voting-box p {
+      color: var(--muted);
+      font-size: 12px;
+      max-width: 600px;
+    }
+
+    /* CTA */
+
+    .cta {
+      background: var(--dark);
+      color: white;
+      text-align: center;
+      padding: 78px 25px;
+    }
+
+    .cta .eyebrow {
+      color: #d69a7e;
+    }
+
+    .cta h2 {
+      font-size: clamp(35px, 5vw, 52px);
+      margin-bottom: 15px;
+    }
+
+    .cta p {
+      max-width: 550px;
+      margin: 0 auto 25px;
+      color: #c5c7bf;
+      font-size: 13px;
+    }
+
+    footer {
+      background: #1d1f1b;
+      color: white;
+      padding: 60px 0 25px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 40px;
+      padding-bottom: 42px;
+    }
+
+    .footer-brand {
+      font-family: var(--serif);
+      font-size: 27px;
+      margin-bottom: 15px;
+    }
+
+    .footer-brand span {
+      color: #d18b6b;
+    }
+
+    .footer-about {
+      color: #a8aaa1;
+      font-size: 12px;
+      max-width: 270px;
+    }
+
+    .footer-column h4 {
+      font-size: 10px;
+      letter-spacing: 1.7px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .footer-column a {
+      display: block;
+      color: #a8aaa1;
+      font-size: 11px;
+      margin-bottom: 11px;
+    }
+
+    .footer-column a:hover {
+      color: white;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid #393b35;
+      padding-top: 22px;
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      color: #92948b;
+      font-size: 10px;
+    }
+
+    @media (max-width: 950px) {
+      .nav-links {
+        gap: 12px;
+      }
+
+      .hero-grid {
+        gap: 30px;
+      }
+
+      .steps-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .container {
+        width: min(100% - 32px, var(--container));
+      }
+
+      .nav-inner {
+        min-height: 68px;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 68px;
+        left: 0;
+        right: 0;
+        background: var(--paper);
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--line);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .nav-actions {
+        margin-left: auto;
+      }
+
+      .nav-actions > a:first-child {
+        display: none;
+      }
+
+      .hero {
+        padding: 60px 0;
+      }
+
+      .hero-grid,
+      .rules-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-image {
+        height: 330px;
+      }
+
+      .section {
+        padding: 58px 0;
+      }
+
+      .schedule-grid,
+      .featured-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .theme-card {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .voting-box {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .brand {
+        font-size: 22px;
+      }
+
+      .schedule-grid,
+      .featured-grid,
+      .steps-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-image {
+        height: 270px;
+      }
+
+      .text-link {
+        display: block;
+        margin: 18px 0 0;
+      }
+
+      .theme-card {
+        padding: 25px;
+      }
+
+      .rules-card,
+      .voting-box {
+        padding: 23px;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="announcement">
+    One photograph. One theme. A community of perspectives.
+  </div>
+
+  <header class="navbar">
+    <div class="container nav-inner">
+
+      <a href="index.html" class="brand">Lens <span>Circle</span></a>
+
+      <button class="menu-toggle" id="menuToggle"
+        aria-label="Toggle navigation"
+        aria-expanded="false">☰</button>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="index.html">Home</a>
+        <a href="discover.html">Discover</a>
+        <a href="activities.html" class="active">Activities</a>
+        <a href="competitions.html">Competitions</a>
+        <a href="exhibitions.html">Exhibitions</a>
+        <a href="creators.html">Creators</a>
+        <a href="stories.html">Journal</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="member/login.html">Sign in</a>
+        <a href="member/register.html" class="nav-join">Join Lens Circle</a>
+      </div>
+
+    </div>
+  </header>
+
+  <main>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container hero-grid">
+
+        <div>
+          <div class="eyebrow">Lens Circle signature activity</div>
+          <h1>Photo of <span>the Day.</span></h1>
+
+          <p class="hero-copy">
+            A daily celebration of photography, creativity and
+            perspective. Discover how different photographers
+            interpret a shared theme, and share your own vision
+            with the Lens Circle community.
+          </p>
+
+          <a href="#how-it-works" class="button">
+            How to participate →
+          </a>
+
+          <a href="#submission" class="text-link">
+            Submission details
+          </a>
+        </div>
+
+        <div>
+          <img
+            class="hero-image"
+            src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1200&q=85"
+            alt="Mountain landscape photographed in beautiful natural light">
+        </div>
+
+      </div>
+    </section>
+
+    <!-- DAILY SCHEDULE -->
+    <section class="section">
+      <div class="container">
+
+        <div class="section-heading">
+          <div class="eyebrow">Daily participation schedule</div>
+          <h2>A simple daily photography ritual.</h2>
+          <p>
+            The activity follows a submission window and a
+            community voting window. All times are in Indian
+            Standard Time (IST).
+          </p>
+        </div>
+
+        <div class="schedule-grid">
+
+          <article class="schedule-card">
+            <div class="schedule-number">01</div>
+            <h3>Submit your photograph</h3>
+            <p>
+              Send your entry through the official submission
+              channel before 12:00 PM IST.
+            </p>
+          </article>
+
+          <article class="schedule-card">
+            <div class="schedule-number">02</div>
+            <h3>Community voting</h3>
+            <p>
+              Explore the selected entries and cast your vote
+              during the voting window, ending at 8:00 PM IST.
+            </p>
+          </article>
+
+          <article class="schedule-card">
+            <div class="schedule-number">03</div>
+            <h3>Featured photograph</h3>
+            <p>
+              The selected Photo of the Day can be showcased
+              through Lens Circle's community channels.
+            </p>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- DAILY THEME -->
+    <section class="theme-section">
+      <div class="container section">
+
+        <div class="section-heading">
+          <div class="eyebrow">Today's creative direction</div>
+          <h2>One theme. Many interpretations.</h2>
+          <p>
+            Every theme is an invitation to experiment,
+            observe and tell a story through photography.
+          </p>
+        </div>
+
+        <div class="theme-card">
+          <div>
+            <div class="eyebrow">Theme announcement</div>
+            <h3>Today's Theme</h3>
+            <p>
+              The daily theme will be announced through the
+              official Lens Circle community channel.
+            </p>
+          </div>
+
+          <div class="theme-label">
+            Check latest announcement
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section" id="how-it-works">
+      <div class="container">
+
+        <div class="section-heading">
+          <div class="eyebrow">Participation process</div>
+          <h2>Four steps to take part.</h2>
+          <p>
+            Whether you use a professional camera or a smartphone,
+            your perspective belongs here.
+          </p>
+        </div>
+
+        <div class="steps-grid">
+
+          <article class="step">
+            <span>STEP 01</span>
+            <h3>Explore the theme</h3>
+            <p>
+              Read the daily theme announcement and think
+              about your own interpretation.
+            </p>
+          </article>
+
+          <article class="step">
+            <span>STEP 02</span>
+            <h3>Capture your vision</h3>
+            <p>
+              Create an original photograph that reflects
+              the announced theme.
+            </p>
+          </article>
+
+          <article class="step">
+            <span>STEP 03</span>
+            <h3>Send your entry</h3>
+            <p>
+              Submit your photograph through the official
+              entry channel before the deadline.
+            </p>
+          </article>
+
+          <article class="step">
+            <span>STEP 04</span>
+            <h3>Vote and discover</h3>
+            <p>
+              Explore the entries, participate in voting
+              and appreciate other photographers.
+            </p>
+          </article>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- FEATURED PHOTOGRAPHS -->
+    <section class="section" style="background:white;">
+      <div class="container">
+
+        <div class="section-heading">
+          <div class="eyebrow">A celebration of perspectives</div>
+          <h2>Every frame tells a story.</h2>
+          <p>
+            A preview of the visual directions that make
+            photography such a powerful creative language.
+          </p>
+        </div>
+
+        <div class="featured-grid">
+
+          <article class="featured-card">
+            <img
+              src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=800&q=85"
+              alt="Landscape photography inspiration">
+            <div class="featured-card-content">
+              <span class="demo-label">Visual inspiration</span>
+              <h3>Nature & landscapes</h3>
+              <p>Find extraordinary moments in the natural world.</p>
+            </div>
+          </article>
+
+          <article class="featured-card">
+            <img
+              src="https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=800&q=85"
+              alt="Night sky photography inspiration">
+            <div class="featured-card-content">
+              <span class="demo-label">Visual inspiration</span>
+              <h3>Light & atmosphere</h3>
+              <p>Explore the mood created by light and darkness.</p>
+            </div>
+          </article>
+
+          <article class="featured-card">
+            <img
+              src="https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=800&q=85"
+              alt="Creative photography inspiration">
+            <div class="featured-card-content">
+              <span class="demo-label">Visual inspiration</span>
+              <h3>Creative perspectives</h3>
+              <p>Discover new ways of seeing familiar subjects.</p>
+            </div>
+          </article>
+
+        </div>
+
+        <p style="font-size:10px;color:var(--muted);margin-top:16px;">
+          These are illustrative photographs, not actual member entries
+          or Photo of the Day winners.
+        </p>
+
+      </div>
+    </section>
+
+    <!-- SUBMISSION RULES -->
+    <section class="rules-section" id="submission">
+      <div class="container section">
+
+        <div class="section-heading">
+          <div class="eyebrow">Before you submit</div>
+          <h2>Keep it original. Keep it respectful.</h2>
+          <p>
+            A few basic expectations help make the activity
+            fair and enjoyable for everyone.
+          </p>
+        </div>
+
+        <div class="rules-grid">
+
+          <div class="rules-card">
+            <h3>Submission guidelines</h3>
+            <ul>
+              <li>Submit your own original photograph.</li>
+              <li>Follow the announced daily theme.</li>
+              <li>Send your entry before 12:00 PM IST.</li>
+              <li>Include your Instagram username or creator credit.</li>
+              <li>Do not submit stolen or unauthorised photographs.</li>
+              <li>Follow any additional instructions in the daily announcement.</li>
+            </ul>
+          </div>
+
+          <div class="rules-card">
+            <h3>Community voting</h3>
+            <ul>
+              <li>Voting takes place until 8:00 PM IST.</li>
+              <li>Appreciate photographs fairly and respectfully.</li>
+              <li>Do not use fake accounts or automated voting.</li>
+              <li>Do not pressure others to vote for a particular entry.</li>
+              <li>Respect the published result and activity rules.</li>
+              <li>Follow the official announcement for result updates.</li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- VOTING -->
+    <section class="section">
+      <div class="container">
+
+        <div class="voting-box">
+          <div>
+            <div class="eyebrow">Community participation</div>
+            <h3>Discover. Appreciate. Vote.</h3>
+            <p>
+              The voting gallery and official voting mechanism
+              will be made available through the Lens Circle
+              activity system. Follow the latest community
+              announcement for the current voting link.
+            </p>
+          </div>
+
+          <a href="activities.html" class="button button-dark">
+            Explore activities →
+          </a>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+      <div class="container">
+        <div class="eyebrow">
+          Your perspective belongs here
+        </div>
+
+        <h2>Ready to share your frame?</h2>
+
+        <p>
+          Take part in Photo of the Day and become part
+          of a community that celebrates the art of seeing.
+        </p>
+
+        <a href="member/register.html" class="button">
+          Join Lens Circle →
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+
+      <div class="footer-grid">
+
+        <div>
+          <div class="footer-brand">Lens <span>Circle</span></div>
+          <p class="footer-about">
+            An international photography community celebrating
+            creativity, perspectives and the art of seeing.
+          </p>
+        </div>
+
+        <div class="footer-column">
+          <h4>Explore</h4>
+          <a href="discover.html">Discover</a>
+          <a href="activities.html">Activities</a>
+          <a href="competitions.html">Competitions</a>
+          <a href="exhibitions.html">Exhibitions</a>
+        </div>
+
+        <div class="footer-column">
+          <h4>Community</h4>
+          <a href="creators.html">Creators</a>
+          <a href="stories.html">Journal</a>
+          <a href="about.html">About us</a>
+          <a href="contact.html">Contact</a>
+        </div>
+
+        <div class="footer-column">
+          <h4>Policies</h4>
+          <a href="legal/guidelines.html">Guidelines</a>
+          <a href="legal/privacy.html">Privacy policy</a>
+          <a href="legal/terms.html">Terms of service</a>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <span>© <span id="year"></span> Lens Circle. All rights reserved.</span>
+        <span>The world, through your lens.</span>
+      </div>
+
+    </div>
+  </footer>
+
+  <script>
+    const menuToggle = document.getElementById("menuToggle");
+    const navLinks = document.getElementById("navLinks");
+
+    menuToggle.addEventListener("click", () => {
+      const isOpen = navLinks.classList.toggle("open");
+      menuToggle.setAttribute("aria-expanded", String(isOpen));
+      menuToggle.textContent = isOpen ? "×" : "☰";
+    });
+
+    navLinks.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        navLinks.classList.remove("open");
+        menuToggle.setAttribute("aria-expanded", "false");
+        menuToggle.textContent = "☰";
+      });
+    });
+
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+  </script>
+
+</body>
+</html>

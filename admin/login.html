@@ -1,0 +1,433 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#252722">
+  <title>Admin Login | Lens Circle</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --paper: #f7f6f2;
+      --ink: #252722;
+      --muted: #77796f;
+      --line: #e8e6df;
+      --accent: #a85e42;
+      --accent-soft: #f5eae4;
+      --dark: #252722;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "DM Sans", sans-serif;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .topbar {
+      padding: 23px 6%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      font-family: "Playfair Display", serif;
+      font-size: 25px;
+      letter-spacing: -.7px;
+    }
+
+    .brand span { color: var(--accent); }
+
+    .portal {
+      color: var(--muted);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.8px;
+    }
+
+    .main {
+      flex: 1;
+      display: grid;
+      place-items: center;
+      padding: 45px 20px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 450px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 39px;
+      box-shadow: 0 16px 55px rgba(37,39,34,.055);
+    }
+
+    .icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      display: grid;
+      place-items: center;
+      font-size: 23px;
+      margin-bottom: 25px;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-family: "Playfair Display", serif;
+      font-size: 33px;
+      font-weight: 500;
+      letter-spacing: -.7px;
+      margin: 0 0 10px;
+    }
+
+    .description {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.8;
+      margin-bottom: 27px;
+    }
+
+    .field { margin-bottom: 18px; }
+
+    label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .password-wrap { position: relative; }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fdfcf9;
+      color: var(--ink);
+      outline: none;
+      font: inherit;
+      font-size: 12px;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(168,94,66,.08);
+    }
+
+    .password-wrap input { padding-right: 55px; }
+
+    .toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .forgot {
+      display: block;
+      text-align: right;
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 600;
+      margin-top: -6px;
+      margin-bottom: 22px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--dark);
+      color: #fff;
+      border: 0;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .btn:hover { background: var(--accent); }
+    .btn:disabled { opacity: .55; cursor: not-allowed; }
+
+    .message {
+      display: none;
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: 11px;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .message.error {
+      display: block;
+      background: #f8ece9;
+      color: #944b39;
+    }
+
+    .message.info {
+      display: block;
+      background: #f1eee7;
+      color: #68685e;
+    }
+
+    .security-note {
+      border-top: 1px solid var(--line);
+      padding-top: 17px;
+      margin-top: 24px;
+      color: #929288;
+      font-size: 10px;
+      line-height: 1.7;
+    }
+
+    .back {
+      display: block;
+      text-align: center;
+      margin-top: 22px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .back:hover { color: var(--accent); }
+
+    .footer {
+      text-align: center;
+      color: #96968c;
+      font-size: 10px;
+      padding: 20px;
+    }
+
+    @media (max-width: 480px) {
+      .card { padding: 28px 22px; }
+      .topbar { padding: 18px 5%; }
+      .brand { font-size: 22px; }
+      h1 { font-size: 29px; }
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <a href="../index.html" class="brand">Lens <span>Circle</span></a>
+  <div class="portal">Restricted Admin Portal</div>
+</header>
+
+<main class="main">
+  <section class="card">
+
+    <div class="icon">✦</div>
+
+    <div class="eyebrow">Platform administration</div>
+    <h1>Administrator login</h1>
+
+    <p class="description">
+      Secure access to the Lens Circle administration workspace.
+      Only authorised platform administrators can sign in here.
+    </p>
+
+    <div id="message" class="message" role="alert" aria-live="polite"></div>
+
+    <form id="loginForm">
+
+      <div class="field">
+        <label for="email">Administrator email</label>
+        <input
+          id="email"
+          type="email"
+          autocomplete="username"
+          placeholder="Enter your registered email"
+          maxlength="254"
+          required
+        >
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+
+        <div class="password-wrap">
+          <input
+            id="password"
+            type="password"
+            autocomplete="current-password"
+            placeholder="Enter your password"
+            required
+          >
+          <button class="toggle" id="togglePassword" type="button">
+            Show
+          </button>
+        </div>
+      </div>
+
+      <a href="reset-password.html" class="forgot">
+        Forgot password?
+      </a>
+
+      <button class="btn" id="loginButton" type="submit">
+        Sign in securely
+      </button>
+
+    </form>
+
+    <div class="security-note">
+      This portal is restricted. Administrator accounts are created
+      and managed through the authorised platform administration process.
+      Public registration and self-assigned administrator roles are not permitted.
+    </div>
+
+    <a href="../index.html" class="back">← Return to Lens Circle</a>
+
+  </section>
+</main>
+
+<footer class="footer">
+  © <span id="year"></span> Lens Circle · Restricted Administration
+</footer>
+
+<script>
+  const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
+  const SUPABASE_ANON_KEY = "YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY";
+
+  const { createClient } = supabase;
+
+  const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+      flowType: "pkce",
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true
+    }
+  });
+
+  const loginForm = document.getElementById("loginForm");
+  const loginButton = document.getElementById("loginButton");
+  const message = document.getElementById("message");
+
+  document.getElementById("year").textContent =
+    new Date().getFullYear();
+
+  function showMessage(text, type = "error") {
+    message.textContent = text;
+    message.className = "message " + type;
+  }
+
+  document.getElementById("togglePassword").addEventListener("click", () => {
+    const password = document.getElementById("password");
+    const visible = password.type === "text";
+
+    password.type = visible ? "password" : "text";
+    document.getElementById("togglePassword").textContent =
+      visible ? "Show" : "Hide";
+  });
+
+  async function verifyExistingSession() {
+    try {
+      const { data, error } = await db.auth.getSession();
+
+      if (error || !data.session) return;
+
+      const { data: authorised, error: roleError } =
+        await db.rpc("has_staff_role", {
+          required_role: "admin"
+        });
+
+      if (!roleError && authorised === true) {
+        window.location.replace("dashboard.html");
+        return;
+      }
+
+      await db.auth.signOut();
+
+    } catch (error) {
+      console.error("Existing session verification failed:", error);
+    }
+  }
+
+  loginForm.addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    if (!email || !password) {
+      showMessage("Please enter your email and password.");
+      return;
+    }
+
+    loginButton.disabled = true;
+    loginButton.textContent = "Verifying credentials...";
+
+    try {
+      const { data, error } = await db.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) throw error;
+
+      const { data: authorised, error: roleError } =
+        await db.rpc("has_staff_role", {
+          required_role: "admin"
+        });
+
+      if (roleError || authorised !== true) {
+        await db.auth.signOut();
+
+        showMessage(
+          "Access denied. This account is not authorised for the Admin portal."
+        );
+        return;
+      }
+
+      window.location.replace("dashboard.html");
+
+    } catch (error) {
+      console.error("Admin login failed:", error);
+
+      showMessage(
+        "Unable to sign in. Check your credentials or contact the authorised administrator."
+      );
+
+    } finally {
+      loginButton.disabled = false;
+      loginButton.textContent = "Sign in securely";
+    }
+  });
+
+  verifyExistingSession();
+</script>
+
+</body>
+</html>

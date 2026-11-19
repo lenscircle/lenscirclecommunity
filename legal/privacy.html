@@ -1,0 +1,939 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f7f6f2">
+
+  <title>Privacy Policy | Lens Circle</title>
+  <meta name="description" content="Read the Lens Circle Privacy Policy to understand how member information, photographs and account data are handled.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --paper: #f7f6f2;
+      --white: #fff;
+      --ink: #252722;
+      --muted: #777970;
+      --line: #e7e4dc;
+      --accent: #a85e42;
+      --accent-dark: #85472f;
+      --soft: #eeeae2;
+      --dark: #252722;
+      --serif: "Playfair Display", Georgia, serif;
+      --sans: "DM Sans", Arial, sans-serif;
+      --container: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 100px;
+    }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.7;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(var(--container), calc(100% - 48px));
+      margin: auto;
+    }
+
+    .announcement {
+      background: var(--dark);
+      color: var(--paper);
+      text-align: center;
+      padding: 9px 15px;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(247,246,242,.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-inner {
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 25px;
+    }
+
+    .brand {
+      font-family: var(--serif);
+      font-size: 25px;
+      font-weight: 700;
+      letter-spacing: -.8px;
+      white-space: nowrap;
+    }
+
+    .brand span {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 12px;
+      color: #55574f;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .nav-join {
+      background: var(--ink);
+      color: white;
+      padding: 11px 18px;
+    }
+
+    .nav-join:hover {
+      background: var(--accent);
+    }
+
+    .menu-toggle {
+      display: none;
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      font-size: 25px;
+      cursor: pointer;
+    }
+
+    .page-intro {
+      padding: 82px 0 65px;
+      text-align: center;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2.4px;
+      text-transform: uppercase;
+      margin-bottom: 17px;
+    }
+
+    h1, h2, h3 {
+      font-family: var(--serif);
+      font-weight: 500;
+      line-height: 1.2;
+    }
+
+    .page-intro h1 {
+      font-size: clamp(40px, 6vw, 65px);
+      letter-spacing: -1.8px;
+      margin-bottom: 18px;
+    }
+
+    .page-intro p {
+      max-width: 680px;
+      margin: auto;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .section {
+      padding: 75px 0;
+    }
+
+    .document-layout {
+      display: grid;
+      grid-template-columns: 245px 1fr;
+      gap: 65px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 115px;
+      background: white;
+      border: 1px solid var(--line);
+      padding: 25px;
+    }
+
+    .sidebar h3 {
+      font-size: 21px;
+      margin-bottom: 17px;
+    }
+
+    .sidebar a {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .sidebar a:hover {
+      color: var(--accent);
+    }
+
+    .document {
+      max-width: 800px;
+    }
+
+    .intro-note {
+      background: var(--soft);
+      border-left: 3px solid var(--accent);
+      padding: 20px 23px;
+      margin-bottom: 40px;
+      font-size: 12px;
+      color: #55574f;
+    }
+
+    .document section {
+      margin-bottom: 40px;
+      scroll-margin-top: 110px;
+    }
+
+    .document h2 {
+      font-size: 29px;
+      margin-bottom: 14px;
+    }
+
+    .document h3 {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 700;
+      margin: 21px 0 8px;
+    }
+
+    .document p {
+      color: #62645c;
+      font-size: 13px;
+      margin-bottom: 13px;
+    }
+
+    .document ul {
+      padding-left: 21px;
+      margin: 12px 0 17px;
+    }
+
+    .document li {
+      color: #62645c;
+      font-size: 13px;
+      padding: 4px 0;
+    }
+
+    .document strong {
+      color: var(--ink);
+    }
+
+    .document a {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .policy-meta {
+      color: var(--muted);
+      font-size: 10px;
+      margin-top: 20px;
+    }
+
+    .cta {
+      background: var(--dark);
+      color: white;
+      text-align: center;
+      padding: 70px 25px;
+    }
+
+    .cta h2 {
+      font-size: clamp(32px, 5vw, 48px);
+      margin-bottom: 15px;
+    }
+
+    .cta p {
+      max-width: 540px;
+      margin: 0 auto 25px;
+      color: #c5c7bf;
+      font-size: 13px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent);
+      color: white;
+      padding: 13px 22px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .button:hover {
+      background: var(--accent-dark);
+    }
+
+    footer {
+      background: #1d1f1b;
+      color: white;
+      padding: 60px 0 25px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 40px;
+      padding-bottom: 42px;
+    }
+
+    .footer-brand {
+      font-family: var(--serif);
+      font-size: 27px;
+      margin-bottom: 15px;
+    }
+
+    .footer-brand span {
+      color: #d18b6b;
+    }
+
+    .footer-about {
+      color: #a8aaa1;
+      font-size: 12px;
+      max-width: 270px;
+    }
+
+    .footer-column h4 {
+      font-size: 10px;
+      letter-spacing: 1.7px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .footer-column a {
+      display: block;
+      color: #a8aaa1;
+      font-size: 11px;
+      margin-bottom: 11px;
+    }
+
+    .footer-column a:hover {
+      color: white;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid #393b35;
+      padding-top: 22px;
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      color: #92948b;
+      font-size: 10px;
+    }
+
+    @media (max-width: 950px) {
+      .nav-links {
+        gap: 12px;
+      }
+
+      .document-layout {
+        gap: 35px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .container {
+        width: min(100% - 32px, var(--container));
+      }
+
+      .nav-inner {
+        min-height: 68px;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 68px;
+        left: 0;
+        right: 0;
+        background: var(--paper);
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--line);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .nav-actions {
+        margin-left: auto;
+      }
+
+      .nav-actions > a:first-child {
+        display: none;
+      }
+
+      .document-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+
+      .sidebar nav {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0 15px;
+      }
+
+      .page-intro {
+        padding: 60px 0 45px;
+      }
+
+      .section {
+        padding: 55px 0;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .brand {
+        font-size: 22px;
+      }
+
+      .sidebar nav {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="announcement">
+    Your creativity matters. Your privacy does too.
+  </div>
+
+  <header class="navbar">
+    <div class="container nav-inner">
+
+      <a href="../index.html" class="brand">Lens <span>Circle</span></a>
+
+      <button class="menu-toggle" id="menuToggle"
+        aria-label="Toggle navigation"
+        aria-expanded="false">☰</button>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="../index.html">Home</a>
+        <a href="../discover.html">Discover</a>
+        <a href="../activities.html">Activities</a>
+        <a href="../competitions.html">Competitions</a>
+        <a href="../exhibitions.html">Exhibitions</a>
+        <a href="../creators.html">Creators</a>
+        <a href="../stories.html">Journal</a>
+        <a href="../about.html">About</a>
+        <a href="../contact.html">Contact</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="../member/login.html">Sign in</a>
+        <a href="../member/register.html" class="nav-join">Join Lens Circle</a>
+      </div>
+
+    </div>
+  </header>
+
+  <main>
+
+    <section class="page-intro">
+      <div class="container">
+        <div class="eyebrow">Your information matters</div>
+        <h1>Privacy Policy</h1>
+        <p>
+          This policy describes how Lens Circle intends to collect,
+          use, protect and manage information when people visit
+          the website or participate in the community.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container document-layout">
+
+        <aside class="sidebar">
+          <h3>On this page</h3>
+          <nav>
+            <a href="#overview">Overview</a>
+            <a href="#information">Information collected</a>
+            <a href="#photographs">Photographs and content</a>
+            <a href="#use">How information is used</a>
+            <a href="#sharing">Sharing information</a>
+            <a href="#supabase">Technology providers</a>
+            <a href="#security">Data security</a>
+            <a href="#retention">Data retention</a>
+            <a href="#rights">Your choices and rights</a>
+            <a href="#cookies">Cookies and analytics</a>
+            <a href="#children">Children's privacy</a>
+            <a href="#international">International visitors</a>
+            <a href="#changes">Policy changes</a>
+            <a href="#contact">Contact</a>
+          </nav>
+        </aside>
+
+        <article class="document">
+
+          <div class="intro-note">
+            <strong>Important notice:</strong>
+            This is the initial privacy-policy draft for the planned
+            Lens Circle platform. The final policy must be checked
+            against the actual website features, Supabase configuration,
+            analytics tools, data flows and applicable legal requirements
+            before member registration is enabled.
+          </div>
+
+          <section id="overview">
+            <div class="eyebrow">01 / Introduction</div>
+            <h2>Overview</h2>
+            <p>
+              Lens Circle is a photography community designed to
+              connect photographers, creators and photography
+              enthusiasts through discovery, activities, competitions,
+              exhibitions and editorial content.
+            </p>
+            <p>
+              This policy explains how information may be handled
+              when you use Lens Circle's website and services.
+            </p>
+            <p>
+              In this policy, "Lens Circle", "we", "our" and "us"
+              refer to the Lens Circle platform and its operators.
+              "You" refers to a visitor, member or other person
+              interacting with the platform.
+            </p>
+          </section>
+
+          <section id="information">
+            <div class="eyebrow">02 / Data collection</div>
+            <h2>Information we may collect</h2>
+
+            <h3>Account information</h3>
+            <p>
+              If account registration is introduced, we may collect
+              information such as:
+            </p>
+            <ul>
+              <li>Name or display name.</li>
+              <li>Email address.</li>
+              <li>Authentication and account identifiers.</li>
+              <li>Profile photograph, biography and optional profile details.</li>
+              <li>Account preferences and settings.</li>
+            </ul>
+
+            <h3>Community information</h3>
+            <ul>
+              <li>Photographs, titles, descriptions and captions submitted by members.</li>
+              <li>Competition and activity entries.</li>
+              <li>Votes, comments, bookmarks and participation records, where those features are enabled.</li>
+              <li>Messages, reports and support requests submitted through platform features.</li>
+            </ul>
+
+            <h3>Technical information</h3>
+            <p>
+              Depending on hosting, security and analytics configuration,
+              limited technical information may be processed, such as
+              browser type, device information, approximate usage data,
+              IP address and security logs.
+            </p>
+
+            <h3>Information you choose not to provide</h3>
+            <p>
+              Some features may require certain information to function.
+              Optional profile details should be clearly identified.
+              You should not provide sensitive personal information
+              unless a specific feature genuinely requires it and
+              appropriate safeguards are in place.
+            </p>
+          </section>
+
+          <section id="photographs">
+            <div class="eyebrow">03 / Creator rights</div>
+            <h2>Photographs and creative content</h2>
+            <p>
+              Your photographs are an important part of Lens Circle.
+              We recognise that creators should retain ownership
+              of their original work.
+            </p>
+            <ul>
+              <li>You retain applicable rights in photographs and other original content you create.</li>
+              <li>Content may be displayed to operate the feature for which it was submitted.</li>
+              <li>Public submissions may be visible to other visitors if the relevant feature is designed as public.</li>
+              <li>Private account information should not be displayed publicly unless you choose to share it or it is necessary and lawful.</li>
+              <li>Additional permission may be required for promotional, advertising or commercial reuse beyond ordinary platform display.</li>
+            </ul>
+            <p>
+              Before uploading, review the visibility settings and
+              submission terms associated with the relevant feature.
+              Do not upload another person's photograph without
+              appropriate permission.
+            </p>
+          </section>
+
+          <section id="use">
+            <div class="eyebrow">04 / Purpose</div>
+            <h2>How information may be used</h2>
+            <p>Information may be used to:</p>
+            <ul>
+              <li>Create and manage member accounts.</li>
+              <li>Authenticate users and protect account access.</li>
+              <li>Display member profiles and authorised photography submissions.</li>
+              <li>Operate competitions, exhibitions, voting and community activities.</li>
+              <li>Respond to support requests and reports.</li>
+              <li>Moderate content and enforce community guidelines.</li>
+              <li>Maintain website performance and security.</li>
+              <li>Improve features and understand aggregate platform usage.</li>
+              <li>Meet applicable legal obligations.</li>
+            </ul>
+            <p>
+              We should collect and use only information reasonably
+              necessary for the relevant purpose.
+            </p>
+          </section>
+
+          <section id="sharing">
+            <div class="eyebrow">05 / Disclosure</div>
+            <h2>When information may be shared</h2>
+            <p>
+              We do not intend to sell members' personal information.
+              Information may be shared only where appropriate,
+              such as:
+            </p>
+            <ul>
+              <li>With service providers needed to operate the platform.</li>
+              <li>With authorised moderators or administrators where necessary for their duties.</li>
+              <li>When you choose to publish a profile or photograph publicly.</li>
+              <li>When required by applicable law or a valid legal process.</li>
+              <li>When necessary to investigate abuse, fraud or security incidents.</li>
+              <li>With your consent for a specific purpose.</li>
+            </ul>
+            <p>
+              Public photographs, comments and creator profiles may
+              be visible to people outside Lens Circle if the relevant
+              feature is publicly accessible.
+            </p>
+          </section>
+
+          <section id="supabase">
+            <div class="eyebrow">06 / Platform infrastructure</div>
+            <h2>Hosting and technology providers</h2>
+            <p>
+              The planned platform uses GitHub Pages for website
+              hosting and Supabase for backend services such as
+              authentication, database and file storage.
+            </p>
+            <p>
+              These providers may process technical or account
+              information as necessary to provide their services,
+              subject to their own terms, privacy policies and
+              applicable configuration.
+            </p>
+            <p>
+              The final version of this policy should identify the
+              actual providers, enabled services, relevant data
+              locations and applicable contractual arrangements
+              after implementation is complete.
+            </p>
+          </section>
+
+          <section id="security">
+            <div class="eyebrow">07 / Protection</div>
+            <h2>Data security</h2>
+            <p>
+              We intend to use reasonable technical and organisational
+              safeguards to protect information against unauthorised
+              access, alteration, disclosure or destruction.
+            </p>
+            <p>Planned safeguards include:</p>
+            <ul>
+              <li>Role-based access controls.</li>
+              <li>Database access policies and Row Level Security.</li>
+              <li>Secure authentication practices.</li>
+              <li>Restricted administrative access.</li>
+              <li>Appropriate file-storage permissions.</li>
+              <li>Security monitoring and audit records where implemented.</li>
+            </ul>
+            <p>
+              No internet service can guarantee absolute security.
+              Members should use strong, unique passwords and protect
+              their account credentials.
+            </p>
+          </section>
+
+          <section id="retention">
+            <div class="eyebrow">08 / Storage duration</div>
+            <h2>Data retention</h2>
+            <p>
+              Information should be retained only for as long as
+              reasonably necessary for the purpose for which it
+              was collected, subject to applicable legal requirements.
+            </p>
+            <p>
+              Retention periods will depend on the type of information,
+              the feature involved, security requirements and legal
+              obligations. The final platform should define retention
+              and deletion procedures for accounts, submissions,
+              moderation records and backups.
+            </p>
+          </section>
+
+          <section id="rights">
+            <div class="eyebrow">09 / Your choices</div>
+            <h2>Your choices and privacy rights</h2>
+            <p>
+              Subject to applicable law and verification requirements,
+              you may be able to:
+            </p>
+            <ul>
+              <li>Request access to personal information associated with your account.</li>
+              <li>Request correction of inaccurate information.</li>
+              <li>Request deletion of your account or eligible information.</li>
+              <li>Withdraw consent where processing relies on consent.</li>
+              <li>Object to or request restriction of certain processing where applicable.</li>
+              <li>Raise concerns about how your information is handled.</li>
+            </ul>
+            <p>
+              Some information may need to be retained for legitimate
+              security, dispute-resolution or legal reasons. Deletion
+              from public display may not immediately remove every
+              backup or legally required record.
+            </p>
+            <p>
+              We will publish a verified privacy contact and a
+              practical request process before public registration
+              begins.
+            </p>
+          </section>
+
+          <section id="cookies">
+            <div class="eyebrow">10 / Website technologies</div>
+            <h2>Cookies and analytics</h2>
+            <p>
+              The current static website may use essential browser
+              functionality and third-party resources such as
+              web fonts and remote images.
+            </p>
+            <p>
+              Additional cookies, analytics tools or similar
+              technologies may be introduced in the future.
+              If introduced, their purpose, operation and relevant
+              choices should be explained here and in any required
+              consent interface.
+            </p>
+          </section>
+
+          <section id="children">
+            <div class="eyebrow">11 / Younger users</div>
+            <h2>Children's privacy</h2>
+            <p>
+              Lens Circle is not intended to knowingly collect
+              personal information from children in violation
+              of applicable law.
+            </p>
+            <p>
+              Any future age requirements, parental consent
+              procedures and safeguards for younger users must
+              be defined before registration is opened to them.
+            </p>
+          </section>
+
+          <section id="international">
+            <div class="eyebrow">12 / Global community</div>
+            <h2>International visitors</h2>
+            <p>
+              Lens Circle aims to serve a global photography
+              community. Depending on the providers and their
+              infrastructure, information may be processed
+              in countries other than the country where you live.
+            </p>
+            <p>
+              Where required, appropriate safeguards and
+              disclosures should be implemented for international
+              data transfers.
+            </p>
+          </section>
+
+          <section id="changes">
+            <div class="eyebrow">13 / Updates</div>
+            <h2>Changes to this policy</h2>
+            <p>
+              This policy may be updated as Lens Circle introduces
+              new features, changes its technology providers or
+              responds to legal and operational requirements.
+            </p>
+            <p>
+              Material changes should be communicated through
+              appropriate website notices or other suitable
+              communication channels.
+            </p>
+          </section>
+
+          <section id="contact">
+            <div class="eyebrow">14 / Contact</div>
+            <h2>Questions about privacy?</h2>
+            <p>
+              For privacy-related questions or requests, use the
+              <a href="../contact.html">Lens Circle contact page</a>.
+            </p>
+            <p>
+              A verified privacy contact address and formal
+              data-request procedure must be added before
+              public launch.
+            </p>
+
+            <div class="policy-meta">
+              Document: Privacy Policy<br>
+              Version: 1.0 — Initial draft<br>
+              Last updated: November 2026
+            </div>
+          </section>
+
+        </article>
+
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="container">
+        <div class="eyebrow" style="color:#d69a7e;">
+          Trust and transparency
+        </div>
+        <h2>Your work. Your voice. Your privacy.</h2>
+        <p>
+          We want Lens Circle to be a place where creators
+          can share their work with confidence.
+        </p>
+        <a href="../contact.html" class="button">Contact Lens Circle →</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+
+      <div class="footer-grid">
+
+        <div>
+          <div class="footer-brand">Lens <span>Circle</span></div>
+          <p class="footer-about">
+            An international photography community celebrating
+            creativity, perspectives and the art of seeing.
+          </p>
+        </div>
+
+        <div class="footer-column">
+          <h4>Explore</h4>
+          <a href="../discover.html">Discover</a>
+          <a href="../activities.html">Activities</a>
+          <a href="../competitions.html">Competitions</a>
+          <a href="../exhibitions.html">Exhibitions</a>
+        </div>
+
+        <div class="footer-column">
+          <h4>Community</h4>
+          <a href="../creators.html">Creators</a>
+          <a href="../stories.html">Journal</a>
+          <a href="../about.html">About us</a>
+          <a href="../contact.html">Contact</a>
+        </div>
+
+        <div class="footer-column">
+          <h4>Policies</h4>
+          <a href="guidelines.html">Community guidelines</a>
+          <a href="privacy.html">Privacy policy</a>
+          <a href="terms.html">Terms of service</a>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <span>© <span id="year"></span> Lens Circle. All rights reserved.</span>
+        <span>The world, through your lens.</span>
+      </div>
+
+    </div>
+  </footer>
+
+  <script>
+    const menuToggle = document.getElementById("menuToggle");
+    const navLinks = document.getElementById("navLinks");
+
+    menuToggle.addEventListener("click", () => {
+      const isOpen = navLinks.classList.toggle("open");
+      menuToggle.setAttribute("aria-expanded", String(isOpen));
+      menuToggle.textContent = isOpen ? "×" : "☰";
+    });
+
+    navLinks.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        navLinks.classList.remove("open");
+        menuToggle.setAttribute("aria-expanded", "false");
+        menuToggle.textContent = "☰";
+      });
+    });
+
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+  </script>
+
+</body>
+</html>

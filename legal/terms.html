@@ -1,0 +1,993 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f7f6f2">
+
+  <title>Terms of Service | Lens Circle</title>
+  <meta name="description" content="Read the Lens Circle Terms of Service governing membership, content submissions, competitions and use of the photography community.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --paper: #f7f6f2;
+      --white: #fff;
+      --ink: #252722;
+      --muted: #777970;
+      --line: #e7e4dc;
+      --accent: #a85e42;
+      --accent-dark: #85472f;
+      --soft: #eeeae2;
+      --dark: #252722;
+      --serif: "Playfair Display", Georgia, serif;
+      --sans: "DM Sans", Arial, sans-serif;
+      --container: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 100px;
+    }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.7;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: min(var(--container), calc(100% - 48px));
+      margin: auto;
+    }
+
+    .announcement {
+      background: var(--dark);
+      color: var(--paper);
+      text-align: center;
+      padding: 9px 15px;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(247,246,242,.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .nav-inner {
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 25px;
+    }
+
+    .brand {
+      font-family: var(--serif);
+      font-size: 25px;
+      font-weight: 700;
+      letter-spacing: -.8px;
+      white-space: nowrap;
+    }
+
+    .brand span {
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 12px;
+      color: #55574f;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .nav-join {
+      background: var(--ink);
+      color: white;
+      padding: 11px 18px;
+    }
+
+    .nav-join:hover {
+      background: var(--accent);
+    }
+
+    .menu-toggle {
+      display: none;
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      font-size: 25px;
+      cursor: pointer;
+    }
+
+    .page-intro {
+      padding: 82px 0 65px;
+      text-align: center;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2.4px;
+      text-transform: uppercase;
+      margin-bottom: 17px;
+    }
+
+    h1, h2, h3 {
+      font-family: var(--serif);
+      font-weight: 500;
+      line-height: 1.2;
+    }
+
+    .page-intro h1 {
+      font-size: clamp(40px, 6vw, 65px);
+      letter-spacing: -1.8px;
+      margin-bottom: 18px;
+    }
+
+    .page-intro p {
+      max-width: 680px;
+      margin: auto;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .section {
+      padding: 75px 0;
+    }
+
+    .document-layout {
+      display: grid;
+      grid-template-columns: 245px 1fr;
+      gap: 65px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 115px;
+      background: white;
+      border: 1px solid var(--line);
+      padding: 25px;
+    }
+
+    .sidebar h3 {
+      font-size: 21px;
+      margin-bottom: 17px;
+    }
+
+    .sidebar a {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .sidebar a:hover {
+      color: var(--accent);
+    }
+
+    .document {
+      max-width: 800px;
+    }
+
+    .intro-note {
+      background: var(--soft);
+      border-left: 3px solid var(--accent);
+      padding: 20px 23px;
+      margin-bottom: 40px;
+      font-size: 12px;
+      color: #55574f;
+    }
+
+    .document section {
+      margin-bottom: 40px;
+      scroll-margin-top: 110px;
+    }
+
+    .document h2 {
+      font-size: 29px;
+      margin-bottom: 14px;
+    }
+
+    .document h3 {
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 700;
+      margin: 21px 0 8px;
+    }
+
+    .document p {
+      color: #62645c;
+      font-size: 13px;
+      margin-bottom: 13px;
+    }
+
+    .document ul {
+      padding-left: 21px;
+      margin: 12px 0 17px;
+    }
+
+    .document li {
+      color: #62645c;
+      font-size: 13px;
+      padding: 4px 0;
+    }
+
+    .document strong {
+      color: var(--ink);
+    }
+
+    .document a {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .policy-meta {
+      color: var(--muted);
+      font-size: 10px;
+      margin-top: 20px;
+    }
+
+    .cta {
+      background: var(--dark);
+      color: white;
+      text-align: center;
+      padding: 70px 25px;
+    }
+
+    .cta h2 {
+      font-size: clamp(32px, 5vw, 48px);
+      margin-bottom: 15px;
+    }
+
+    .cta p {
+      max-width: 540px;
+      margin: 0 auto 25px;
+      color: #c5c7bf;
+      font-size: 13px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent);
+      color: white;
+      padding: 13px 22px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .button:hover {
+      background: var(--accent-dark);
+    }
+
+    footer {
+      background: #1d1f1b;
+      color: white;
+      padding: 60px 0 25px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 40px;
+      padding-bottom: 42px;
+    }
+
+    .footer-brand {
+      font-family: var(--serif);
+      font-size: 27px;
+      margin-bottom: 15px;
+    }
+
+    .footer-brand span {
+      color: #d18b6b;
+    }
+
+    .footer-about {
+      color: #a8aaa1;
+      font-size: 12px;
+      max-width: 270px;
+    }
+
+    .footer-column h4 {
+      font-size: 10px;
+      letter-spacing: 1.7px;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .footer-column a {
+      display: block;
+      color: #a8aaa1;
+      font-size: 11px;
+      margin-bottom: 11px;
+    }
+
+    .footer-column a:hover {
+      color: white;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid #393b35;
+      padding-top: 22px;
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      color: #92948b;
+      font-size: 10px;
+    }
+
+    @media (max-width: 950px) {
+      .nav-links {
+        gap: 12px;
+      }
+
+      .document-layout {
+        gap: 35px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .container {
+        width: min(100% - 32px, var(--container));
+      }
+
+      .nav-inner {
+        min-height: 68px;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .nav-links {
+        display: none;
+        position: absolute;
+        top: 68px;
+        left: 0;
+        right: 0;
+        background: var(--paper);
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--line);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 18px;
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .nav-actions {
+        margin-left: auto;
+      }
+
+      .nav-actions > a:first-child {
+        display: none;
+      }
+
+      .document-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+
+      .sidebar nav {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0 15px;
+      }
+
+      .page-intro {
+        padding: 60px 0 45px;
+      }
+
+      .section {
+        padding: 55px 0;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .brand {
+        font-size: 22px;
+      }
+
+      .sidebar nav {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="announcement">
+    A shared space for creative expression
+  </div>
+
+  <header class="navbar">
+    <div class="container nav-inner">
+
+      <a href="../index.html" class="brand">Lens <span>Circle</span></a>
+
+      <button class="menu-toggle" id="menuToggle"
+        aria-label="Toggle navigation"
+        aria-expanded="false">☰</button>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="../index.html">Home</a>
+        <a href="../discover.html">Discover</a>
+        <a href="../activities.html">Activities</a>
+        <a href="../competitions.html">Competitions</a>
+        <a href="../exhibitions.html">Exhibitions</a>
+        <a href="../creators.html">Creators</a>
+        <a href="../stories.html">Journal</a>
+        <a href="../about.html">About</a>
+        <a href="../contact.html">Contact</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="../member/login.html">Sign in</a>
+        <a href="../member/register.html" class="nav-join">Join Lens Circle</a>
+      </div>
+
+    </div>
+  </header>
+
+  <main>
+
+    <section class="page-intro">
+      <div class="container">
+        <div class="eyebrow">Terms and conditions</div>
+        <h1>Terms of Service</h1>
+        <p>
+          These terms explain the rules for accessing and using
+          Lens Circle, participating in community activities
+          and sharing creative work.
+        </p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container document-layout">
+
+        <aside class="sidebar">
+          <h3>On this page</h3>
+          <nav>
+            <a href="#acceptance">Acceptance of terms</a>
+            <a href="#eligibility">Eligibility</a>
+            <a href="#accounts">Member accounts</a>
+            <a href="#membership">Membership</a>
+            <a href="#conduct">Acceptable use</a>
+            <a href="#content">Your content</a>
+            <a href="#licence">Content licence</a>
+            <a href="#copyright">Copyright complaints</a>
+            <a href="#competitions">Competitions</a>
+            <a href="#moderation">Moderation</a>
+            <a href="#third-party">Third-party services</a>
+            <a href="#availability">Service availability</a>
+            <a href="#disclaimer">Disclaimers</a>
+            <a href="#liability">Liability</a>
+            <a href="#termination">Termination</a>
+            <a href="#changes">Changes to terms</a>
+            <a href="#law">Applicable law</a>
+            <a href="#contact">Contact</a>
+          </nav>
+        </aside>
+
+        <article class="document">
+
+          <div class="intro-note">
+            <strong>Important notice:</strong>
+            This is an initial draft for the planned Lens Circle
+            platform. It must be reviewed by a qualified legal
+            professional and aligned with the actual operating
+            entity, features, competition rules and applicable
+            laws before public launch.
+          </div>
+
+          <section id="acceptance">
+            <div class="eyebrow">01 / Agreement</div>
+            <h2>Acceptance of these terms</h2>
+            <p>
+              These Terms of Service govern access to and use of
+              the Lens Circle website, member accounts and related
+              community features.
+            </p>
+            <p>
+              By accessing or using a feature covered by these
+              terms, you agree to comply with the applicable
+              terms and policies. If you do not agree, you should
+              not use the relevant service.
+            </p>
+            <p>
+              Additional terms may apply to particular competitions,
+              events, exhibitions or other activities.
+            </p>
+          </section>
+
+          <section id="eligibility">
+            <div class="eyebrow">02 / Eligibility</div>
+            <h2>Who can use Lens Circle?</h2>
+            <p>
+              Lens Circle is intended for photography enthusiasts,
+              photographers, creators and community participants.
+            </p>
+            <p>
+              You must meet the minimum age and other eligibility
+              requirements established for your location and the
+              particular service you use.
+            </p>
+            <p>
+              If you are not legally able to agree to these terms,
+              you must not create an account or use restricted
+              features without any legally required consent.
+            </p>
+          </section>
+
+          <section id="accounts">
+            <div class="eyebrow">03 / Accounts</div>
+            <h2>Member accounts and security</h2>
+            <p>
+              Some features may require registration and an
+              authenticated account.
+            </p>
+            <ul>
+              <li>Provide accurate and current registration information.</li>
+              <li>Keep your login credentials confidential.</li>
+              <li>Do not impersonate another person or create deceptive accounts.</li>
+              <li>Notify the platform if you suspect unauthorised account access.</li>
+              <li>Do not share privileged staff or administrative credentials.</li>
+            </ul>
+            <p>
+              You are responsible for activity carried out through
+              your account to the extent permitted by applicable law.
+            </p>
+          </section>
+
+          <section id="membership">
+            <div class="eyebrow">04 / Membership</div>
+            <h2>Free community membership</h2>
+            <p>
+              Core Lens Circle membership is intended to remain
+              free. Certain optional events, workshops, publications
+              or services may have separate fees if introduced.
+            </p>
+            <p>
+              Any paid feature must clearly explain its price,
+              applicable conditions and cancellation or refund
+              arrangements before a user makes a purchase.
+            </p>
+            <p>
+              Membership does not guarantee selection for
+              competitions, exhibitions, editorial features
+              or promotional opportunities.
+            </p>
+          </section>
+
+          <section id="conduct">
+            <div class="eyebrow">05 / User responsibilities</div>
+            <h2>Acceptable use</h2>
+            <p>
+              You agree to use Lens Circle lawfully and respectfully.
+            </p>
+            <ul>
+              <li>Follow the Community Guidelines.</li>
+              <li>Respect other members and their intellectual property.</li>
+              <li>Do not upload illegal, abusive or harmful content.</li>
+              <li>Do not interfere with platform security or operation.</li>
+              <li>Do not attempt unauthorised access to accounts, databases or administrative functions.</li>
+              <li>Do not use bots, fake accounts or deceptive practices to manipulate voting or engagement.</li>
+              <li>Do not distribute malware, spam or fraudulent links.</li>
+            </ul>
+          </section>
+
+          <section id="content">
+            <div class="eyebrow">06 / Creator ownership</div>
+            <h2>Your content and ownership</h2>
+            <p>
+              You retain ownership of the photographs, captions,
+              text and other original material that you create,
+              subject to the rights of any other person or entity
+              that may apply.
+            </p>
+            <p>
+              By submitting content, you confirm that you have
+              the rights and permissions necessary to share it
+              through the relevant Lens Circle feature.
+            </p>
+            <p>
+              You must not submit content that infringes copyright,
+              privacy, publicity, trademark or other legal rights.
+            </p>
+          </section>
+
+          <section id="licence">
+            <div class="eyebrow">07 / Permission to operate</div>
+            <h2>Licence to display submitted content</h2>
+            <p>
+              To operate the platform, you grant Lens Circle a
+              limited, non-exclusive, royalty-free licence to host,
+              store, reproduce, format and display the content
+              you submit, only as reasonably necessary to provide
+              the feature through which you submitted it.
+            </p>
+            <p>
+              This licence is intended to cover activities such as
+              displaying a photograph in a gallery, showing an
+              entry in a competition or presenting an authorised
+              creator profile.
+            </p>
+            <p>
+              This clause does not transfer ownership of your
+              photographs to Lens Circle.
+            </p>
+            <p>
+              Separate, clear permission must be obtained where
+              a proposed use goes beyond the ordinary operation
+              of the feature, including certain advertising,
+              commercial licensing or third-party promotional uses.
+            </p>
+            <p>
+              The licence should end when the relevant content
+              is removed or the account is closed, except where
+              limited continued retention is reasonably necessary
+              for legal, security, dispute-resolution or backup
+              purposes.
+            </p>
+          </section>
+
+          <section id="copyright">
+            <div class="eyebrow">08 / Intellectual property</div>
+            <h2>Copyright and intellectual property complaints</h2>
+            <p>
+              Lens Circle respects the rights of creators and
+              expects members to do the same.
+            </p>
+            <p>
+              If you believe content on the platform infringes
+              your copyright or another legal right, contact
+              Lens Circle through the official reporting channel
+              with sufficient information to identify the content
+              and explain your concern.
+            </p>
+            <p>
+              We may restrict or remove content while reviewing
+              a credible complaint, where appropriate.
+            </p>
+          </section>
+
+          <section id="competitions">
+            <div class="eyebrow">09 / Activities and events</div>
+            <h2>Competitions, exhibitions and voting</h2>
+            <p>
+              Competitions, photography battles, voting events
+              and exhibitions may have separate published rules.
+            </p>
+            <ul>
+              <li>Participants must follow the specific eligibility and submission requirements.</li>
+              <li>Entries must be original or appropriately authorised.</li>
+              <li>Voting must not be manipulated through fake accounts, automation or coercion.</li>
+              <li>Judging criteria and selection procedures should be published for each relevant event.</li>
+              <li>Event-specific deadlines and decisions must be respected.</li>
+            </ul>
+            <p>
+              Unless an event expressly states otherwise, participation
+              does not guarantee a prize, award, publication or
+              exhibition selection.
+            </p>
+            <p>
+              Any prizes, eligibility restrictions, judging methods,
+              disqualification rules and additional content permissions
+              must be clearly stated in the rules for that event.
+            </p>
+          </section>
+
+          <section id="moderation">
+            <div class="eyebrow">10 / Community management</div>
+            <h2>Moderation and enforcement</h2>
+            <p>
+              Lens Circle may review content, investigate reports
+              and take reasonable action to enforce these terms
+              and the Community Guidelines.
+            </p>
+            <p>Actions may include:</p>
+            <ul>
+              <li>Requesting corrections or additional information.</li>
+              <li>Restricting or removing content.</li>
+              <li>Issuing warnings or temporary restrictions.</li>
+              <li>Suspending or terminating accounts for serious or repeated violations.</li>
+            </ul>
+            <p>
+              Moderation should be carried out by authorised
+              personnel according to documented permissions
+              and internal procedures.
+            </p>
+          </section>
+
+          <section id="third-party">
+            <div class="eyebrow">11 / External services</div>
+            <h2>Third-party services and links</h2>
+            <p>
+              Lens Circle may link to external websites or use
+              third-party services to support hosting, authentication,
+              storage, communication or other features.
+            </p>
+            <p>
+              External services operate under their own terms
+              and privacy policies. Lens Circle does not control
+              every external service and cannot guarantee the
+              availability or accuracy of third-party content.
+            </p>
+          </section>
+
+          <section id="availability">
+            <div class="eyebrow">12 / Platform operation</div>
+            <h2>Availability and changes to the service</h2>
+            <p>
+              We aim to provide a useful and reliable platform,
+              but uninterrupted availability cannot be guaranteed.
+            </p>
+            <p>
+              Features may be modified, suspended, replaced or
+              discontinued for maintenance, security, operational
+              or other legitimate reasons.
+            </p>
+          </section>
+
+          <section id="disclaimer">
+            <div class="eyebrow">13 / Disclaimers</div>
+            <h2>Service disclaimers</h2>
+            <p>
+              To the extent permitted by applicable law, the
+              website and its features are provided on an
+              "as available" basis.
+            </p>
+            <p>
+              We do not guarantee that every user-submitted
+              photograph, profile, comment or external link
+              is accurate, lawful or reliable.
+            </p>
+            <p>
+              Community content represents the views of its
+              respective creators and does not necessarily
+              represent the views of Lens Circle.
+            </p>
+          </section>
+
+          <section id="liability">
+            <div class="eyebrow">14 / Responsibility</div>
+            <h2>Limitation of liability</h2>
+            <p>
+              Nothing in these terms excludes or limits any
+              responsibility that cannot legally be excluded
+              or limited.
+            </p>
+            <p>
+              Any limitation of liability must be interpreted
+              in accordance with applicable law and should
+              be reviewed by a qualified legal professional
+              before publication.
+            </p>
+          </section>
+
+          <section id="termination">
+            <div class="eyebrow">15 / Account closure</div>
+            <h2>Suspension and termination</h2>
+            <p>
+              You may stop using Lens Circle and request account
+              closure through the process made available by
+              the platform.
+            </p>
+            <p>
+              Lens Circle may restrict or terminate access where
+              reasonably necessary to address serious violations,
+              security risks, unlawful activity or repeated abuse,
+              subject to applicable law.
+            </p>
+            <p>
+              Account closure does not automatically remove
+              information that must be retained for lawful
+              security, legal or dispute-resolution purposes.
+            </p>
+          </section>
+
+          <section id="changes">
+            <div class="eyebrow">16 / Updates</div>
+            <h2>Changes to these terms</h2>
+            <p>
+              These terms may be revised as Lens Circle develops
+              new features, changes its services or responds
+              to legal and operational requirements.
+            </p>
+            <p>
+              Material changes should be communicated through
+              appropriate notices. The revised version should
+              identify its effective date.
+            </p>
+          </section>
+
+          <section id="law">
+            <div class="eyebrow">17 / Legal framework</div>
+            <h2>Applicable law and disputes</h2>
+            <p>
+              The governing law, jurisdiction and dispute-resolution
+              process for Lens Circle must be finalised based on
+              the legal identity and place of operation of the
+              platform operator, and the applicable laws.
+            </p>
+            <p>
+              Nothing in these terms is intended to remove
+              consumer or other legal rights that cannot
+              lawfully be waived.
+            </p>
+          </section>
+
+          <section id="contact">
+            <div class="eyebrow">18 / Contact</div>
+            <h2>Questions about these terms?</h2>
+            <p>
+              For questions about these terms, use the
+              <a href="../contact.html">Lens Circle contact page</a>.
+            </p>
+            <p>
+              Verified operator details and an official legal
+              contact address should be added before public launch.
+            </p>
+
+            <div class="policy-meta">
+              Document: Terms of Service<br>
+              Version: 1.0 — Initial draft<br>
+              Last updated: November 2026
+            </div>
+          </section>
+
+        </article>
+
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="container">
+        <div class="eyebrow" style="color:#d69a7e;">
+          Shared creativity
+        </div>
+        <h2>Let's make creativity count.</h2>
+        <p>
+          Explore the community, share your perspective
+          and respect the work of every creator.
+        </p>
+        <a href="../discover.html" class="button">Explore Lens Circle →</a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+
+      <div class="footer-grid">
+
+        <div>
+          <div class="footer-brand">Lens <span>Circle</span></div>
+          <p class="footer-about">
+            An international photography community celebrating
+            creativity, perspectives and the art of seeing.
+          </p>
+        </div>
+
+        <div class="footer-column">
+          <h4>Explore</h4>
+          <a href="../discover.html">Discover</a>
+          <a href="../activities.html">Activities</a>
+          <a href="../competitions.html">Competitions</a>
+          <a href="../exhibitions.html">Exhibitions</a>
+        </div>
+
+        <div class="footer-column">
+          <h4>Community</h4>
+          <a href="../creators.html">Creators</a>
+          <a href="../stories.html">Journal</a>
+          <a href="../about.html">About us</a>
+          <a href="../contact.html">Contact</a>
+        </div>
+
+        <div class="footer-column">
+          <h4>Policies</h4>
+          <a href="guidelines.html">Community guidelines</a>
+          <a href="privacy.html">Privacy policy</a>
+          <a href="terms.html">Terms of service</a>
+        </div>
+
+      </div>
+
+      <div class="footer-bottom">
+        <span>© <span id="year"></span> Lens Circle. All rights reserved.</span>
+        <span>The world, through your lens.</span>
+      </div>
+
+    </div>
+  </footer>
+
+  <script>
+    const menuToggle = document.getElementById("menuToggle");
+    const navLinks = document.getElementById("navLinks");
+
+    menuToggle.addEventListener("click", () => {
+      const isOpen = navLinks.classList.toggle("open");
+      menuToggle.setAttribute("aria-expanded", String(isOpen));
+      menuToggle.textContent = isOpen ? "×" : "☰";
+    });
+
+    navLinks.querySelectorAll("a").forEach(link => {
+      link.addEventListener("click", () => {
+        navLinks.classList.remove("open");
+        menuToggle.setAttribute("aria-expanded", "false");
+        menuToggle.textContent = "☰";
+      });
+    });
+
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+  </script>
+
+</body>
+</html>

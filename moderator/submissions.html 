@@ -1,0 +1,855 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#252722">
+  <title>Submission Review | Lens Circle</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --paper: #f7f6f2;
+      --white: #fff;
+      --ink: #252722;
+      --muted: #777970;
+      --line: #e7e4dc;
+      --accent: #a85e42;
+      --accent-light: #f3e8e1;
+      --sidebar: #252722;
+      --serif: "Playfair Display", Georgia, serif;
+      --sans: "DM Sans", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    select,
+    input {
+      font: inherit;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 245px;
+      flex-shrink: 0;
+      background: var(--sidebar);
+      color: white;
+      padding: 29px 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand {
+      font: 700 25px var(--serif);
+      padding: 0 10px;
+    }
+
+    .brand span {
+      color: #d18b6d;
+    }
+
+    .portal-label {
+      padding: 9px 10px 26px;
+      color: #bcbdb5;
+      font-size: 9px;
+      letter-spacing: 1.7px;
+      text-transform: uppercase;
+    }
+
+    .nav-heading {
+      padding: 17px 10px 10px;
+      color: #898b82;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 11px;
+      margin: 2px 0;
+      border-radius: 4px;
+      color: #d1d2cb;
+      font-size: 11px;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: #393b34;
+      color: white;
+    }
+
+    .nav-link.active {
+      border-left: 3px solid #d18b6d;
+      padding-left: 8px;
+    }
+
+    .nav-icon {
+      width: 18px;
+      text-align: center;
+      color: #d18b6d;
+      font-size: 14px;
+    }
+
+    .sidebar-bottom {
+      margin-top: auto;
+      padding-top: 25px;
+    }
+
+    .sidebar-note {
+      padding: 15px;
+      border: 1px solid #484a43;
+      color: #bfc0b8;
+      font-size: 10px;
+      line-height: 1.8;
+    }
+
+    .sidebar-note strong {
+      display: block;
+      color: white;
+      margin-bottom: 5px;
+    }
+
+    .main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .topbar {
+      height: 75px;
+      padding: 0 38px;
+      background: white;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .breadcrumb {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .breadcrumb strong {
+      color: var(--ink);
+    }
+
+    .role-badge {
+      padding: 8px 11px;
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .content {
+      max-width: 1450px;
+      margin: auto;
+      padding: 40px;
+    }
+
+    .page-heading {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font: 500 clamp(34px, 4vw, 44px)/1.15 var(--serif);
+    }
+
+    .intro {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.8;
+    }
+
+    .date {
+      color: var(--muted);
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    .notice {
+      display: flex;
+      gap: 13px;
+      padding: 17px 19px;
+      background: white;
+      border: 1px solid var(--line);
+      margin-bottom: 27px;
+    }
+
+    .notice-icon {
+      color: var(--accent);
+      font-size: 17px;
+    }
+
+    .notice strong {
+      display: block;
+      font-size: 11px;
+      margin-bottom: 5px;
+    }
+
+    .notice p {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.8;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 30px;
+    }
+
+    .stat {
+      padding: 20px;
+      background: white;
+      border: 1px solid var(--line);
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 10px;
+      margin-bottom: 14px;
+    }
+
+    .stat-value {
+      font: 30px var(--serif);
+    }
+
+    .stat-foot {
+      color: var(--muted);
+      font-size: 9px;
+      margin-top: 8px;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .toolbar h2 {
+      font: 500 23px var(--serif);
+    }
+
+    .filters {
+      display: flex;
+      gap: 9px;
+      flex-wrap: wrap;
+    }
+
+    .filters input,
+    .filters select {
+      padding: 11px 13px;
+      background: white;
+      border: 1px solid var(--line);
+      font-size: 10px;
+      outline: none;
+    }
+
+    .filters input:focus,
+    .filters select:focus {
+      border-color: var(--accent);
+    }
+
+    .review-panel {
+      background: white;
+      border: 1px solid var(--line);
+      padding: 25px;
+    }
+
+    .empty-state {
+      padding: 55px 20px;
+      text-align: center;
+    }
+
+    .empty-icon {
+      width: 55px;
+      height: 55px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 18px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      color: var(--accent);
+      font-size: 23px;
+    }
+
+    .empty-state h3 {
+      font: 500 23px var(--serif);
+      margin-bottom: 9px;
+    }
+
+    .empty-state p {
+      max-width: 440px;
+      margin: auto;
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.9;
+    }
+
+    .guidelines {
+      margin-top: 25px;
+      background: #efeee8;
+      padding: 22px;
+    }
+
+    .guidelines h3 {
+      font: 500 20px var(--serif);
+      margin-bottom: 12px;
+    }
+
+    .guidelines ul {
+      padding-left: 17px;
+      color: #65665e;
+      font-size: 10px;
+      line-height: 2.1;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-top: 30px;
+      padding: 20px 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 9px;
+    }
+
+    .logout {
+      border: 0;
+      background: transparent;
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .loading-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      background: var(--paper);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 25px;
+    }
+
+    .loading-screen h2 {
+      font: 500 28px var(--serif);
+      margin-bottom: 10px;
+    }
+
+    .loading-screen p {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.8;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media(max-width: 1050px) {
+      .sidebar {
+        width: 215px;
+      }
+
+      .content {
+        padding: 28px;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media(max-width: 700px) {
+      .layout {
+        display: block;
+      }
+
+      .sidebar {
+        width: 100%;
+        padding: 16px 18px;
+      }
+
+      .portal-label,
+      .sidebar nav,
+      .sidebar-bottom {
+        display: none;
+      }
+
+      .topbar {
+        height: 60px;
+        padding: 0 20px;
+      }
+
+      .content {
+        padding: 25px 18px;
+      }
+
+      .page-heading {
+        display: block;
+      }
+
+      .date {
+        display: block;
+        margin-top: 14px;
+      }
+
+      .footer {
+        flex-direction: column;
+      }
+    }
+
+    @media(max-width: 430px) {
+      .stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 9px;
+      }
+
+      .stat {
+        padding: 14px;
+      }
+
+      .filters {
+        width: 100%;
+      }
+
+      .filters input,
+      .filters select {
+        flex: 1;
+        min-width: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="loading-screen" id="loadingScreen">
+    <div>
+      <h2>Verifying moderator access</h2>
+      <p>Please wait while we check your permissions.</p>
+    </div>
+  </div>
+
+  <div class="layout hidden" id="app">
+
+    <aside class="sidebar">
+
+      <a href="../index.html" class="brand">
+        Lens <span>Circle</span>
+      </a>
+
+      <div class="portal-label">Moderator workspace</div>
+
+      <nav>
+        <div class="nav-heading">Workspace</div>
+
+        <a href="dashboard.html" class="nav-link">
+          <span class="nav-icon">⌂</span>
+          Dashboard
+        </a>
+
+        <a href="assignments.html" class="nav-link">
+          <span class="nav-icon">▤</span>
+          My assignments
+        </a>
+
+        <div class="nav-heading">Community</div>
+
+        <a href="submissions.html" class="nav-link active">
+          <span class="nav-icon">▧</span>
+          Submissions
+        </a>
+
+        <a href="reports.html" class="nav-link">
+          <span class="nav-icon">⚑</span>
+          Community reports
+        </a>
+
+        <a href="members.html" class="nav-link">
+          <span class="nav-icon">♧</span>
+          Member directory
+        </a>
+
+        <div class="nav-heading">Activities</div>
+
+        <a href="activities.html" class="nav-link">
+          <span class="nav-icon">◎</span>
+          Activities
+        </a>
+
+        <a href="competitions.html" class="nav-link">
+          <span class="nav-icon">✧</span>
+          Competitions
+        </a>
+
+        <div class="nav-heading">Account</div>
+
+        <a href="profile.html" class="nav-link">
+          <span class="nav-icon">◉</span>
+          My profile
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="sidebar-note">
+          <strong>Review with fairness</strong>
+          Protect creative expression while applying
+          community guidelines consistently.
+        </div>
+      </div>
+
+    </aside>
+
+    <main class="main">
+
+      <header class="topbar">
+        <div class="breadcrumb">
+          Lens Circle / Moderator / <strong>Submissions</strong>
+        </div>
+
+        <div class="role-badge">MODERATOR</div>
+      </header>
+
+      <div class="content">
+
+        <section class="page-heading">
+          <div>
+            <div class="eyebrow">Photography review centre</div>
+
+            <h1>Submission review.</h1>
+
+            <p class="intro">
+              Review photography entries, check compliance
+              and help maintain the quality and integrity
+              of Lens Circle activities.
+            </p>
+          </div>
+
+          <div class="date" id="date"></div>
+        </section>
+
+        <section class="notice">
+          <div class="notice-icon">✦</div>
+
+          <div>
+            <strong>Submission management is being prepared.</strong>
+
+            <p>
+              This page is an authenticated review workspace.
+              Real member photographs and submission records
+              will appear after Supabase Storage, database
+              tables and moderator permissions are configured.
+            </p>
+          </div>
+        </section>
+
+        <section class="stats">
+
+          <article class="stat">
+            <div class="stat-label">Total submissions</div>
+            <div class="stat-value">—</div>
+            <div class="stat-foot">Awaiting database connection</div>
+          </article>
+
+          <article class="stat">
+            <div class="stat-label">Pending review</div>
+            <div class="stat-value">—</div>
+            <div class="stat-foot">Awaiting database connection</div>
+          </article>
+
+          <article class="stat">
+            <div class="stat-label">Approved</div>
+            <div class="stat-value">—</div>
+            <div class="stat-foot">Awaiting database connection</div>
+          </article>
+
+          <article class="stat">
+            <div class="stat-label">Flagged</div>
+            <div class="stat-value">—</div>
+            <div class="stat-foot">Awaiting database connection</div>
+          </article>
+
+        </section>
+
+        <section>
+
+          <div class="toolbar">
+
+            <h2>Photography entries</h2>
+
+            <div class="filters">
+
+              <input
+                type="search"
+                id="search"
+                placeholder="Search entries..."
+                aria-label="Search entries"
+                disabled>
+
+              <select id="statusFilter" disabled>
+                <option>All statuses</option>
+                <option>Pending</option>
+                <option>Approved</option>
+                <option>Flagged</option>
+              </select>
+
+              <select id="activityFilter" disabled>
+                <option>All activities</option>
+                <option>Photo of the Day</option>
+                <option>Weekly Challenge</option>
+                <option>Competition</option>
+              </select>
+
+            </div>
+
+          </div>
+
+          <div class="review-panel">
+
+            <div class="empty-state">
+              <div class="empty-icon">▧</div>
+
+              <h3>No submissions available.</h3>
+
+              <p>
+                Member entries will appear here once the
+                submission system is connected. You will
+                be able to inspect photographs, submission
+                details and moderation history according
+                to your assigned permissions.
+              </p>
+            </div>
+
+          </div>
+
+        </section>
+
+        <section class="guidelines">
+
+          <h3>Submission review standards</h3>
+
+          <ul>
+            <li>Check whether the entry follows the activity's published rules.</li>
+            <li>Respect the photographer's ownership and intellectual property.</li>
+            <li>Do not download, redistribute or reuse member photographs without authorisation.</li>
+            <li>Escalate copyright disputes and serious policy violations.</li>
+            <li>Record moderation decisions with a clear and appropriate reason.</li>
+            <li>Do not alter competition results or voting outcomes without authorisation.</li>
+          </ul>
+
+        </section>
+
+        <footer class="footer">
+
+          <span>
+            © <span id="year"></span> Lens Circle · Moderator workspace
+          </span>
+
+          <button class="logout" id="logoutButton">
+            Sign out securely →
+          </button>
+
+        </footer>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
+    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY";
+
+    const configured =
+      SUPABASE_URL.startsWith("https://") &&
+      !SUPABASE_URL.includes("YOUR_SUPABASE") &&
+      SUPABASE_ANON_KEY.length > 20 &&
+      !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE");
+
+    const client = configured && window.supabase
+      ? window.supabase.createClient(
+          SUPABASE_URL,
+          SUPABASE_ANON_KEY,
+          {
+            auth: {
+              persistSession: true,
+              autoRefreshToken: true,
+              detectSessionInUrl: true
+            }
+          }
+        )
+      : null;
+
+    const loadingScreen =
+      document.getElementById("loadingScreen");
+
+    const app =
+      document.getElementById("app");
+
+    function showBlockingMessage(title, message) {
+      loadingScreen.innerHTML = `
+        <div>
+          <h2>${title}</h2>
+          <p>${message}</p>
+          <p style="margin-top:22px;">
+            <a href="login.html" style="color:#a85e42;font-weight:700;">
+              Return to moderator sign in →
+            </a>
+          </p>
+        </div>
+      `;
+    }
+
+    async function verifyAccess() {
+      if (!client) {
+        showBlockingMessage(
+          "Configuration required",
+          "Add your Supabase project URL and publishable/anon key before accessing this page."
+        );
+        return;
+      }
+
+      try {
+        const { data, error } =
+          await client.auth.getSession();
+
+        if (error) throw error;
+
+        if (!data.session) {
+          window.location.replace("login.html");
+          return;
+        }
+
+        const { data: authorised, error: roleError } =
+          await client.rpc("has_staff_role", {
+            required_role: "moderator"
+          });
+
+        if (roleError) {
+          throw new Error(
+            "Moderator permissions could not be verified."
+          );
+        }
+
+        if (authorised !== true) {
+          await client.auth.signOut();
+          window.location.replace("login.html");
+          return;
+        }
+
+        const now = new Date();
+
+        document.getElementById("date").textContent =
+          now.toLocaleDateString("en-IN", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+          });
+
+        document.getElementById("year").textContent =
+          now.getFullYear();
+
+        app.classList.remove("hidden");
+        loadingScreen.classList.add("hidden");
+
+      } catch (error) {
+        console.error("Submission access error:", error);
+
+        await client.auth.signOut();
+
+        showBlockingMessage(
+          "Access verification failed",
+          error.message || "Unable to verify moderator permissions."
+        );
+      }
+    }
+
+    document.getElementById("logoutButton")
+      .addEventListener("click", async () => {
+
+        const button =
+          document.getElementById("logoutButton");
+
+        button.disabled = true;
+        button.textContent = "Signing out...";
+
+        if (client) {
+          await client.auth.signOut();
+        }
+
+        window.location.replace("login.html");
+      });
+
+    const now = new Date();
+
+    document.getElementById("date").textContent =
+      now.toLocaleDateString("en-IN", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      });
+
+    verifyAccess();
+  </script>
+
+</body>
+</html>

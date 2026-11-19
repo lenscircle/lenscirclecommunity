@@ -1,0 +1,1189 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#252722">
+  <title>My Profile | Lens Circle Moderator</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --paper: #f7f6f2;
+      --white: #fff;
+      --ink: #252722;
+      --muted: #777970;
+      --line: #e7e4dc;
+      --accent: #a85e42;
+      --accent-light: #f3e8e1;
+      --sidebar: #252722;
+      --serif: "Playfair Display", Georgia, serif;
+      --sans: "DM Sans", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button, input, textarea {
+      font: inherit;
+    }
+
+    .layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: 245px;
+      flex-shrink: 0;
+      background: var(--sidebar);
+      color: white;
+      padding: 29px 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand {
+      font: 700 25px var(--serif);
+      padding: 0 10px;
+    }
+
+    .brand span {
+      color: #d18b6d;
+    }
+
+    .portal-label {
+      padding: 9px 10px 26px;
+      color: #bcbdb5;
+      font-size: 9px;
+      letter-spacing: 1.7px;
+      text-transform: uppercase;
+    }
+
+    .nav-heading {
+      padding: 17px 10px 10px;
+      color: #898b82;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 11px;
+      margin: 2px 0;
+      border-radius: 4px;
+      color: #d1d2cb;
+      font-size: 11px;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      background: #393b34;
+      color: white;
+    }
+
+    .nav-link.active {
+      border-left: 3px solid #d18b6d;
+      padding-left: 8px;
+    }
+
+    .nav-icon {
+      width: 18px;
+      text-align: center;
+      color: #d18b6d;
+      font-size: 14px;
+    }
+
+    .sidebar-bottom {
+      margin-top: auto;
+      padding-top: 25px;
+    }
+
+    .sidebar-note {
+      padding: 15px;
+      border: 1px solid #484a43;
+      color: #bfc0b8;
+      font-size: 10px;
+      line-height: 1.8;
+    }
+
+    .sidebar-note strong {
+      display: block;
+      color: white;
+      margin-bottom: 5px;
+    }
+
+    .main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .topbar {
+      height: 75px;
+      padding: 0 38px;
+      background: white;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .breadcrumb {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .breadcrumb strong {
+      color: var(--ink);
+    }
+
+    .role-badge {
+      padding: 8px 11px;
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .content {
+      max-width: 1200px;
+      margin: auto;
+      padding: 40px;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font: 500 clamp(34px, 4vw, 44px)/1.15 var(--serif);
+    }
+
+    .intro {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.8;
+      margin-bottom: 28px;
+    }
+
+    .profile-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .profile-card,
+    .form-card {
+      background: white;
+      border: 1px solid var(--line);
+    }
+
+    .profile-card {
+      padding: 25px;
+      text-align: center;
+    }
+
+    .avatar {
+      width: 94px;
+      height: 94px;
+      margin: 0 auto 17px;
+      border-radius: 50%;
+      background: var(--accent-light);
+      color: var(--accent);
+      display: grid;
+      place-items: center;
+      font: 38px var(--serif);
+      overflow: hidden;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .profile-card h2 {
+      font: 500 22px var(--serif);
+      overflow-wrap: anywhere;
+    }
+
+    .profile-email {
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 10px;
+      overflow-wrap: anywhere;
+    }
+
+    .profile-role {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 7px 10px;
+      background: var(--accent-light);
+      color: var(--accent);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+
+    .account-info {
+      text-align: left;
+      border-top: 1px solid var(--line);
+      margin-top: 23px;
+      padding-top: 17px;
+    }
+
+    .info-row {
+      margin-bottom: 14px;
+    }
+
+    .info-label {
+      color: var(--muted);
+      font-size: 9px;
+      margin-bottom: 5px;
+    }
+
+    .info-value {
+      font-size: 10px;
+      overflow-wrap: anywhere;
+    }
+
+    .form-card {
+      padding: 28px;
+    }
+
+    .form-card h2 {
+      font: 500 23px var(--serif);
+      margin-bottom: 8px;
+    }
+
+    .form-intro {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.8;
+      margin-bottom: 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      margin-bottom: 19px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 12px 13px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      outline: none;
+      font-size: 11px;
+      border-radius: 0;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: var(--accent);
+    }
+
+    input[readonly] {
+      background: #f5f4ef;
+      color: var(--muted);
+    }
+
+    textarea {
+      min-height: 105px;
+      resize: vertical;
+      line-height: 1.7;
+    }
+
+    .hint {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 9px;
+      line-height: 1.6;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .primary-button,
+    .secondary-button {
+      padding: 12px 19px;
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .primary-button {
+      border: 1px solid var(--ink);
+      background: var(--ink);
+      color: white;
+    }
+
+    .primary-button:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .secondary-button {
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--ink);
+    }
+
+    .primary-button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .message {
+      display: none;
+      padding: 12px 14px;
+      margin-bottom: 18px;
+      font-size: 10px;
+      line-height: 1.7;
+    }
+
+    .message.success {
+      display: block;
+      background: #edf4ed;
+      color: #315c36;
+    }
+
+    .message.error {
+      display: block;
+      background: #f8e9e5;
+      color: #943d2c;
+    }
+
+    .security-note {
+      margin-top: 22px;
+      padding: 17px;
+      background: #efeee8;
+      color: #66675f;
+      font-size: 10px;
+      line-height: 1.8;
+    }
+
+    .security-note strong {
+      color: var(--ink);
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 15px;
+      margin-top: 30px;
+      padding: 20px 0;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 9px;
+    }
+
+    .logout {
+      border: 0;
+      background: transparent;
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .loading-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 10;
+      background: var(--paper);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 25px;
+    }
+
+    .loading-screen h2 {
+      font: 500 28px var(--serif);
+      margin-bottom: 10px;
+    }
+
+    .loading-screen p {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.8;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media(max-width: 1000px) {
+      .sidebar {
+        width: 215px;
+      }
+
+      .content {
+        padding: 28px;
+      }
+
+      .profile-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-card {
+        display: grid;
+        grid-template-columns: 100px 1fr;
+        text-align: left;
+        gap: 0 18px;
+      }
+
+      .avatar {
+        grid-row: span 2;
+        margin: 0;
+      }
+
+      .account-info {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media(max-width: 700px) {
+      .layout {
+        display: block;
+      }
+
+      .sidebar {
+        width: 100%;
+        padding: 16px 18px;
+      }
+
+      .portal-label,
+      .sidebar nav,
+      .sidebar-bottom {
+        display: none;
+      }
+
+      .topbar {
+        height: 60px;
+        padding: 0 20px;
+      }
+
+      .content {
+        padding: 25px 18px;
+      }
+
+      .form-card {
+        padding: 20px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .field.full {
+        grid-column: auto;
+      }
+
+      .profile-card {
+        display: block;
+        text-align: center;
+      }
+
+      .avatar {
+        margin: 0 auto 17px;
+      }
+
+      .account-info {
+        text-align: left;
+      }
+
+      .footer {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="loading-screen" id="loadingScreen">
+    <div>
+      <h2>Verifying moderator access</h2>
+      <p>Please wait while we check your account.</p>
+    </div>
+  </div>
+
+  <div class="layout hidden" id="app">
+
+    <aside class="sidebar">
+
+      <a href="../index.html" class="brand">
+        Lens <span>Circle</span>
+      </a>
+
+      <div class="portal-label">Moderator workspace</div>
+
+      <nav>
+        <div class="nav-heading">Workspace</div>
+
+        <a href="dashboard.html" class="nav-link">
+          <span class="nav-icon">⌂</span>
+          Dashboard
+        </a>
+
+        <a href="assignments.html" class="nav-link">
+          <span class="nav-icon">▤</span>
+          My assignments
+        </a>
+
+        <div class="nav-heading">Community</div>
+
+        <a href="submissions.html" class="nav-link">
+          <span class="nav-icon">▧</span>
+          Submissions
+        </a>
+
+        <a href="reports.html" class="nav-link">
+          <span class="nav-icon">⚑</span>
+          Community reports
+        </a>
+
+        <a href="members.html" class="nav-link">
+          <span class="nav-icon">♧</span>
+          Member directory
+        </a>
+
+        <div class="nav-heading">Activities</div>
+
+        <a href="activities.html" class="nav-link">
+          <span class="nav-icon">◎</span>
+          Activities
+        </a>
+
+        <a href="competitions.html" class="nav-link">
+          <span class="nav-icon">✧</span>
+          Competitions
+        </a>
+
+        <div class="nav-heading">Account</div>
+
+        <a href="profile.html" class="nav-link active">
+          <span class="nav-icon">◉</span>
+          My profile
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="sidebar-note">
+          <strong>Your community contribution</strong>
+          Represent Lens Circle with professionalism
+          and respect for every photographer.
+        </div>
+      </div>
+
+    </aside>
+
+    <main class="main">
+
+      <header class="topbar">
+        <div class="breadcrumb">
+          Lens Circle / Moderator / <strong>My profile</strong>
+        </div>
+
+        <div class="role-badge">MODERATOR</div>
+      </header>
+
+      <div class="content">
+
+        <div class="eyebrow">Account information</div>
+
+        <h1>My profile.</h1>
+
+        <p class="intro">
+          Manage your personal information and the details
+          displayed in your Lens Circle moderator account.
+        </p>
+
+        <div class="profile-layout">
+
+          <aside class="profile-card">
+
+            <div class="avatar" id="avatar">LC</div>
+
+            <div>
+              <h2 id="profileName">Moderator</h2>
+              <p class="profile-email" id="profileEmail">
+                Loading email...
+              </p>
+              <span class="profile-role">MODERATOR</span>
+            </div>
+
+            <div class="account-info">
+
+              <div class="info-row">
+                <div class="info-label">Account ID</div>
+                <div class="info-value" id="accountId">—</div>
+              </div>
+
+              <div class="info-row">
+                <div class="info-label">Account created</div>
+                <div class="info-value" id="createdAt">—</div>
+              </div>
+
+              <div class="info-row">
+                <div class="info-label">Email verification</div>
+                <div class="info-value" id="verificationStatus">—</div>
+              </div>
+
+            </div>
+
+          </aside>
+
+          <section class="form-card">
+
+            <h2>Personal information</h2>
+
+            <p class="form-intro">
+              Keep your profile information accurate and
+              professional. Changes are saved to your
+              authenticated account metadata.
+            </p>
+
+            <div id="message" class="message"></div>
+
+            <form id="profileForm">
+
+              <div class="form-grid">
+
+                <div class="field">
+                  <label for="fullName">Full name</label>
+                  <input
+                    type="text"
+                    id="fullName"
+                    maxlength="80"
+                    required
+                    placeholder="Your full name"
+                  >
+                </div>
+
+                <div class="field">
+                  <label for="username">Username</label>
+                  <input
+                    type="text"
+                    id="username"
+                    maxlength="30"
+                    placeholder="Your username"
+                  >
+                  <p class="hint">
+                    Letters, numbers and underscores are recommended.
+                  </p>
+                </div>
+
+                <div class="field">
+                  <label for="email">Email address</label>
+                  <input
+                    type="email"
+                    id="email"
+                    readonly
+                  >
+                  <p class="hint">
+                    Email changes are managed separately through account settings.
+                  </p>
+                </div>
+
+                <div class="field">
+                  <label for="location">Location</label>
+                  <input
+                    type="text"
+                    id="location"
+                    maxlength="100"
+                    placeholder="City, Country"
+                  >
+                </div>
+
+                <div class="field">
+                  <label for="website">Website or portfolio</label>
+                  <input
+                    type="url"
+                    id="website"
+                    maxlength="250"
+                    placeholder="https://example.com"
+                  >
+                </div>
+
+                <div class="field">
+                  <label for="interests">Photography interests</label>
+                  <input
+                    type="text"
+                    id="interests"
+                    maxlength="200"
+                    placeholder="Portrait, nature, street..."
+                  >
+                </div>
+
+                <div class="field full">
+                  <label for="bio">About me</label>
+                  <textarea
+                    id="bio"
+                    maxlength="500"
+                    placeholder="Write a short introduction..."
+                  ></textarea>
+                  <p class="hint">
+                    Maximum 500 characters.
+                  </p>
+                </div>
+
+              </div>
+
+              <div class="button-row">
+                <button
+                  type="submit"
+                  class="primary-button"
+                  id="saveButton"
+                >
+                  Save profile changes
+                </button>
+
+                <button
+                  type="reset"
+                  class="secondary-button"
+                  id="resetButton"
+                >
+                  Reset form
+                </button>
+              </div>
+
+            </form>
+
+            <div class="security-note">
+              <strong>Account security</strong>
+              Your moderator permissions are controlled
+              separately by Lens Circle administrators.
+              Editing profile information cannot change
+              your account role or grant additional access.
+            </div>
+
+          </section>
+
+        </div>
+
+        <footer class="footer">
+          <span>
+            © <span id="year"></span> Lens Circle · Moderator workspace
+          </span>
+
+          <button class="logout" id="logoutButton">
+            Sign out securely →
+          </button>
+        </footer>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
+    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY";
+
+    const configured =
+      SUPABASE_URL.startsWith("https://") &&
+      !SUPABASE_URL.includes("YOUR_SUPABASE") &&
+      SUPABASE_ANON_KEY.length > 20 &&
+      !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE");
+
+    const client = configured && window.supabase
+      ? window.supabase.createClient(
+          SUPABASE_URL,
+          SUPABASE_ANON_KEY,
+          {
+            auth: {
+              persistSession: true,
+              autoRefreshToken: true,
+              detectSessionInUrl: true
+            }
+          }
+        )
+      : null;
+
+    const loadingScreen =
+      document.getElementById("loadingScreen");
+
+    const app =
+      document.getElementById("app");
+
+    const form =
+      document.getElementById("profileForm");
+
+    const message =
+      document.getElementById("message");
+
+    let originalProfile = null;
+
+    function showBlockingMessage(title, description) {
+      loadingScreen.innerHTML = `
+        <div>
+          <h2>${title}</h2>
+          <p>${description}</p>
+          <p style="margin-top:22px;">
+            <a href="login.html" style="color:#a85e42;font-weight:700;">
+              Return to moderator sign in →
+            </a>
+          </p>
+        </div>
+      `;
+    }
+
+    function showMessage(text, type) {
+      message.textContent = text;
+      message.className = "message " + type;
+    }
+
+    function getInitials(name) {
+      return (name || "Lens Circle")
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map(part => part.charAt(0).toUpperCase())
+        .join("") || "LC";
+    }
+
+    function fillProfile(user) {
+      const metadata = user.user_metadata || {};
+
+      const name =
+        metadata.full_name ||
+        metadata.name ||
+        "Moderator";
+
+      document.getElementById("fullName").value =
+        metadata.full_name || metadata.name || "";
+
+      document.getElementById("username").value =
+        metadata.username || "";
+
+      document.getElementById("location").value =
+        metadata.location || "";
+
+      document.getElementById("website").value =
+        metadata.website || "";
+
+      document.getElementById("interests").value =
+        metadata.photography_interests || "";
+
+      document.getElementById("bio").value =
+        metadata.bio || "";
+
+      document.getElementById("email").value =
+        user.email || "";
+
+      document.getElementById("profileName").textContent =
+        name;
+
+      document.getElementById("profileEmail").textContent =
+        user.email || "No email available";
+
+      document.getElementById("accountId").textContent =
+        user.id;
+
+      document.getElementById("createdAt").textContent =
+        user.created_at
+          ? new Date(user.created_at).toLocaleDateString("en-IN")
+          : "Not available";
+
+      document.getElementById("verificationStatus").textContent =
+        user.email_confirmed_at
+          ? "Verified"
+          : "Not verified";
+
+      const avatar =
+        document.getElementById("avatar");
+
+      avatar.textContent = getInitials(name);
+
+      originalProfile = {
+        fullName: document.getElementById("fullName").value,
+        username: document.getElementById("username").value,
+        location: document.getElementById("location").value,
+        website: document.getElementById("website").value,
+        interests: document.getElementById("interests").value,
+        bio: document.getElementById("bio").value
+      };
+    }
+
+    async function verifyAccess() {
+      if (!client) {
+        showBlockingMessage(
+          "Configuration required",
+          "Configure Supabase before accessing this page."
+        );
+        return;
+      }
+
+      try {
+        const { data, error } =
+          await client.auth.getSession();
+
+        if (error) throw error;
+
+        if (!data.session) {
+          window.location.replace("login.html");
+          return;
+        }
+
+        const { data: authorised, error: roleError } =
+          await client.rpc("has_staff_role", {
+            required_role: "moderator"
+          });
+
+        if (roleError) {
+          throw new Error(
+            "Moderator permissions could not be verified."
+          );
+        }
+
+        if (authorised !== true) {
+          await client.auth.signOut();
+          window.location.replace("login.html");
+          return;
+        }
+
+        const { data: userData, error: userError } =
+          await client.auth.getUser();
+
+        if (userError) throw userError;
+
+        if (!userData.user) {
+          throw new Error("Unable to retrieve account information.");
+        }
+
+        fillProfile(userData.user);
+
+        document.getElementById("year").textContent =
+          new Date().getFullYear();
+
+        app.classList.remove("hidden");
+        loadingScreen.classList.add("hidden");
+
+      } catch (error) {
+        console.error("Profile access error:", error);
+
+        await client.auth.signOut();
+
+        showBlockingMessage(
+          "Access verification failed",
+          error.message || "Unable to verify moderator permissions."
+        );
+      }
+    }
+
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+
+      if (!client) return;
+
+      const saveButton =
+        document.getElementById("saveButton");
+
+      const fullName =
+        document.getElementById("fullName").value.trim();
+
+      const username =
+        document.getElementById("username").value.trim();
+
+      const location =
+        document.getElementById("location").value.trim();
+
+      const website =
+        document.getElementById("website").value.trim();
+
+      const interests =
+        document.getElementById("interests").value.trim();
+
+      const bio =
+        document.getElementById("bio").value.trim();
+
+      if (!fullName) {
+        showMessage("Please enter your full name.", "error");
+        return;
+      }
+
+      if (username && !/^[a-zA-Z0-9_]{3,30}$/.test(username)) {
+        showMessage(
+          "Username must contain 3–30 letters, numbers or underscores.",
+          "error"
+        );
+        return;
+      }
+
+      if (website) {
+        try {
+          const parsed = new URL(website);
+
+          if (!["http:", "https:"].includes(parsed.protocol)) {
+            throw new Error("Invalid protocol");
+          }
+        } catch {
+          showMessage(
+            "Enter a valid website URL beginning with https:// or http://.",
+            "error"
+          );
+          return;
+        }
+      }
+
+      saveButton.disabled = true;
+      saveButton.textContent = "Saving...";
+
+      try {
+        const { data: currentData, error: currentError } =
+          await client.auth.getUser();
+
+        if (currentError) throw currentError;
+
+        const currentMetadata =
+          currentData.user.user_metadata || {};
+
+        const { error } = await client.auth.updateUser({
+          data: {
+            ...currentMetadata,
+            full_name: fullName,
+            username: username,
+            location: location,
+            website: website,
+            photography_interests: interests,
+            bio: bio
+          }
+        });
+
+        if (error) throw error;
+
+        const { data: refreshed, error: refreshError } =
+          await client.auth.getUser();
+
+        if (refreshError) throw refreshError;
+
+        fillProfile(refreshed.user);
+
+        showMessage(
+          "Your profile information has been updated.",
+          "success"
+        );
+
+      } catch (error) {
+        console.error("Profile update error:", error);
+
+        showMessage(
+          error.message || "Unable to update your profile.",
+          "error"
+        );
+
+      } finally {
+        saveButton.disabled = false;
+        saveButton.textContent = "Save profile changes";
+      }
+    });
+
+    document.getElementById("resetButton")
+      .addEventListener("click", () => {
+
+        if (!originalProfile) return;
+
+        document.getElementById("fullName").value =
+          originalProfile.fullName;
+
+        document.getElementById("username").value =
+          originalProfile.username;
+
+        document.getElementById("location").value =
+          originalProfile.location;
+
+        document.getElementById("website").value =
+          originalProfile.website;
+
+        document.getElementById("interests").value =
+          originalProfile.interests;
+
+        document.getElementById("bio").value =
+          originalProfile.bio;
+
+        message.className = "message";
+        message.textContent = "";
+      });
+
+    document.getElementById("logoutButton")
+      .addEventListener("click", async () => {
+
+        const button =
+          document.getElementById("logoutButton");
+
+        button.disabled = true;
+        button.textContent = "Signing out...";
+
+        if (client) {
+          await client.auth.signOut();
+        }
+
+        window.location.replace("login.html");
+      });
+
+    verifyAccess();
+  </script>
+
+</body>
+</html>

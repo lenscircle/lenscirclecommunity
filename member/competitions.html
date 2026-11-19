@@ -1,0 +1,725 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f7f6f2">
+
+  <title>Member Competitions | Lens Circle</title>
+  <meta name="description" content="Discover photography competitions and creative opportunities at Lens Circle.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --paper: #f7f6f2;
+      --white: #fff;
+      --ink: #252722;
+      --muted: #777970;
+      --line: #e7e4dc;
+      --accent: #a85e42;
+      --accent-light: #f3e8e1;
+      --soft: #eeeae2;
+      --serif: "Playfair Display", Georgia, serif;
+      --sans: "DM Sans", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .topbar {
+      height: 72px;
+      padding: 0 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: white;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      font-family: var(--serif);
+      font-size: 25px;
+      font-weight: 700;
+    }
+
+    .brand span {
+      color: var(--accent);
+    }
+
+    .back {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .back:hover {
+      color: var(--accent);
+    }
+
+    .container {
+      max-width: 1250px;
+      padding: 43px 25px 70px;
+      margin: auto;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-family: var(--serif);
+      font-size: 43px;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+
+    .intro {
+      max-width: 650px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.8;
+    }
+
+    .heading {
+      margin-bottom: 32px;
+    }
+
+    .hero {
+      min-height: 245px;
+      padding: 38px;
+      display: flex;
+      align-items: center;
+      color: white;
+      background:
+        linear-gradient(90deg, rgba(26,27,22,.88), rgba(26,27,22,.2)),
+        url("https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1500&q=85")
+        center/cover;
+      margin-bottom: 35px;
+    }
+
+    .hero-content {
+      max-width: 460px;
+    }
+
+    .hero .eyebrow {
+      color: #e2a88c;
+    }
+
+    .hero h2 {
+      font-family: var(--serif);
+      font-size: 36px;
+      font-weight: 500;
+      line-height: 1.15;
+      margin-bottom: 13px;
+    }
+
+    .hero p {
+      color: #e3e3dc;
+      font-size: 11px;
+      line-height: 1.8;
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin: 35px 0 18px;
+    }
+
+    .section-heading h2 {
+      font-family: var(--serif);
+      font-size: 27px;
+      font-weight: 500;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .filter {
+      background: white;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      padding: 10px 14px;
+      font-size: 10px;
+      cursor: pointer;
+    }
+
+    .filter.active,
+    .filter:hover {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: white;
+    }
+
+    .competition-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .competition-card {
+      background: white;
+      border: 1px solid var(--line);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .competition-image {
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+      background: var(--soft);
+    }
+
+    .competition-body {
+      padding: 21px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .category {
+      color: var(--accent);
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-bottom: 10px;
+    }
+
+    .competition-body h3 {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 500;
+      margin-bottom: 9px;
+    }
+
+    .competition-body p {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.8;
+      flex: 1;
+    }
+
+    .competition-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding-top: 17px;
+      margin-top: 17px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 9px;
+    }
+
+    .details-link {
+      display: inline-block;
+      margin-top: 16px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .empty-state {
+      display: none;
+      grid-column: 1 / -1;
+      background: white;
+      border: 1px solid var(--line);
+      padding: 45px 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .empty-state strong {
+      display: block;
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 23px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .process-card {
+      background: white;
+      border: 1px solid var(--line);
+      padding: 21px;
+    }
+
+    .process-number {
+      font-family: var(--serif);
+      font-size: 29px;
+      color: var(--accent);
+      margin-bottom: 15px;
+    }
+
+    .process-card h3 {
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .process-card p {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.8;
+    }
+
+    .note {
+      margin-top: 30px;
+      padding: 18px;
+      background: #fbf6ec;
+      border: 1px solid #e9dcc2;
+      color: #705d40;
+      font-size: 10px;
+      line-height: 1.8;
+    }
+
+    .loading,
+    .error {
+      background: white;
+      border: 1px solid var(--line);
+      padding: 40px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 11px;
+      margin: 50px auto;
+      max-width: 500px;
+    }
+
+    .error h2 {
+      font-family: var(--serif);
+      font-size: 27px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+
+    .error a {
+      display: inline-block;
+      margin-top: 15px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      text-align: center;
+      padding: 20px;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    @media(max-width: 900px) {
+      .competition-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .process-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media(max-width: 560px) {
+      .container {
+        padding: 32px 16px 50px;
+      }
+
+      h1 {
+        font-size: 36px;
+      }
+
+      .hero {
+        padding: 27px 22px;
+        min-height: 220px;
+      }
+
+      .hero h2 {
+        font-size: 29px;
+      }
+
+      .competition-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .process-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <a href="../index.html" class="brand">
+      Lens <span>Circle</span>
+    </a>
+
+    <a href="dashboard.html" class="back">
+      ← Member dashboard
+    </a>
+  </header>
+
+  <main class="container">
+
+    <div class="loading" id="loading">
+      Verifying your member account...
+    </div>
+
+    <section class="error" id="error" hidden>
+      <h2>Member access required.</h2>
+      <p id="errorText">Please sign in to continue.</p>
+      <a href="login.html">Go to sign in →</a>
+    </section>
+
+    <div id="pageContent" hidden>
+
+      <section class="heading">
+        <div class="eyebrow">Creative opportunities</div>
+        <h1>Photography competitions.</h1>
+        <p class="intro">
+          Participate in creative challenges, explore new themes
+          and present your photography to the Lens Circle community.
+        </p>
+      </section>
+
+      <section class="hero">
+        <div class="hero-content">
+          <div class="eyebrow">Your next creative challenge</div>
+          <h2>Let your perspective be seen.</h2>
+          <p>
+            Every competition is an opportunity to experiment,
+            develop your vision and connect with photographers
+            from different backgrounds.
+          </p>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-heading">
+          <h2>Explore competitions</h2>
+          <p>Illustrative categories, not live competition listings</p>
+        </div>
+
+        <div class="filter-row" id="filterRow">
+          <button class="filter active" data-filter="all">All categories</button>
+          <button class="filter" data-filter="nature">Nature</button>
+          <button class="filter" data-filter="portrait">Portrait</button>
+          <button class="filter" data-filter="street">Street</button>
+          <button class="filter" data-filter="creative">Creative</button>
+        </div>
+
+        <div class="competition-grid" id="competitionGrid">
+
+          <article class="competition-card" data-category="nature">
+            <img
+              class="competition-image"
+              src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=800&q=80"
+              alt="Mountain landscape">
+
+            <div class="competition-body">
+              <div class="category">Nature photography</div>
+              <h3>Beyond the Horizon</h3>
+              <p>
+                Explore landscapes, natural light and the beauty
+                of distant horizons through your own perspective.
+              </p>
+              <div class="competition-meta">
+                <span>Landscape</span>
+                <span>Concept category</span>
+              </div>
+              <a href="../competitions.html" class="details-link">
+                View competition information →
+              </a>
+            </div>
+          </article>
+
+          <article class="competition-card" data-category="portrait">
+            <img
+              class="competition-image"
+              src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80"
+              alt="Portrait photography">
+
+            <div class="competition-body">
+              <div class="category">Portrait photography</div>
+              <h3>Expressions</h3>
+              <p>
+                Tell a story through expressions, emotion,
+                character and the connection between subject and lens.
+              </p>
+              <div class="competition-meta">
+                <span>Portrait</span>
+                <span>Concept category</span>
+              </div>
+              <a href="../competitions.html" class="details-link">
+                View competition information →
+              </a>
+            </div>
+          </article>
+
+          <article class="competition-card" data-category="street">
+            <img
+              class="competition-image"
+              src="https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=800&q=80"
+              alt="City street photography">
+
+            <div class="competition-body">
+              <div class="category">Street photography</div>
+              <h3>Life in Motion</h3>
+              <p>
+                Capture everyday life, fleeting moments,
+                city rhythms and stories hidden in ordinary scenes.
+              </p>
+              <div class="competition-meta">
+                <span>Street</span>
+                <span>Concept category</span>
+              </div>
+              <a href="../competitions.html" class="details-link">
+                View competition information →
+              </a>
+            </div>
+          </article>
+
+          <article class="competition-card" data-category="creative">
+            <img
+              class="competition-image"
+              src="https://images.unsplash.com/photo-1493612276216-ee3925520721?auto=format&fit=crop&w=800&q=80"
+              alt="Creative still life photography">
+
+            <div class="competition-body">
+              <div class="category">Creative photography</div>
+              <h3>Unexpected Perspectives</h3>
+              <p>
+                Experiment with composition, visual ideas,
+                abstraction and creative interpretations.
+              </p>
+              <div class="competition-meta">
+                <span>Creative</span>
+                <span>Concept category</span>
+              </div>
+              <a href="../competitions.html" class="details-link">
+                View competition information →
+              </a>
+            </div>
+          </article>
+
+          <div class="empty-state" id="emptyState">
+            <strong>No categories found.</strong>
+            Try selecting another category.
+          </div>
+
+        </div>
+      </section>
+
+      <section>
+        <div class="section-heading">
+          <h2>How participation works</h2>
+        </div>
+
+        <div class="process-grid">
+
+          <div class="process-card">
+            <div class="process-number">01</div>
+            <h3>Discover</h3>
+            <p>Explore competition themes and participation rules.</p>
+          </div>
+
+          <div class="process-card">
+            <div class="process-number">02</div>
+            <h3>Prepare</h3>
+            <p>Create an original photograph that fits the theme.</p>
+          </div>
+
+          <div class="process-card">
+            <div class="process-number">03</div>
+            <h3>Submit</h3>
+            <p>Follow the official submission instructions and deadlines.</p>
+          </div>
+
+          <div class="process-card">
+            <div class="process-number">04</div>
+            <h3>Participate</h3>
+            <p>Follow announcements and results through official channels.</p>
+          </div>
+
+        </div>
+      </section>
+
+      <div class="note">
+        <strong>Competition centre preview:</strong>
+        The displayed cards are illustrative photography categories,
+        not confirmed active competitions. Registration, submission
+        tracking, judging, voting and results will be connected
+        through the Lens Circle backend.
+        Always follow the official competition rules and announcements.
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer>
+    © <span id="year"></span> Lens Circle. The world, through your lens.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    // Supabase configuration
+    const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
+    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY";
+
+    const isConfigured =
+      SUPABASE_URL.startsWith("https://") &&
+      !SUPABASE_URL.includes("YOUR_SUPABASE") &&
+      SUPABASE_ANON_KEY.length > 20 &&
+      !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE");
+
+    let supabaseClient = null;
+
+    if (isConfigured && window.supabase) {
+      supabaseClient = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+      );
+    }
+
+    const loading = document.getElementById("loading");
+    const pageContent = document.getElementById("pageContent");
+    const error = document.getElementById("error");
+    const errorText = document.getElementById("errorText");
+
+    function showError(message) {
+      loading.hidden = true;
+      pageContent.hidden = true;
+      error.hidden = false;
+      errorText.textContent = message;
+    }
+
+    async function initializePage() {
+      if (!supabaseClient) {
+        showError(
+          "Supabase is not configured. Add your project URL and publishable/anon key to this file."
+        );
+        return;
+      }
+
+      try {
+        const { data, error: sessionError } =
+          await supabaseClient.auth.getSession();
+
+        if (sessionError) throw sessionError;
+
+        if (!data.session) {
+          window.location.replace("login.html");
+          return;
+        }
+
+        loading.hidden = true;
+        pageContent.hidden = false;
+
+      } catch (err) {
+        showError(
+          err.message || "Unable to verify your member account."
+        );
+      }
+    }
+
+    // Category filtering
+    const filterButtons = document.querySelectorAll(".filter");
+    const cards = document.querySelectorAll(".competition-card");
+    const emptyState = document.getElementById("emptyState");
+
+    filterButtons.forEach(button => {
+      button.addEventListener("click", () => {
+        filterButtons.forEach(item => {
+          item.classList.remove("active");
+        });
+
+        button.classList.add("active");
+
+        const selected = button.dataset.filter;
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+          const matches =
+            selected === "all" ||
+            card.dataset.category === selected;
+
+          card.hidden = !matches;
+
+          if (matches) visibleCount++;
+        });
+
+        emptyState.style.display =
+          visibleCount === 0 ? "block" : "none";
+      });
+    });
+
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+
+    if (isConfigured && window.supabase) {
+      const client = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+      );
+
+      client.auth.onAuthStateChange((event, session) => {
+        if (event === "SIGNED_OUT" || !session) {
+          window.location.replace("login.html");
+        }
+      });
+    }
+
+    initializePage();
+  </script>
+
+</body>
+</html>

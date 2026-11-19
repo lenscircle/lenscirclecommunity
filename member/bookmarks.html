@@ -1,0 +1,493 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f7f6f2">
+
+  <title>Saved Photographs | Lens Circle</title>
+  <meta name="description" content="Your personal collection of saved photography on Lens Circle.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --paper: #f7f6f2;
+      --white: #fff;
+      --ink: #252722;
+      --muted: #777970;
+      --line: #e7e4dc;
+      --accent: #a85e42;
+      --soft: #eeeae2;
+      --serif: "Playfair Display", Georgia, serif;
+      --sans: "DM Sans", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .topbar {
+      height: 72px;
+      background: white;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 5%;
+    }
+
+    .brand {
+      font-family: var(--serif);
+      font-size: 25px;
+      font-weight: 700;
+    }
+
+    .brand span {
+      color: var(--accent);
+    }
+
+    .back {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .back:hover {
+      color: var(--accent);
+    }
+
+    .container {
+      max-width: 1250px;
+      margin: auto;
+      padding: 43px 25px 70px;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-family: var(--serif);
+      font-size: 43px;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+
+    .intro {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.8;
+      max-width: 620px;
+    }
+
+    .heading {
+      margin-bottom: 30px;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 23px;
+      flex-wrap: wrap;
+    }
+
+    .saved-count {
+      font-size: 10px;
+      color: var(--muted);
+    }
+
+    .search {
+      width: 240px;
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      background: white;
+      font-size: 10px;
+      outline: none;
+    }
+
+    .search:focus {
+      border-color: var(--accent);
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      background: white;
+      border: 1px solid var(--line);
+      text-align: center;
+      padding: 75px 25px;
+    }
+
+    .empty-icon {
+      font-size: 36px;
+      margin-bottom: 18px;
+    }
+
+    .empty-state h2 {
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+
+    .empty-state p {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.8;
+      max-width: 450px;
+      margin: 0 auto 23px;
+    }
+
+    .primary-link {
+      display: inline-block;
+      padding: 13px 19px;
+      background: var(--ink);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .primary-link:hover {
+      background: var(--accent);
+    }
+
+    .bookmark-card {
+      background: white;
+      border: 1px solid var(--line);
+      overflow: hidden;
+    }
+
+    .bookmark-image {
+      width: 100%;
+      height: 245px;
+      object-fit: cover;
+      display: block;
+      background: var(--soft);
+    }
+
+    .bookmark-body {
+      padding: 17px;
+    }
+
+    .bookmark-body h3 {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    .bookmark-body p {
+      color: var(--muted);
+      font-size: 10px;
+      line-height: 1.7;
+    }
+
+    .bookmark-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
+      margin-top: 15px;
+    }
+
+    .bookmark-actions button {
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .bookmark-actions span {
+      color: var(--muted);
+      font-size: 9px;
+    }
+
+    .information {
+      margin-top: 30px;
+      padding: 17px 19px;
+      background: #fbf6ec;
+      border: 1px solid #e9dcc2;
+      color: #705d40;
+      font-size: 10px;
+      line-height: 1.8;
+    }
+
+    .loading,
+    .error {
+      max-width: 500px;
+      margin: 50px auto;
+      padding: 40px;
+      background: white;
+      border: 1px solid var(--line);
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .error h2 {
+      font-family: var(--serif);
+      font-size: 27px;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+
+    .error a {
+      display: inline-block;
+      margin-top: 15px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    @media(max-width: 850px) {
+      .gallery {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media(max-width: 550px) {
+      .container {
+        padding: 32px 16px 50px;
+      }
+
+      h1 {
+        font-size: 36px;
+      }
+
+      .gallery {
+        grid-template-columns: 1fr;
+      }
+
+      .search {
+        width: 100%;
+      }
+
+      .bookmark-image {
+        height: 230px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="topbar">
+    <a href="../index.html" class="brand">
+      Lens <span>Circle</span>
+    </a>
+
+    <a href="dashboard.html" class="back">
+      ← Member dashboard
+    </a>
+  </header>
+
+  <main class="container">
+
+    <div class="loading" id="loading">
+      Verifying your member account...
+    </div>
+
+    <section class="error" id="error" hidden>
+      <h2>Member access required.</h2>
+      <p id="errorText">Please sign in to continue.</p>
+      <a href="login.html">Go to sign in →</a>
+    </section>
+
+    <div id="pageContent" hidden>
+
+      <section class="heading">
+        <div class="eyebrow">Your personal collection</div>
+        <h1>Saved photographs.</h1>
+        <p class="intro">
+          Keep the photographs that inspire you close.
+          Your saved collection will bring together the images
+          and creators you want to revisit.
+        </p>
+      </section>
+
+      <div class="toolbar">
+        <div class="saved-count" id="savedCount">
+          0 saved photographs
+        </div>
+
+        <input
+          type="search"
+          class="search"
+          id="searchInput"
+          placeholder="Search saved photographs..."
+          aria-label="Search saved photographs">
+      </div>
+
+      <section class="gallery" id="gallery">
+
+        <div class="empty-state" id="emptyState">
+          <div class="empty-icon">♡</div>
+
+          <h2>Nothing saved yet.</h2>
+
+          <p>
+            When you discover photographs that inspire you,
+            save them to build your personal collection.
+          </p>
+
+          <a href="../discover.html" class="primary-link">
+            Discover photographs →
+          </a>
+        </div>
+
+      </section>
+
+      <div class="information">
+        <strong>Your collection is private.</strong>
+        This page currently displays an empty state.
+        Bookmarking and removal will be connected to a secure
+        Supabase database, with each member able to access
+        only their own saved photographs.
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer>
+    © <span id="year"></span> Lens Circle. The world, through your lens.
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    // Supabase configuration
+    const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
+    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY";
+
+    const isConfigured =
+      SUPABASE_URL.startsWith("https://") &&
+      !SUPABASE_URL.includes("YOUR_SUPABASE") &&
+      SUPABASE_ANON_KEY.length > 20 &&
+      !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE");
+
+    let supabaseClient = null;
+
+    if (isConfigured && window.supabase) {
+      supabaseClient = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+      );
+    }
+
+    const loading = document.getElementById("loading");
+    const pageContent = document.getElementById("pageContent");
+    const error = document.getElementById("error");
+    const errorText = document.getElementById("errorText");
+
+    function showError(message) {
+      loading.hidden = true;
+      pageContent.hidden = true;
+      error.hidden = false;
+      errorText.textContent = message;
+    }
+
+    async function initializePage() {
+      if (!supabaseClient) {
+        showError(
+          "Supabase is not configured. Add your project URL and publishable/anon key to this file."
+        );
+        return;
+      }
+
+      try {
+        const { data, error: sessionError } =
+          await supabaseClient.auth.getSession();
+
+        if (sessionError) throw sessionError;
+
+        if (!data.session) {
+          window.location.replace("login.html");
+          return;
+        }
+
+        loading.hidden = true;
+        pageContent.hidden = false;
+
+      } catch (err) {
+        showError(
+          err.message || "Unable to verify your member account."
+        );
+      }
+    }
+
+    // Search interface prepared for database-backed bookmarks.
+    document.getElementById("searchInput").addEventListener(
+      "input",
+      event => {
+        const query = event.target.value.trim().toLowerCase();
+
+        // Actual bookmark filtering will be implemented
+        // after the saved_photographs table is created.
+        if (query.length > 0) {
+          console.info("Bookmark search is awaiting database integration.");
+        }
+      }
+    );
+
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+
+    if (isConfigured && window.supabase) {
+      const client = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_ANON_KEY
+      );
+
+      client.auth.onAuthStateChange((event, session) => {
+        if (event === "SIGNED_OUT" || !session) {
+          window.location.replace("login.html");
+        }
+      });
+    }
+
+    initializePage();
+  </script>
+
+</body>
+</html>

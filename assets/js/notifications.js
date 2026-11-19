@@ -1,569 +1,625 @@
 
-/* =====================================================
-   LENS CIRCLE
-   Central Notification System
-   File: assets/js/notifications.js
-
-   Dependencies:
-   - Supabase JS SDK v2
-   - assets/js/supabase-client.js
-   - assets/js/auth.js
-
-   Required Supabase table:
-   public.notifications
-
-   Expected columns:
-   id           uuid
-   user_id      uuid
-   title        text
-   message      text
-   type         text
-   link         text
-   is_read      boolean
-   created_at   timestamptz
-
-   RLS must restrict users to their own notifications.
-   ===================================================== */
+/**
+ * LENS CIRCLE — NOTIFICATIONS MODULE
+ * File: assets/js/notifications.js
+ *
+ * Features:
+ * - Load authenticated user's notifications
+ * - Display unread notification count
+ * - Render notification dropdown
+ * - Mark individual notifications as read
+ * - Mark all notifications as read
+ * - Delete individual notifications
+ * - Subscribe to Supabase Realtime updates
+ * - Navigate to notification destinations
+ *
+ * REQUIRED TABLE: public.notifications
+ *
+ * Suggested columns:
+ * id UUID PRIMARY KEY
+ * user_id UUID REFERENCES auth.users(id)
+ * title TEXT NOT NULL
+ * message TEXT
+ * type TEXT
+ * link TEXT
+ * is_read BOOLEAN DEFAULT FALSE
+ * created_at TIMESTAMPTZ DEFAULT NOW()
+ *
+ * SECURITY:
+ * - RLS must restrict records to their intended recipient.
+ * - Users must not create notifications for themselves
+ *   unless explicitly permitted by the platform design.
+ * - Staff notification creation must use trusted backend functions.
+ * - Realtime subscriptions must be protected by RLS.
+ */
 
 (function () {
   "use strict";
 
-  // ----------------------------------------------------
-  // 1. DEPENDENCY CHECK
-  // ----------------------------------------------------
+  const CONFIG = {
+    table: "notifications",
+    limit: 30,
+    realtime: true,
+    refreshInterval: null
+  };
 
-  if (
-    !window.LensCircle ||
-    !window.LensCircle.configured ||
-    !window.LensCircleAuth
-  ) {
-    console.error(
-      "Lens Circle Notifications: Dependencies missing."
+  const state = {
+    notifications: [],
+    unreadCount: 0,
+    loading: false,
+    subscription: null,
+    userId: null
+  };
+
+  function client() {
+    if (window.LensCircle?.db) {
+      return window.LensCircle.db;
+    }
+
+    if (window.supabaseClient) {
+      return window.supabaseClient;
+    }
+
+    throw new Error(
+      "Lens Circle Supabase client is unavailable."
     );
-    return;
   }
 
-  const db = window.LensCircle.db;
-
-  const Notifications =
-    window.LensCircleNotifications = {};
-
-  const TABLE = "notifications";
-
-  const PAGE_SIZE = 20;
-
-  const VALID_TYPES = [
-    "general",
-    "announcement",
-    "competition",
-    "submission",
-    "activity",
-    "assignment",
-    "moderation",
-    "system"
-  ];
-
-  let currentUserId = null;
-  let realtimeChannel = null;
-
-  // ----------------------------------------------------
-  // 2. GET CURRENT USER
-  // ----------------------------------------------------
-
-  async function getUserId() {
-    const user =
-      await window.LensCircleAuth.getUser();
-
-    if (!user) {
-      throw new Error(
-        "Sign in to access notifications."
-      );
-    }
-
-    currentUserId = user.id;
-
-    return user.id;
+  function escapeHTML(value) {
+    return String(value ?? "").replace(
+      /[&<>"']/g,
+      character => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      })[character]
+    );
   }
 
-  // ----------------------------------------------------
-  // 3. FETCH NOTIFICATIONS
-  // ----------------------------------------------------
-
-  Notifications.getAll = async function (options) {
-    options = options || {};
-
-    const userId = await getUserId();
-
-    const limit = Math.min(
-      Math.max(Number(options.limit) || PAGE_SIZE, 1),
-      100
-    );
-
-    let query = db
-      .from(TABLE)
-      .select(
-        "id, title, message, type, link, is_read, created_at"
-      )
-      .eq("user_id", userId)
-      .order("created_at", {
-        ascending: false
-      })
-      .limit(limit);
-
-    if (options.unreadOnly === true) {
-      query = query.eq("is_read", false);
-    }
-
-    if (options.before) {
-      query = query.lt(
-        "created_at",
-        options.before
-      );
-    }
-
-    const { data, error } = await query;
-
-    if (error) {
-      console.error(
-        "Unable to load notifications:",
-        error
-      );
-
-      throw error;
-    }
-
-    return data || [];
-  };
-
-  // ----------------------------------------------------
-  // 4. GET UNREAD COUNT
-  // ----------------------------------------------------
-
-  Notifications.getUnreadCount = async function () {
-    const userId = await getUserId();
-
-    const { count, error } = await db
-      .from(TABLE)
-      .select("id", {
-        count: "exact",
-        head: true
-      })
-      .eq("user_id", userId)
-      .eq("is_read", false);
-
-    if (error) {
-      throw error;
-    }
-
-    return count || 0;
-  };
-
-  // ----------------------------------------------------
-  // 5. MARK ONE NOTIFICATION AS READ
-  // ----------------------------------------------------
-
-  Notifications.markAsRead = async function (
-    notificationId
-  ) {
-    const userId = await getUserId();
-
-    const { data, error } = await db
-      .from(TABLE)
-      .update({
-        is_read: true
-      })
-      .eq("id", notificationId)
-      .eq("user_id", userId)
-      .select("id")
-      .maybeSingle();
-
-    if (error) {
-      throw error;
-    }
-
-    return Boolean(data);
-  };
-
-  // ----------------------------------------------------
-  // 6. MARK ALL NOTIFICATIONS AS READ
-  // ----------------------------------------------------
-
-  Notifications.markAllAsRead = async function () {
-    const userId = await getUserId();
-
-    const { data, error } = await db
-      .from(TABLE)
-      .update({
-        is_read: true
-      })
-      .eq("user_id", userId)
-      .eq("is_read", false)
-      .select("id");
-
-    if (error) {
-      throw error;
-    }
-
-    return data || [];
-  };
-
-  // ----------------------------------------------------
-  // 7. DELETE OWN NOTIFICATION
-  // ----------------------------------------------------
-
-  Notifications.delete = async function (
-    notificationId
-  ) {
-    const userId = await getUserId();
-
-    const { data, error } = await db
-      .from(TABLE)
-      .delete()
-      .eq("id", notificationId)
-      .eq("user_id", userId)
-      .select("id")
-      .maybeSingle();
-
-    if (error) {
-      throw error;
-    }
-
-    return Boolean(data);
-  };
-
-  // ----------------------------------------------------
-  // 8. DELETE ALL READ NOTIFICATIONS
-  // ----------------------------------------------------
-
-  Notifications.clearRead = async function () {
-    const userId = await getUserId();
-
-    const { data, error } = await db
-      .from(TABLE)
-      .delete()
-      .eq("user_id", userId)
-      .eq("is_read", true)
-      .select("id");
-
-    if (error) {
-      throw error;
-    }
-
-    return data || [];
-  };
-
-  // ----------------------------------------------------
-  // 9. NOTIFICATION DATE FORMAT
-  // ----------------------------------------------------
-
-  Notifications.formatDate = function (dateValue) {
-    if (!dateValue) {
-      return "";
-    }
-
-    const date = new Date(dateValue);
-
-    if (Number.isNaN(date.getTime())) {
-      return "";
-    }
-
-    return new Intl.DateTimeFormat("en-IN", {
-      dateStyle: "medium",
-      timeStyle: "short"
-    }).format(date);
-  };
-
-  // ----------------------------------------------------
-  // 10. SAFE NOTIFICATION RENDERING
-  // ----------------------------------------------------
-
-  Notifications.render = function (
-    container,
-    notifications
-  ) {
-    if (typeof container === "string") {
-      container = document.querySelector(container);
-    }
-
-    if (!container) {
-      throw new Error(
-        "Notification container was not found."
-      );
-    }
-
-    container.replaceChildren();
-
-    if (!notifications || !notifications.length) {
-      const empty = document.createElement("div");
-
-      empty.className = "lc-notification-empty";
-      empty.textContent = "You're all caught up.";
-
-      container.appendChild(empty);
-
-      return;
-    }
-
-    notifications.forEach(function (item) {
-      const article = document.createElement("article");
-
-      article.className =
-        "lc-notification-item" +
-        (item.is_read ? "" : " is-unread");
-
-      article.dataset.notificationId = item.id;
-
-      const content = document.createElement("div");
-
-      content.className = "lc-notification-content";
-
-      const title = document.createElement("h4");
-      title.textContent = item.title || "Notification";
-
-      const message = document.createElement("p");
-      message.textContent = item.message || "";
-
-      const date = document.createElement("time");
-
-      date.textContent =
-        Notifications.formatDate(item.created_at);
-
-      date.dateTime = item.created_at || "";
-
-      content.appendChild(title);
-      content.appendChild(message);
-      content.appendChild(date);
-
-      article.appendChild(content);
-
-      if (!item.is_read) {
-        const readButton =
-          document.createElement("button");
-
-        readButton.type = "button";
-        readButton.textContent = "Mark as read";
-        readButton.className =
-          "lc-notification-read";
-
-        readButton.addEventListener(
-          "click",
-          async function () {
-            try {
-              await Notifications.markAsRead(item.id);
-
-              article.classList.remove("is-unread");
-              readButton.remove();
-
-              article.dispatchEvent(
-                new CustomEvent("lc:notification-read", {
-                  bubbles: true,
-                  detail: { id: item.id }
-                })
-              );
-
-            } catch (error) {
-              console.error(error);
-
-              window.LensCircleUI?.notify(
-                "Unable to update notification.",
-                "error"
-              );
-            }
-          }
-        );
-
-        article.appendChild(readButton);
-      }
-
-      if (item.link) {
-        const link = document.createElement("a");
-
-        link.href = Notifications.safeLink(item.link);
-        link.textContent = "View details";
-        link.className = "lc-notification-link";
-
-        article.appendChild(link);
-      }
-
-      container.appendChild(article);
-    });
-  };
-
-  // ----------------------------------------------------
-  // 11. VALIDATE NOTIFICATION LINK
-  // ----------------------------------------------------
-
-  Notifications.safeLink = function (link) {
-    if (typeof link !== "string") {
-      return "#";
-    }
+  function safeLink(value) {
+    if (!value) return "";
 
     try {
-      const parsed = new URL(
-        link,
+      const url = new URL(
+        value,
         window.location.origin
       );
 
       if (
-        parsed.origin !== window.location.origin
+        url.protocol !== "https:" &&
+        url.protocol !== "http:"
       ) {
-        return "#";
+        return "";
       }
 
-      return parsed.href;
-
-    } catch (error) {
-      return "#";
+      return url.href;
+    } catch {
+      return "";
     }
-  };
+  }
 
-  // ----------------------------------------------------
-  // 12. REAL-TIME NOTIFICATION SUBSCRIPTION
-  // ----------------------------------------------------
+  function timeAgo(value) {
+    if (!value) return "";
 
-  Notifications.subscribe = async function (callback) {
-    const userId = await getUserId();
+    const timestamp = new Date(value).getTime();
 
-    if (realtimeChannel) {
-      await Notifications.unsubscribe();
-    }
+    if (Number.isNaN(timestamp)) return "";
 
-    realtimeChannel = db
-      .channel("lc-notifications-" + userId)
+    const seconds = Math.max(
+      0,
+      Math.floor((Date.now() - timestamp) / 1000)
+    );
 
-      .on(
-        "postgres_changes",
-        {
-          event: "INSERT",
-          schema: "public",
-          table: TABLE,
-          filter: "user_id=eq." + userId
-        },
-        function (payload) {
-          if (typeof callback === "function") {
-            callback({
-              event: "INSERT",
-              notification: payload.new
-            });
-          }
-        }
-      )
+    if (seconds < 60) return "Just now";
 
-      .subscribe();
+    const minutes = Math.floor(seconds / 60);
 
-    return realtimeChannel;
-  };
-
-  // ----------------------------------------------------
-  // 13. UNSUBSCRIBE
-  // ----------------------------------------------------
-
-  Notifications.unsubscribe = async function () {
-    if (!realtimeChannel) {
-      return;
+    if (minutes < 60) {
+      return `${minutes} min ago`;
     }
 
-    await db.removeChannel(realtimeChannel);
+    const hours = Math.floor(minutes / 60);
 
-    realtimeChannel = null;
-  };
+    if (hours < 24) {
+      return `${hours} hr ago`;
+    }
 
-  // ----------------------------------------------------
-  // 14. LOAD NOTIFICATIONS INTO A PAGE
-  // ----------------------------------------------------
+    const days = Math.floor(hours / 24);
 
-  Notifications.loadInto = async function (
-    containerSelector,
-    options
-  ) {
-    try {
-      const notifications =
-        await Notifications.getAll(options);
+    if (days < 7) {
+      return `${days} days ago`;
+    }
 
-      Notifications.render(
-        containerSelector,
-        notifications
+    return new Intl.DateTimeFormat("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric"
+    }).format(new Date(value));
+  }
+
+  function normalise(record) {
+    if (!record || typeof record !== "object") {
+      return null;
+    }
+
+    return {
+      id: record.id || "",
+      title: record.title || "Notification",
+      message: record.message || "",
+      type: record.type || "general",
+      link: safeLink(record.link),
+      isRead: record.is_read === true,
+      createdAt: record.created_at || null
+    };
+  }
+
+  function notify(message, type = "info") {
+    window.dispatchEvent(
+      new CustomEvent("lenscircle:notification-message", {
+        detail: { message, type }
+      })
+    );
+  }
+
+  async function getCurrentUser() {
+    const { data, error } = await client().auth.getUser();
+
+    if (error) throw error;
+
+    if (!data?.user) {
+      throw new Error("Please sign in to continue.");
+    }
+
+    state.userId = data.user.id;
+
+    return data.user;
+  }
+
+  function updateUnreadCount() {
+    state.unreadCount = state.notifications.filter(
+      item => !item.isRead
+    ).length;
+
+    document.querySelectorAll(
+      "[data-notification-count]"
+    ).forEach(element => {
+      element.textContent = state.unreadCount;
+
+      element.hidden = state.unreadCount === 0;
+      element.setAttribute(
+        "aria-label",
+        `${state.unreadCount} unread notifications`
       );
+    });
 
-      return notifications;
+    document.querySelectorAll(
+      "[data-notification-unread]"
+    ).forEach(element => {
+      element.textContent = state.unreadCount;
+    });
 
-    } catch (error) {
-      console.error(error);
+    window.dispatchEvent(
+      new CustomEvent("lenscircle:unread-count-changed", {
+        detail: {
+          count: state.unreadCount
+        }
+      })
+    );
+  }
 
-      const container =
-        document.querySelector(containerSelector);
-
-      if (container) {
-        container.textContent =
-          "Unable to load notifications.";
-      }
-
-      return [];
-    }
-  };
-
-  // ----------------------------------------------------
-  // 15. UPDATE NOTIFICATION BADGE
-  // ----------------------------------------------------
-
-  Notifications.updateBadge = async function (
-    selector
-  ) {
-    const badge =
-      document.querySelector(selector || "[data-lc-unread-count]");
-
-    if (!badge) {
-      return 0;
-    }
+  async function load(options = {}) {
+    state.loading = true;
 
     try {
-      const count =
-        await Notifications.getUnreadCount();
+      await getCurrentUser();
 
-      badge.textContent =
-        count > 99 ? "99+" : String(count);
+      const { data, error } = await client()
+        .from(CONFIG.table)
+        .select(
+          "id, title, message, type, link, is_read, created_at"
+        )
+        .order("created_at", {
+          ascending: false
+        })
+        .limit(options.limit || CONFIG.limit);
 
-      badge.hidden = count === 0;
+      if (error) throw error;
 
-      return count;
+      state.notifications = Array.isArray(data)
+        ? data.map(normalise).filter(Boolean)
+        : [];
+
+      updateUnreadCount();
+
+      return {
+        success: true,
+        data: state.notifications,
+        unreadCount: state.unreadCount
+      };
 
     } catch (error) {
       console.error(
-        "Unable to update unread count:",
+        "Notification loading failed:",
         error
       );
 
-      badge.hidden = true;
+      return {
+        success: false,
+        data: [],
+        error: error.message || "Unable to load notifications."
+      };
 
-      return 0;
+    } finally {
+      state.loading = false;
     }
-  };
+  }
 
-  // ----------------------------------------------------
-  // 16. NOTIFICATION TYPE VALIDATION
-  // ----------------------------------------------------
-
-  Notifications.isValidType = function (type) {
-    return VALID_TYPES.includes(type);
-  };
-
-  // ----------------------------------------------------
-  // 17. CLEANUP
-  // ----------------------------------------------------
-
-  window.addEventListener("beforeunload", function () {
-    if (realtimeChannel) {
-      db.removeChannel(realtimeChannel);
-      realtimeChannel = null;
+  async function markAsRead(notificationId) {
+    if (!notificationId) {
+      throw new Error("Notification ID is required.");
     }
-  });
 
-  // ----------------------------------------------------
-  // 18. INITIALISE
-  // ----------------------------------------------------
+    const { error } = await client()
+      .from(CONFIG.table)
+      .update({
+        is_read: true
+      })
+      .eq("id", notificationId)
+      .eq("user_id", state.userId)
+      .eq("is_read", false);
 
-  console.info(
-    "Lens Circle: Notification utilities loaded."
-  );
+    if (error) throw error;
+
+    state.notifications = state.notifications.map(item =>
+      item.id === notificationId
+        ? { ...item, isRead: true }
+        : item
+    );
+
+    updateUnreadCount();
+
+    return {
+      success: true
+    };
+  }
+
+  async function markAllAsRead() {
+    await getCurrentUser();
+
+    const { error } = await client()
+      .from(CONFIG.table)
+      .update({
+        is_read: true
+      })
+      .eq("user_id", state.userId)
+      .eq("is_read", false);
+
+    if (error) throw error;
+
+    state.notifications = state.notifications.map(item => ({
+      ...item,
+      isRead: true
+    }));
+
+    updateUnreadCount();
+
+    return {
+      success: true
+    };
+  }
+
+  async function remove(notificationId) {
+    if (!notificationId) {
+      throw new Error("Notification ID is required.");
+    }
+
+    const { error } = await client()
+      .from(CONFIG.table)
+      .delete()
+      .eq("id", notificationId)
+      .eq("user_id", state.userId);
+
+    if (error) throw error;
+
+    state.notifications = state.notifications.filter(
+      item => item.id !== notificationId
+    );
+
+    updateUnreadCount();
+
+    return {
+      success: true
+    };
+  }
+
+  function renderItem(item) {
+    const notification = normalise(item);
+
+    if (!notification) return "";
+
+    return `
+      <article
+        class="lc-notification-item
+          ${notification.isRead ? "is-read" : "is-unread"}"
+        data-notification-id="${escapeHTML(notification.id)}">
+
+        <div class="lc-notification-item__content">
+
+          <span class="lc-notification-type">
+            ${escapeHTML(notification.type.replace(/_/g, " "))}
+          </span>
+
+          <h4>${escapeHTML(notification.title)}</h4>
+
+          <p>${escapeHTML(notification.message)}</p>
+
+          <time>
+            ${escapeHTML(timeAgo(notification.createdAt))}
+          </time>
+
+        </div>
+
+        <div class="lc-notification-item__actions">
+
+          ${
+            !notification.isRead
+              ? `<button
+                  type="button"
+                  data-notification-action="read"
+                  data-id="${escapeHTML(notification.id)}"
+                  aria-label="Mark as read">
+                  Mark read
+                </button>`
+              : ""
+          }
+
+          <button
+            type="button"
+            data-notification-action="delete"
+            data-id="${escapeHTML(notification.id)}"
+            aria-label="Delete notification">
+            Delete
+          </button>
+
+          ${
+            notification.link
+              ? `<button
+                  type="button"
+                  data-notification-action="open"
+                  data-id="${escapeHTML(notification.id)}">
+                  View
+                </button>`
+              : ""
+          }
+
+        </div>
+
+      </article>
+    `;
+  }
+
+  function render(container) {
+    if (!container) return;
+
+    if (state.loading) {
+      container.innerHTML = `
+        <div class="lc-notifications-loading">
+          Loading notifications...
+        </div>
+      `;
+      return;
+    }
+
+    if (!state.notifications.length) {
+      container.innerHTML = `
+        <div class="lc-notifications-empty">
+          <span class="lc-notifications-empty__icon">♧</span>
+          <h3>You're all caught up</h3>
+          <p>New updates from Lens Circle will appear here.</p>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = `
+      <div class="lc-notifications-header">
+        <div>
+          <h3>Notifications</h3>
+          <span>${state.unreadCount} unread</span>
+        </div>
+
+        ${
+          state.unreadCount
+            ? `<button
+                type="button"
+                data-notification-action="read-all">
+                Mark all as read
+              </button>`
+            : ""
+        }
+      </div>
+
+      <div class="lc-notifications-list">
+        ${state.notifications.map(renderItem).join("")}
+      </div>
+    `;
+  }
+
+  async function loadInto(selector) {
+    const container = typeof selector === "string"
+      ? document.querySelector(selector)
+      : selector;
+
+    if (!container) {
+      return {
+        success: false,
+        error: "Notification container not found."
+      };
+    }
+
+    const result = await load();
+
+    if (!result.success) {
+      container.innerHTML = `
+        <div class="lc-notifications-error">
+          Notifications could not be loaded.
+        </div>
+      `;
+
+      return result;
+    }
+
+    render(container);
+
+    return result;
+  }
+
+  function refreshVisibleContainers() {
+    document.querySelectorAll(
+      "[data-notification-list]"
+    ).forEach(render);
+  }
+
+  async function handleAction(action, notificationId) {
+    if (action === "read") {
+      await markAsRead(notificationId);
+    }
+
+    if (action === "read-all") {
+      await markAllAsRead();
+    }
+
+    if (action === "delete") {
+      await remove(notificationId);
+    }
+
+    if (action === "open") {
+      const item = state.notifications.find(
+        notification => notification.id === notificationId
+      );
+
+      if (!item) return;
+
+      if (!item.isRead) {
+        await markAsRead(notificationId);
+      }
+
+      if (item.link) {
+        window.location.assign(item.link);
+      }
+    }
+
+    refreshVisibleContainers();
+  }
+
+  function bind(container = document) {
+    container.addEventListener("click", async event => {
+      const button = event.target.closest(
+        "[data-notification-action]"
+      );
+
+      if (!button) return;
+
+      const action = button.dataset.notificationAction;
+      const id = button.dataset.id;
+
+      button.disabled = true;
+
+      try {
+        await handleAction(action, id);
+
+      } catch (error) {
+        console.error(
+          "Notification action failed:",
+          error
+        );
+
+        notify(
+          error.message || "Unable to update notification.",
+          "error"
+        );
+
+      } finally {
+        button.disabled = false;
+      }
+    });
+  }
+
+  function subscribe() {
+    if (!CONFIG.realtime || state.subscription) {
+      return state.subscription;
+    }
+
+    if (!state.userId) {
+      return null;
+    }
+
+    state.subscription = client()
+      .channel(`notifications-${state.userId}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: CONFIG.table,
+          filter: `user_id=eq.${state.userId}`
+        },
+        async () => {
+          await load();
+          refreshVisibleContainers();
+        }
+      )
+      .subscribe();
+
+    return state.subscription;
+  }
+
+  async function unsubscribe() {
+    if (!state.subscription) return;
+
+    await client().removeChannel(state.subscription);
+
+    state.subscription = null;
+  }
+
+  async function initialise(options = {}) {
+    bind();
+
+    const result = await load({
+      limit: options.limit || CONFIG.limit
+    });
+
+    if (result.success) {
+      document.querySelectorAll(
+        "[data-notification-list]"
+      ).forEach(render);
+
+      if (options.realtime !== false) {
+        subscribe();
+      }
+    }
+
+    return result;
+  }
+
+  window.LensCircleNotifications = {
+    config: CONFIG,
+    state,
+    load,
+    loadInto,
+    markAsRead,
+    markAllAsRead,
+    remove,
+    render,
+    renderItem,
+    updateUnreadCount,
+    subscribe,
+    unsubscribe,
+    bind,
+    initialise,
+    timeAgo
+  };
 
 })();

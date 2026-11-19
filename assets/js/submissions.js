@@ -8,35 +8,28 @@
    - supabase-client.js
    - auth.js
    - storage.js
-   - helpers.js
+   - helpers.js (optional)
 
-   REQUIRED SUPABASE RPC FUNCTIONS:
+   Database:
+   - public.photos
+   - public.submit_photo_entry(...)
 
-   1. submit_photography_entry
-      Creates a submission after validating activity,
-      ownership, deadlines and image permissions.
+   Storage:
+   - pod-submissions-private
 
-   2. withdraw_photography_entry
-      Withdraws an eligible submission owned by caller.
+   Supported activities:
+   - Photo of the Day
+   - Weekly Challenge
+   - Monthly Theme
+   - Photography Battle
 
-   3. review_photography_entry
-      Authorised staff review and moderation action.
-
-   4. get_my_photography_submissions
-      Returns submissions belonging to auth.uid().
-
-   IMPORTANT:
-   Database functions and RLS must enforce all
-   permissions. Browser-side checks are not security.
+   Database RLS and protected RPCs enforce security.
    ===================================================== */
 
 (function () {
   "use strict";
 
-  // ----------------------------------------------------
   // 1. DEPENDENCY CHECK
-  // ----------------------------------------------------
-
   if (
     !window.LensCircle ||
     !window.LensCircle.configured ||
@@ -55,62 +48,41 @@
   const Submissions =
     window.LensCircleSubmissions = {};
 
-  // ----------------------------------------------------
   // 2. SUBMISSION TYPES
-  // ----------------------------------------------------
-
   const TYPES = Object.freeze({
     photo_of_the_day: {
-      label: "Photo of the Day",
-      bucket: "photo-submissions"
+      label: "Photo of the Day"
     },
-
     weekly_challenge: {
-      label: "Weekly Challenge",
-      bucket: "photo-submissions"
+      label: "Weekly Challenge"
     },
-
-    photography_battle: {
-      label: "Photography Battle",
-      bucket: "photo-submissions"
-    },
-
     monthly_theme: {
-      label: "Monthly Theme",
-      bucket: "photo-submissions"
+      label: "Monthly Theme"
     },
-
-    competition: {
-      label: "Competition",
-      bucket: "competition-entries"
-    },
-
-    exhibition: {
-      label: "Exhibition",
-      bucket: "exhibition-images"
+    photography_battle: {
+      label: "Photography Battle"
     }
   });
 
-  const VALID_STATUSES = [
+  const VALID_STATUSES = Object.freeze([
     "pending",
-    "under_review",
     "approved",
-    "rejected",
-    "withdrawn"
-  ];
+    "rejected"
+  ]);
 
-  // ----------------------------------------------------
-  // 3. VALIDATE SUBMISSION TYPE
-  // ----------------------------------------------------
+  const UUID_PATTERN =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+  // 3. PUBLIC CONFIGURATION
+  Submissions.types = TYPES;
+  Submissions.statuses = VALID_STATUSES;
 
   Submissions.getTypes = function () {
     return Object.entries(TYPES).map(
-      function (entry) {
-        return {
-          id: entry[0],
-          label: entry[1].label
-        };
-      }
+      ([id, config]) => ({
+        id: id,
+        label: config.label
+      })
     );
   };
 
@@ -125,15 +97,27 @@
     return VALID_STATUSES.includes(status);
   };
 
-  // ----------------------------------------------------
-  // 4. GET CURRENT USER
-  // ----------------------------------------------------
+  Submissions.getTypeLabel = function (type) {
+    return TYPES[type]?.label ||
+      "Photography Submission";
+  };
 
+  Submissions.getStatusLabel = function (status) {
+    const labels = {
+      pending: "Awaiting Review",
+      approved: "Approved",
+      rejected: "Not Selected"
+    };
+
+    return labels[status] || "Unknown Status";
+  };
+
+  // 4. CURRENT USER
   async function getCurrentUser() {
     const user =
       await window.LensCircleAuth.getUser();
 
-    if (!user) {
+    if (!user || !user.id) {
       throw new Error(
         "Please sign in before submitting photographs."
       );
@@ -142,24 +126,18 @@
     return user;
   }
 
-  // ----------------------------------------------------
   // 5. VALIDATE SUBMISSION DETAILS
-  // ----------------------------------------------------
-
   Submissions.validate = function (details) {
     if (!details || typeof details !== "object") {
-      throw new Error("Submission details are required.");
+      throw new Error(
+        "Submission details are required."
+      );
     }
 
     if (!Submissions.isValidType(details.type)) {
-      throw new Error("Invalid submission category.");
-    }
-
-    if (
-      typeof details.activityId !== "string" ||
-      !/^[a-zA-Z0-9_-]+$/.test(details.activityId)
-    ) {
-      throw new Error("Invalid activity identifier.");
+      throw new Error(
+        "Invalid photography activity."
+      );
     }
 
     if (
@@ -168,12 +146,34 @@
       details.title.trim().length > 120
     ) {
       throw new Error(
-        "Title must contain between 2 and 120 characters."
+        "Title must contain 2–120 characters."
       );
     }
 
     if (
-      details.caption &&
+      typeof details.photographer !== "string" ||
+      details.photographer.trim().length < 1 ||
+      details.photographer.trim().length > 80
+    ) {
+      throw new Error(
+        "Photographer name must contain 1–80 characters."
+      );
+    }
+
+    if (
+      details.activityId &&
+      (
+        typeof details.activityId !== "string" ||
+        !UUID_PATTERN.test(details.activityId)
+      )
+    ) {
+      throw new Error(
+        "Activity ID must be a valid UUID."
+      );
+    }
+
+    if (
+      details.caption != null &&
       (
         typeof details.caption !== "string" ||
         details.caption.length > 1000
@@ -184,8 +184,34 @@
       );
     }
 
+    if (
+      details.description != null &&
+      (
+        typeof details.description !== "string" ||
+        details.description.length > 2000
+      )
+    ) {
+      throw new Error(
+        "Description cannot exceed 2000 characters."
+      );
+    }
+
+    if (
+      details.category != null &&
+      (
+        typeof details.category !== "string" ||
+        details.category.length > 80
+      )
+    ) {
+      throw new Error(
+        "Category cannot exceed 80 characters."
+      );
+    }
+
     if (!details.file) {
-      throw new Error("Please select a photograph.");
+      throw new Error(
+        "Please select a photograph."
+      );
     }
 
     Storage.validateImage(details.file, {
@@ -195,56 +221,57 @@
     return true;
   };
 
-  // ----------------------------------------------------
   // 6. SUBMIT PHOTOGRAPH
-  // ----------------------------------------------------
-
   Submissions.submit = async function (details) {
     Submissions.validate(details);
 
-    const user = await getCurrentUser();
-
-    const typeConfig = TYPES[details.type];
+    await getCurrentUser();
 
     let uploadedFile = null;
 
     try {
-      // Upload photograph to the appropriate bucket.
-      if (details.type === "competition") {
-        uploadedFile =
-          await Storage.uploadCompetitionEntry(
-            details.activityId,
-            details.file
-          );
+      // Upload into the authenticated member's
+      // private storage folder.
+      uploadedFile =
+        await Storage.uploadSubmission(details.file);
 
-      } else if (details.type === "exhibition") {
-        uploadedFile =
-          await Storage.uploadExhibitionImage(
-            details.activityId,
-            details.file
-          );
-
-      } else {
-        uploadedFile =
-          await Storage.uploadImage(
-            typeConfig.bucket,
-            details.file,
-            {
-              folder: user.id
-            }
-          );
+      if (
+        uploadedFile.bucket !==
+        Storage.buckets.submissions
+      ) {
+        throw new Error(
+          "Photograph was not uploaded to the private submissions bucket."
+        );
       }
 
-      // Submit the record through a protected RPC.
+      // Create the database record through the
+      // protected server-side submission function.
       const { data, error } = await db.rpc(
-        "submit_photography_entry",
+        "submit_photo_entry",
         {
-          p_activity_id: details.activityId,
-          p_submission_type: details.type,
-          p_title: details.title.trim(),
-          p_caption: (details.caption || "").trim(),
-          p_storage_bucket: uploadedFile.bucket,
-          p_storage_path: uploadedFile.path
+          p_photographer:
+            details.photographer.trim(),
+
+          p_title:
+            details.title.trim(),
+
+          p_image_path:
+            uploadedFile.path,
+
+          p_submission_type:
+            details.type,
+
+          p_activity_id:
+            details.activityId || null,
+
+          p_caption:
+            (details.caption || "").trim() || null,
+
+          p_description:
+            (details.description || "").trim() || null,
+
+          p_category:
+            (details.category || "").trim() || null
         }
       );
 
@@ -254,210 +281,220 @@
 
       return {
         success: true,
-        submission: data,
+        photoId: data,
+        status: "pending",
+        message:
+          "Your photograph has been submitted for review.",
         uploadedFile: uploadedFile
       };
 
     } catch (error) {
-      /*
-        If record creation fails after upload, the
-        file may remain in storage.
-
-        A trusted cleanup process should remove orphaned
-        uploads after verifying no submission references
-        the object. Do not attempt unrestricted deletion.
-      */
-
       console.error(
-        "Submission failed:",
+        "Lens Circle submission failed:",
         error
       );
 
+      /*
+        Do not automatically delete the uploaded object
+        here. The existing deletion policy requires a
+        matching pending/rejected database record.
+        A failed RPC may leave an orphaned upload.
+        A controlled cleanup process will handle it.
+      */
+
       throw error;
     }
   };
 
-  // ----------------------------------------------------
   // 7. GET MY SUBMISSIONS
-  // ----------------------------------------------------
-
   Submissions.getMine = async function (options) {
     options = options || {};
 
-    await getCurrentUser();
-
-    const { data, error } = await db.rpc(
-      "get_my_photography_submissions",
-      {
-        p_submission_type: options.type || null,
-        p_status: options.status || null,
-        p_limit: Math.min(
-          Math.max(Number(options.limit) || 50, 1),
-          100
-        ),
-        p_offset: Math.max(
-          Number(options.offset) || 0,
-          0
-        )
-      }
-    );
-
-    if (error) {
-      throw error;
-    }
-
-    return Array.isArray(data) ? data : [];
-  };
-
-  // ----------------------------------------------------
-  // 8. GET SUBMISSION STATUS
-  // ----------------------------------------------------
-
-  Submissions.getStatusLabel = function (status) {
-    const labels = {
-      pending: "Awaiting Review",
-      under_review: "Under Review",
-      approved: "Approved",
-      rejected: "Not Selected",
-      withdrawn: "Withdrawn"
-    };
-
-    return labels[status] || "Unknown Status";
-  };
-
-  // ----------------------------------------------------
-  // 9. WITHDRAW OWN SUBMISSION
-  // ----------------------------------------------------
-
-  Submissions.withdraw = async function (
-    submissionId
-  ) {
-    await getCurrentUser();
-
-    if (
-      typeof submissionId !== "string" ||
-      !/^[a-zA-Z0-9_-]+$/.test(submissionId)
-    ) {
-      throw new Error("Invalid submission identifier.");
-    }
-
-    const { data, error } = await db.rpc(
-      "withdraw_photography_entry",
-      {
-        p_submission_id: submissionId
-      }
-    );
-
-    if (error) {
-      throw error;
-    }
-
-    return data;
-  };
-
-  // ----------------------------------------------------
-  // 10. STAFF REVIEW
-  // ----------------------------------------------------
-
-  /*
-    Staff actions must be checked again inside the
-    database function.
-
-    A Moderator may only review entries within their
-    assigned operational permissions.
-
-    Directors may supervise only their assigned
-    departments.
-
-    Admin has platform-wide authority.
-  */
-
-  Submissions.review = async function (
-    submissionId,
-    decision,
-    notes
-  ) {
     const user = await getCurrentUser();
 
-    const validDecisions = [
-      "approve",
-      "reject",
-      "request_changes"
-    ];
-
-    if (!validDecisions.includes(decision)) {
-      throw new Error("Invalid review decision.");
-    }
-
     if (
-      typeof submissionId !== "string" ||
-      !/^[a-zA-Z0-9_-]+$/.test(submissionId)
+      options.type &&
+      !Submissions.isValidType(options.type)
     ) {
-      throw new Error("Invalid submission identifier.");
-    }
-
-    if (
-      notes &&
-      (
-        typeof notes !== "string" ||
-        notes.length > 2000
-      )
-    ) {
-      throw new Error("Review notes are too long.");
-    }
-
-    const authorisedRoles = [
-      "admin",
-      "director",
-      "moderator"
-    ];
-
-    let authorised = false;
-
-    for (const role of authorisedRoles) {
-      if (
-        await window.LensCircleAuth.hasRole(role)
-      ) {
-        authorised = true;
-        break;
-      }
-    }
-
-    if (!authorised) {
       throw new Error(
-        "Authorised staff access is required."
+        "Invalid submission type filter."
       );
     }
 
-    const { data, error } = await db.rpc(
-      "review_photography_entry",
-      {
-        p_submission_id: submissionId,
-        p_decision: decision,
-        p_notes: (notes || "").trim(),
-        p_reviewer_id: user.id
-      }
+    if (
+      options.status &&
+      !Submissions.isValidStatus(options.status)
+    ) {
+      throw new Error(
+        "Invalid submission status filter."
+      );
+    }
+
+    const limit = Math.min(
+      Math.max(Number(options.limit) || 50, 1),
+      100
     );
+
+    const offset = Math.max(
+      Number(options.offset) || 0,
+      0
+    );
+
+    let query = db
+      .from("photos")
+      .select(
+        [
+          "id",
+          "photographer",
+          "title",
+          "image_path",
+          "storage_bucket",
+          "votes",
+          "status",
+          "description",
+          "category",
+          "submission_type",
+          "activity_id",
+          "caption",
+          "rejection_reason",
+          "created_at",
+          "reviewed_at"
+        ].join(",")
+      )
+      .eq("user_id", user.id)
+      .order("created_at", {
+        ascending: false
+      })
+      .range(offset, offset + limit - 1);
+
+    if (options.type) {
+      query = query.eq(
+        "submission_type",
+        options.type
+      );
+    }
+
+    if (options.status) {
+      query = query.eq(
+        "status",
+        options.status
+      );
+    }
+
+    const { data, error } = await query;
 
     if (error) {
       throw error;
     }
 
+    const submissions = data || [];
+
+    // Private submissions need short-lived signed URLs.
+    const enriched = await Promise.all(
+      submissions.map(async function (photo) {
+        const result = Object.assign({}, photo);
+
+        try {
+          if (
+            photo.storage_bucket ===
+            Storage.buckets.submissions
+          ) {
+            result.image_url =
+              await Storage.getSignedUrl(
+                photo.storage_bucket,
+                photo.image_path,
+                3600
+              );
+
+          } else {
+            result.image_url =
+              Storage.getPublicUrl(
+                photo.storage_bucket || "pod-photos",
+                photo.image_path
+              );
+          }
+        } catch (error) {
+          console.warn(
+            "Could not create image URL for photo:",
+            photo.id,
+            error
+          );
+
+          result.image_url = null;
+        }
+
+        return result;
+      })
+    );
+
+    return enriched;
+  };
+
+  // 8. GET ONE SUBMISSION
+  Submissions.getById = async function (photoId) {
+    const user = await getCurrentUser();
+
+    if (
+      photoId === null ||
+      photoId === undefined ||
+      !/^\d+$/.test(String(photoId))
+    ) {
+      throw new Error(
+        "Invalid photograph identifier."
+      );
+    }
+
+    const { data, error } = await db
+      .from("photos")
+      .select(
+        "id, photographer, title, image_path, storage_bucket, votes, status, description, category, submission_type, activity_id, caption, rejection_reason, created_at, reviewed_at"
+      )
+      .eq("id", Number(photoId))
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (error) {
+      throw error;
+    }
+
+    if (!data) {
+      throw new Error(
+        "Submission not found or access denied."
+      );
+    }
+
+    if (
+      data.storage_bucket ===
+      Storage.buckets.submissions
+    ) {
+      data.image_url =
+        await Storage.getSignedUrl(
+          data.storage_bucket,
+          data.image_path,
+          3600
+        );
+    } else {
+      data.image_url =
+        Storage.getPublicUrl(
+          data.storage_bucket || "pod-photos",
+          data.image_path
+        );
+    }
+
     return data;
   };
 
-  // ----------------------------------------------------
-  // 11. SUBMISSION TYPE LABEL
-  // ----------------------------------------------------
-
-  Submissions.getTypeLabel = function (type) {
-    return TYPES[type]?.label || "Photography Submission";
+  // 9. STATUS LABELS
+  Submissions.getStatusClass = function (status) {
+    return "lc-status-" +
+      (
+        Submissions.isValidStatus(status)
+          ? status
+          : "pending"
+      );
   };
 
-  // ----------------------------------------------------
-  // 12. FORMAT SUBMISSION DATE
-  // ----------------------------------------------------
-
+  // 10. FORMAT SUBMISSION DATE
   Submissions.formatDate = function (value) {
     if (window.LensCircleHelpers) {
       return window.LensCircleHelpers.formatIST(value);
@@ -471,20 +508,19 @@
 
     return new Intl.DateTimeFormat("en-IN", {
       timeZone: "Asia/Kolkata",
-      dateStyle: "medium"
+      dateStyle: "medium",
+      timeStyle: "short"
     }).format(date);
   };
 
-  // ----------------------------------------------------
-  // 13. RENDER SUBMISSION HISTORY
-  // ----------------------------------------------------
-
+  // 11. RENDER SUBMISSION HISTORY
   Submissions.renderMine = function (
     container,
     submissions
   ) {
     if (typeof container === "string") {
-      container = document.querySelector(container);
+      container =
+        document.querySelector(container);
     }
 
     if (!container) {
@@ -495,76 +531,133 @@
 
     container.replaceChildren();
 
-    if (!submissions || !submissions.length) {
-      const empty = document.createElement("div");
+    if (
+      !Array.isArray(submissions) ||
+      submissions.length === 0
+    ) {
+      const empty =
+        document.createElement("div");
 
       empty.className = "lc-empty-state";
 
-      const heading = document.createElement("h3");
+      const heading =
+        document.createElement("h3");
+
       heading.textContent = "No submissions yet";
 
-      const message = document.createElement("p");
+      const message =
+        document.createElement("p");
+
       message.textContent =
         "Your photography submissions will appear here.";
 
-      empty.appendChild(heading);
-      empty.appendChild(message);
-
+      empty.append(heading, message);
       container.appendChild(empty);
 
       return;
     }
 
     submissions.forEach(function (submission) {
-      const card = document.createElement("article");
+      const card =
+        document.createElement("article");
 
       card.className = "lc-submission-card";
 
-      const title = document.createElement("h3");
+      const image =
+        document.createElement("img");
+
+      image.className = "lc-submission-image";
+      image.alt = submission.title || "Submitted photograph";
+      image.loading = "lazy";
+
+      if (submission.image_url) {
+        image.src = submission.image_url;
+      }
+
+      const title =
+        document.createElement("h3");
+
       title.textContent =
         submission.title || "Untitled photograph";
 
-      const type = document.createElement("p");
+      const photographer =
+        document.createElement("p");
+
+      photographer.textContent =
+        "By " + (submission.photographer || "Unknown");
+
+      const type =
+        document.createElement("p");
+
       type.textContent =
         Submissions.getTypeLabel(
           submission.submission_type
         );
 
-      const status = document.createElement("span");
+      const status =
+        document.createElement("span");
+
       status.className =
-        "lc-submission-status lc-status-" +
-        (
-          Submissions.isValidStatus(submission.status)
-            ? submission.status
-            : "pending"
+        "lc-submission-status " +
+        Submissions.getStatusClass(
+          submission.status
         );
 
       status.textContent =
-        Submissions.getStatusLabel(submission.status);
+        Submissions.getStatusLabel(
+          submission.status
+        );
 
-      const date = document.createElement("time");
+      const date =
+        document.createElement("time");
+
+      date.dateTime =
+        submission.created_at || "";
+
       date.textContent =
-        Submissions.formatDate(submission.created_at);
+        Submissions.formatDate(
+          submission.created_at
+        );
 
-      card.appendChild(title);
-      card.appendChild(type);
-      card.appendChild(status);
-      card.appendChild(date);
+      card.append(
+        image,
+        title,
+        photographer,
+        type,
+        status,
+        date
+      );
+
+      if (
+        submission.status === "rejected" &&
+        submission.rejection_reason
+      ) {
+        const reason =
+          document.createElement("p");
+
+        reason.className = "lc-rejection-reason";
+        reason.textContent =
+          "Review note: " +
+          submission.rejection_reason;
+
+        card.appendChild(reason);
+      }
 
       container.appendChild(card);
     });
   };
 
-  // ----------------------------------------------------
-  // 14. LOAD SUBMISSION HISTORY
-  // ----------------------------------------------------
-
+  // 12. LOAD SUBMISSION HISTORY
   Submissions.loadMine = async function (
     container,
     options
   ) {
     try {
-      if (window.LensCircleHelpers) {
+      if (
+        window.LensCircleHelpers &&
+        typeof window.LensCircleHelpers.showLoading ===
+          "function"
+      ) {
         window.LensCircleHelpers.showLoading(
           container,
           "Loading your submissions…"
@@ -584,7 +677,11 @@
     } catch (error) {
       console.error(error);
 
-      if (window.LensCircleHelpers) {
+      if (
+        window.LensCircleHelpers &&
+        typeof window.LensCircleHelpers.showError ===
+          "function"
+      ) {
         window.LensCircleHelpers.showError(
           container,
           "Unable to load your submissions. Please try again."
@@ -595,15 +692,18 @@
     }
   };
 
-  // ----------------------------------------------------
-  // 15. EXPOSE CONFIGURATION
-  // ----------------------------------------------------
+  // 13. LOCAL IMAGE PREVIEW
+  Submissions.createPreview = function (file) {
+    return Storage.createPreview(file);
+  };
 
-  Submissions.types = TYPES;
-  Submissions.statuses = VALID_STATUSES;
+  Submissions.revokePreview = function (url) {
+    Storage.revokePreview(url);
+  };
 
+  // 14. EXPOSE MODULE
   console.info(
-    "Lens Circle: Submission utilities loaded."
+    "Lens Circle: Photography submission utilities loaded."
   );
 
 })();

@@ -22,7 +22,6 @@
       --line: #e7e4dc;
       --accent: #a85e42;
       --accent-dark: #85472f;
-      --soft: #eeeae2;
       --serif: "Playfair Display", Georgia, serif;
       --sans: "DM Sans", Arial, sans-serif;
     }
@@ -169,6 +168,7 @@
     .register-heading p {
       color: var(--muted);
       font-size: 12px;
+      line-height: 1.7;
     }
 
     .form-row {
@@ -613,20 +613,62 @@
     The world, through your lens.
   </footer>
 
-  <!-- SUPABASE SDK -->
+  <!-- DIRECT SUPABASE INITIALIZATION -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <!-- SHARED LENS CIRCLE SUPABASE CLIENT -->
-  <script src="../assets/js/supabase-client.js"></script>
 
   <script>
     "use strict";
 
-    // Use the existing shared Supabase client.
-    const supabaseClient = window.LensCircle?.configured
-      ? window.LensCircle.db
-      : null;
+    /*
+    ========================================================
+    LENS CIRCLE - REGISTRATION
+    Direct Supabase client initialization
+    ========================================================
+    */
 
+    const SUPABASE_URL =
+      "https://cmqxweqbepfsslghxaog.supabase.co";
+
+    const SUPABASE_PUBLISHABLE_KEY =
+      "sb_publishable_9UdYM-0Csw-RMv1FTRJqLQ_U6G704SI";
+
+    let supabaseClient = null;
+
+    // Initialize Supabase
+    function initializeSupabase() {
+      if (
+        !window.supabase ||
+        typeof window.supabase.createClient !== "function"
+      ) {
+        console.error("Lens Circle: Supabase SDK did not load.");
+        return false;
+      }
+
+      try {
+        supabaseClient = window.supabase.createClient(
+          SUPABASE_URL,
+          SUPABASE_PUBLISHABLE_KEY,
+          {
+            auth: {
+              autoRefreshToken: true,
+              persistSession: true,
+              detectSessionInUrl: true
+            }
+          }
+        );
+
+        console.info("Lens Circle: Registration client initialized.");
+        return true;
+
+      } catch (error) {
+        console.error("Supabase initialization error:", error);
+        return false;
+      }
+    }
+
+    const supabaseReady = initializeSupabase();
+
+    // Form elements
     const form = document.getElementById("registerForm");
     const fullNameInput = document.getElementById("fullName");
     const usernameInput = document.getElementById("username");
@@ -636,6 +678,7 @@
     const submitButton = document.getElementById("submitButton");
     const statusMessage = document.getElementById("statusMessage");
 
+    // Status messages
     function showStatus(message, type) {
       statusMessage.textContent = message;
       statusMessage.className = "status " + type;
@@ -664,8 +707,8 @@
         .toLowerCase();
     });
 
-    // Validate matching passwords
-    function validatePasswords() {
+    // Password matching validation
+    function validatePasswordMatch() {
       confirmPasswordInput.setCustomValidity(
         confirmPasswordInput.value &&
         confirmPasswordInput.value !== passwordInput.value
@@ -674,34 +717,36 @@
       );
     }
 
-    confirmPasswordInput.addEventListener("input", validatePasswords);
-    passwordInput.addEventListener("input", validatePasswords);
+    confirmPasswordInput.addEventListener("input", validatePasswordMatch);
+    passwordInput.addEventListener("input", validatePasswordMatch);
 
-    // Existing session check
+    // Check existing session
     async function checkExistingSession() {
       if (!supabaseClient) return;
 
       try {
-        const { data, error } = await supabaseClient.auth.getSession();
+        const { data, error } =
+          await supabaseClient.auth.getSession();
 
         if (error) throw error;
 
         if (data.session) {
           window.location.replace("dashboard.html");
         }
+
       } catch (error) {
         console.error("Session check failed:", error);
       }
     }
 
-    // Member registration
+    // Registration
     form.addEventListener("submit", async event => {
       event.preventDefault();
       clearStatus();
 
-      if (!supabaseClient) {
+      if (!supabaseReady || !supabaseClient) {
         showStatus(
-          "Supabase could not be initialized. Check assets/js/supabase-client.js and confirm that the Supabase SDK loads before it.",
+          "The registration service could not be loaded. Please refresh the page or try again later.",
           "error"
         );
         return;
@@ -712,7 +757,8 @@
       const email = emailInput.value.trim().toLowerCase();
       const password = passwordInput.value;
       const confirmPassword = confirmPasswordInput.value;
-      const acceptedTerms = document.getElementById("acceptTerms").checked;
+      const acceptedTerms =
+        document.getElementById("acceptTerms").checked;
 
       if (fullName.length < 2) {
         showStatus("Please enter your full name.", "error");
@@ -729,9 +775,15 @@
         return;
       }
 
-      if (password.length < 10) {
+      if (email.length > 254) {
+        showStatus("Please enter a valid email address.", "error");
+        emailInput.focus();
+        return;
+      }
+
+      if (password.length < 10 || password.length > 72) {
         showStatus(
-          "Your password must contain at least 10 characters.",
+          "Your password must contain between 10 and 72 characters.",
           "error"
         );
         passwordInput.focus();
@@ -763,21 +815,24 @@
             "dashboard.html"
           );
 
-        const { data, error } = await supabaseClient.auth.signUp({
-          email,
-          password,
+        const { data, error } =
+          await supabaseClient.auth.signUp({
+            email: email,
+            password: password,
 
-          options: {
-            emailRedirectTo: redirectUrl,
+            options: {
+              emailRedirectTo: redirectUrl,
 
-            data: {
-              full_name: fullName,
-              username: username
+              data: {
+                full_name: fullName,
+                username: username
+              }
             }
-          }
-        });
+          });
 
-        if (error) throw error;
+        if (error) {
+          throw error;
+        }
 
         if (data.session) {
           showStatus(
@@ -797,10 +852,17 @@
         form.reset();
 
       } catch (error) {
-        let message = error.message || "Unable to create your account.";
+        console.error("Registration error:", error);
 
-        if (message.toLowerCase().includes("already registered")) {
-          message = "An account may already exist with this email address. Try signing in instead.";
+        let message =
+          error.message || "Unable to create your account.";
+
+        if (
+          message.toLowerCase().includes("already registered") ||
+          message.toLowerCase().includes("already exists")
+        ) {
+          message =
+            "An account may already exist with this email address. Try signing in instead.";
         }
 
         showStatus(message, "error");
@@ -811,10 +873,13 @@
       }
     });
 
+    // Footer year
     document.getElementById("year").textContent =
       new Date().getFullYear();
 
+    // Start session check
     checkExistingSession();
+
   </script>
 
 </body>

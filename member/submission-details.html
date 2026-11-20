@@ -1,0 +1,718 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f7f6f2">
+  <title>Submission Details | Lens Circle</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --paper: #f7f6f2;
+      --white: #fff;
+      --ink: #252722;
+      --muted: #777970;
+      --line: #e7e4dc;
+      --accent: #a85e42;
+      --soft: #eeeae2;
+      --green: #32633a;
+      --green-bg: #eff7ef;
+      --red: #a33c2c;
+      --red-bg: #fff2ef;
+      --gold: #805711;
+      --gold-bg: #fff5df;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "DM Sans", sans-serif;
+    }
+
+    button { font: inherit; }
+
+    .navbar {
+      height: 72px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 6%;
+      border-bottom: 1px solid var(--line);
+      background: var(--white);
+    }
+
+    .brand {
+      font-family: "Playfair Display", serif;
+      font-size: 25px;
+      font-weight: 700;
+    }
+
+    .brand span { color: var(--accent); }
+
+    .back-link {
+      color: var(--muted);
+      font-size: 12px;
+      text-decoration: none;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 38px 24px 70px;
+    }
+
+    .eyebrow {
+      color: var(--accent);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-family: "Playfair Display", serif;
+      font-size: 38px;
+      font-weight: 500;
+      margin: 9px 0;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 22px;
+      margin-top: 28px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--white);
+      border: 1px solid var(--line);
+      padding: 23px;
+      margin-bottom: 20px;
+    }
+
+    .panel h2 {
+      font-family: "Playfair Display", serif;
+      font-weight: 500;
+      font-size: 22px;
+      margin: 0 0 17px;
+    }
+
+    .photo-frame {
+      width: 100%;
+      min-height: 260px;
+      background: var(--soft);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--muted);
+      font-size: 12px;
+      overflow: hidden;
+    }
+
+    .photo-frame img {
+      display: block;
+      width: 100%;
+      max-height: 540px;
+      object-fit: contain;
+    }
+
+    .photo-caption {
+      font-family: "Playfair Display", serif;
+      font-size: 23px;
+      margin: 18px 0 8px;
+    }
+
+    .description {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.8;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .detail-row {
+      padding: 13px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .detail-row:last-child { border-bottom: 0; }
+
+    .detail-label {
+      color: var(--muted);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 5px;
+    }
+
+    .detail-value {
+      font-size: 13px;
+      font-weight: 600;
+      overflow-wrap: anywhere;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 7px 12px;
+      border-radius: 30px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: capitalize;
+      background: var(--gold-bg);
+      color: var(--gold);
+    }
+
+    .status.shortlisted {
+      background: var(--green-bg);
+      color: var(--green);
+    }
+
+    .status.rejected {
+      background: var(--red-bg);
+      color: var(--red);
+    }
+
+    .status.withdrawn {
+      background: #eeeef0;
+      color: #666;
+    }
+
+    .status.submitted {
+      background: var(--gold-bg);
+      color: var(--gold);
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 22px;
+      border-left: 2px solid var(--line);
+      margin-left: 6px;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding: 0 0 22px 12px;
+    }
+
+    .timeline-item:last-child { padding-bottom: 0; }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -19px;
+      top: 3px;
+      width: 10px;
+      height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+      border: 3px solid white;
+      box-shadow: 0 0 0 1px var(--accent);
+    }
+
+    .timeline-item strong {
+      font-size: 12px;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .timeline-item span {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 12px 17px;
+      border: 0;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 5px;
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: white;
+    }
+
+    .btn-danger {
+      background: var(--red-bg);
+      color: var(--red);
+      border: 1px solid #efd0c8;
+    }
+
+    .btn:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .notice {
+      padding: 14px;
+      margin-top: 15px;
+      background: var(--gold-bg);
+      color: var(--gold);
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    .message {
+      display: none;
+      padding: 13px 15px;
+      margin: 18px 0;
+      font-size: 12px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .message.error {
+      display: block;
+      background: var(--red-bg);
+      color: var(--red);
+    }
+
+    .message.success {
+      display: block;
+      background: var(--green-bg);
+      color: var(--green);
+    }
+
+    .loading, .empty {
+      padding: 30px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      background: white;
+      border: 1px dashed var(--line);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    @media(max-width:750px) {
+      main { padding: 28px 15px 50px; }
+      .layout { grid-template-columns: 1fr; }
+      h1 { font-size: 32px; }
+      .panel { padding: 18px; }
+    }
+
+    @media(max-width:420px) {
+      .navbar { padding: 0 17px; }
+      .brand { font-size: 21px; }
+      .back-link { font-size: 10px; }
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="navbar">
+  <a href="../index.html" class="brand">Lens <span>Circle</span></a>
+  <a href="competitions.html" class="back-link">← My Competitions</a>
+</header>
+
+<main>
+  <div class="eyebrow">Member workspace</div>
+  <h1>Submission Details</h1>
+  <p class="subtitle">View your photograph, competition information and review progress.</p>
+
+  <div id="pageMessage" class="message"></div>
+
+  <div id="loading" class="loading">Loading your submission…</div>
+
+  <div id="submissionContent" style="display:none;">
+    <div class="layout">
+
+      <div>
+        <section class="panel">
+          <h2>Your Photograph</h2>
+
+          <div class="photo-frame" id="photoFrame">
+            Loading photograph…
+          </div>
+
+          <div class="photo-caption" id="photoTitle"></div>
+          <p class="description" id="photoDescription"></p>
+        </section>
+
+        <section class="panel">
+          <h2>Submission Timeline</h2>
+          <div class="timeline" id="timeline"></div>
+        </section>
+      </div>
+
+      <div>
+        <section class="panel">
+          <h2>Submission Status</h2>
+          <div id="statusBadge"></div>
+
+          <div class="detail-row">
+            <div class="detail-label">Competition</div>
+            <div class="detail-value" id="competitionName">—</div>
+          </div>
+
+          <div class="detail-row">
+            <div class="detail-label">Category</div>
+            <div class="detail-value" id="categoryName">—</div>
+          </div>
+
+          <div class="detail-row">
+            <div class="detail-label">Submission date</div>
+            <div class="detail-value" id="submissionDate">—</div>
+          </div>
+
+          <div class="detail-row">
+            <div class="detail-label">Last updated</div>
+            <div class="detail-value" id="updatedDate">—</div>
+          </div>
+
+          <div class="detail-row">
+            <div class="detail-label">Submission ID</div>
+            <div class="detail-value" id="submissionId">—</div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>Photograph Information</h2>
+
+          <div class="detail-row">
+            <div class="detail-label">Camera / Equipment</div>
+            <div class="detail-value" id="cameraDetails">Not provided</div>
+          </div>
+
+          <div class="detail-row">
+            <div class="detail-label">Current review status</div>
+            <div class="detail-value" id="reviewStatus">—</div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>Submission Actions</h2>
+          <p class="description">
+            You can withdraw an entry only while it is awaiting review.
+            Once shortlisted, rejected or withdrawn, it cannot be withdrawn again.
+          </p>
+
+          <div class="actions">
+            <button class="btn btn-danger" id="withdrawBtn" type="button">
+              Withdraw Submission
+            </button>
+
+            <a class="btn btn-primary" href="competitions.html">
+              Back to Competitions
+            </a>
+          </div>
+
+          <div class="notice" id="withdrawNotice">
+            Withdrawal changes the submission status. It does not automatically delete the uploaded photograph from private storage.
+          </div>
+        </section>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../assets/js/supabase-client.js"></script>
+
+<script>
+(() => {
+  "use strict";
+
+  const db = window.LensCircle?.db;
+  const BUCKET = "competition-submissions-private";
+
+  const params = new URLSearchParams(window.location.search);
+  const submissionId = params.get("id");
+
+  let currentUser = null;
+  let submission = null;
+  let competition = null;
+  let category = null;
+
+  const $ = id => document.getElementById(id);
+
+  function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    })[char]);
+  }
+
+  function formatDate(value) {
+    if (!value) return "Not available";
+
+    const date = new Date(value);
+
+    return Number.isNaN(date.getTime())
+      ? "Not available"
+      : date.toLocaleString();
+  }
+
+  function showMessage(message, type = "error") {
+    const element = $("pageMessage");
+    element.textContent = message;
+    element.className = "message " + type;
+  }
+
+  async function authenticate() {
+    if (!db) {
+      throw new Error("Supabase client is not configured.");
+    }
+
+    const { data, error } = await db.auth.getSession();
+
+    if (error) throw error;
+
+    if (!data.session) {
+      window.location.replace("login.html");
+      return false;
+    }
+
+    currentUser = data.session.user;
+
+    const { data: role, error: roleError } = await db.rpc("get_my_role");
+
+    if (roleError) throw roleError;
+
+    if (role !== "member") {
+      window.location.replace("../staff/login.html");
+      return false;
+    }
+
+    return true;
+  }
+
+  async function loadSubmission() {
+    if (!submissionId) {
+      throw new Error("Submission ID is missing. Open this page from My Submissions.");
+    }
+
+    const { data, error } = await db
+      .from("competition_submissions")
+      .select("*")
+      .eq("id", submissionId)
+      .eq("user_id", currentUser.id)
+      .single();
+
+    if (error) throw error;
+
+    submission = data;
+
+    const [competitionResult, categoryResult] = await Promise.all([
+      db.from("competitions")
+        .select("id,title,status,submission_deadline")
+        .eq("id", submission.competition_id)
+        .single(),
+
+      db.from("competition_categories")
+        .select("id,name,description")
+        .eq("id", submission.category_id)
+        .single()
+    ]);
+
+    if (competitionResult.error) throw competitionResult.error;
+    if (categoryResult.error) throw categoryResult.error;
+
+    competition = competitionResult.data;
+    category = categoryResult.data;
+
+    await renderSubmission();
+  }
+
+  async function loadPrivatePhoto() {
+    if (!submission.photo_url) {
+      $("photoFrame").textContent = "Photograph path unavailable.";
+      return;
+    }
+
+    const { data, error } = await db.storage
+      .from(BUCKET)
+      .createSignedUrl(submission.photo_url, 3600);
+
+    if (error) {
+      console.error(error);
+      $("photoFrame").textContent = "Unable to load photograph.";
+      return;
+    }
+
+    const image = document.createElement("img");
+    image.src = data.signedUrl;
+    image.alt = submission.title || "Competition photograph";
+
+    $("photoFrame").replaceChildren(image);
+  }
+
+  function renderTimeline() {
+    const items = [
+      {
+        title: "Photograph submitted",
+        date: submission.submitted_at
+      }
+    ];
+
+    if (submission.status === "shortlisted") {
+      items.push({
+        title: "Photograph shortlisted",
+        date: submission.updated_at
+      });
+    }
+
+    if (submission.status === "rejected") {
+      items.push({
+        title: "Review completed",
+        date: submission.updated_at
+      });
+    }
+
+    if (submission.status === "withdrawn") {
+      items.push({
+        title: "Submission withdrawn",
+        date: submission.updated_at
+      });
+    }
+
+    $("timeline").innerHTML = items.map(item => `
+      <div class="timeline-item">
+        <strong>${escapeHTML(item.title)}</strong>
+        <span>${escapeHTML(formatDate(item.date))}</span>
+      </div>
+    `).join("");
+  }
+
+  async function renderSubmission() {
+    $("photoTitle").textContent = submission.title || "Untitled photograph";
+
+    $("photoDescription").textContent =
+      submission.description || "No description was provided.";
+
+    $("competitionName").textContent = competition.title;
+    $("categoryName").textContent = category.name;
+
+    $("submissionDate").textContent = formatDate(submission.submitted_at);
+    $("updatedDate").textContent = formatDate(submission.updated_at);
+    $("submissionId").textContent = submission.id;
+
+    $("cameraDetails").textContent =
+      submission.camera_details || "Not provided";
+
+    $("reviewStatus").textContent = submission.status;
+
+    $("statusBadge").innerHTML =
+      `<span class="status ${escapeHTML(submission.status)}">${escapeHTML(submission.status)}</span>`;
+
+    $("withdrawBtn").style.display =
+      submission.status === "submitted" ? "inline-block" : "none";
+
+    if (submission.status !== "submitted") {
+      $("withdrawNotice").textContent =
+        "This submission is no longer awaiting review, so withdrawal is unavailable.";
+    }
+
+    renderTimeline();
+
+    await loadPrivatePhoto();
+
+    $("loading").style.display = "none";
+    $("submissionContent").style.display = "block";
+  }
+
+  async function withdrawSubmission() {
+    if (!submission || submission.status !== "submitted") {
+      showMessage("Only submissions awaiting review can be withdrawn.");
+      return;
+    }
+
+    const confirmed = confirm(
+      "Are you sure you want to withdraw this photograph?\n\nThe submission will be marked as withdrawn and will no longer be considered for judging."
+    );
+
+    if (!confirmed) return;
+
+    const button = $("withdrawBtn");
+    button.disabled = true;
+    button.textContent = "Withdrawing…";
+
+    try {
+      const { data, error } = await db.rpc(
+        "member_withdraw_competition_submission",
+        {
+          p_submission_id: submission.id
+        }
+      );
+
+      if (error) throw error;
+
+      submission.status = "withdrawn";
+      submission.updated_at = new Date().toISOString();
+
+      showMessage(
+        data || "Your submission has been withdrawn successfully.",
+        "success"
+      );
+
+      await renderSubmission();
+
+    } catch (error) {
+      console.error(error);
+
+      showMessage(
+        error.message || "Unable to withdraw this submission."
+      );
+
+      button.disabled = false;
+      button.textContent = "Withdraw Submission";
+    }
+  }
+
+  async function init() {
+    try {
+      const allowed = await authenticate();
+
+      if (!allowed) return;
+
+      await loadSubmission();
+
+      $("withdrawBtn").addEventListener("click", withdrawSubmission);
+
+    } catch (error) {
+      console.error(error);
+
+      $("loading").style.display = "none";
+
+      showMessage(
+        error.message || "Unable to load submission details."
+      );
+    }
+  }
+
+  init();
+})();
+</script>
+
+</body>
+</html>
+```

@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Judge Dashboard | Lens Circle</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f5f6fa;
+      --surface: #fff;
+      --text: #192234;
+      --muted: #788397;
+      --border: #e8ebf1;
+      --primary: #6548e8;
+      --primary-light: #f0edff;
+      --success: #168457;
+      --success-light: #eaf8f0;
+      --danger: #c94242;
+      --warning: #986514;
+      --warning-light: #fff5df;
+      --radius: 16px;
+      --shadow: 0 8px 28px rgba(25,35,50,.05);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "DM Sans", sans-serif;
+    }
+
+    button, input, select, textarea { font: inherit; }
+
+    .sidebar {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: 245px;
+      background: #171b29;
+      color: #fff;
+      padding: 28px 18px;
+      display: flex;
+      flex-direction: column;
+      z-index: 5;
+    }
+
+    .brand {
+      font-family: "Manrope", sans-serif;
+      font-weight: 800;
+      font-size: 21px;
+      padding: 0 12px 32px;
+      letter-spacing: -.7px;
+    }
+
+    .brand span { color: #a99aff; }
+
+    .nav-label {
+      padding: 14px 12px 9px;
+      color: #858b9d;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .nav-link {
+      display: block;
+      color: #c4c8d2;
+      text-decoration: none;
+      padding: 12px;
+      margin: 2px 0;
+      border-radius: 9px;
+      font-size: 13px;
+    }
+
+    .nav-link.active, .nav-link:hover {
+      color: white;
+      background: #292e40;
+    }
+
+    .nav-link.active { box-shadow: inset 3px 0 #9b87ff; }
+
+    .sidebar-bottom {
+      margin-top: auto;
+      border-top: 1px solid #303548;
+      padding: 17px 12px 0;
+      font-size: 12px;
+      color: #aeb4c2;
+    }
+
+    .sidebar-bottom button {
+      margin-top: 13px;
+      border: 0;
+      border-radius: 8px;
+      padding: 10px;
+      width: 100%;
+      background: #303548;
+      color: white;
+      cursor: pointer;
+    }
+
+    main {
+      margin-left: 245px;
+      max-width: 1600px;
+      padding: 35px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 700;
+    }
+
+    h1 {
+      font-family: "Manrope", sans-serif;
+      font-size: 29px;
+      letter-spacing: -.8px;
+      margin: 7px 0;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .judge-badge {
+      background: var(--primary-light);
+      color: var(--primary);
+      padding: 10px 14px;
+      border-radius: 9px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .notice {
+      padding: 15px 17px;
+      background: var(--warning-light);
+      border: 1px solid #f0dba9;
+      border-radius: 12px;
+      color: #805711;
+      font-size: 12px;
+      line-height: 1.6;
+      margin-bottom: 22px;
+    }
+
+    .notice strong { display: block; margin-bottom: 4px; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 15px;
+      margin-bottom: 22px;
+    }
+
+    .stat-card, .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .stat-card { padding: 20px; }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .stat-value {
+      font-family: "Manrope", sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      margin-top: 9px;
+    }
+
+    .panel {
+      padding: 23px;
+      margin-bottom: 22px;
+    }
+
+    .panel-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 18px;
+    }
+
+    .panel-heading h2 {
+      font-family: "Manrope", sans-serif;
+      font-size: 17px;
+      margin: 0;
+    }
+
+    .panel-heading p {
+      color: var(--muted);
+      font-size: 12px;
+      margin: 5px 0 0;
+    }
+
+    .competition-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill,minmax(230px,1fr));
+      gap: 14px;
+    }
+
+    .competition-card {
+      padding: 17px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: .2s;
+    }
+
+    .competition-card:hover, .competition-card.selected {
+      border-color: var(--primary);
+      background: #faf9ff;
+    }
+
+    .competition-card h3 {
+      font-size: 14px;
+      margin: 0 0 8px;
+    }
+
+    .competition-card p {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
+      margin: 0 0 10px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 5px 9px;
+      border-radius: 30px;
+      font-size: 10px;
+      font-weight: 700;
+      background: var(--success-light);
+      color: var(--success);
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 17px;
+    }
+
+    select, input, textarea {
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 11px 12px;
+      background: #fff;
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+      width: 100%;
+    }
+
+    select:focus, input:focus, textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(101,72,232,.09);
+    }
+
+    .toolbar select { max-width: 280px; }
+
+    .entries-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill,minmax(240px,1fr));
+      gap: 16px;
+    }
+
+    .entry-card {
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .entry-image {
+      height: 190px;
+      background: #eceef2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .entry-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .entry-content { padding: 15px; }
+
+    .entry-content h3 {
+      font-size: 14px;
+      margin: 0 0 6px;
+    }
+
+    .entry-meta {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .score-form { margin-top: 15px; }
+
+    .score-form label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      margin: 10px 0 6px;
+    }
+
+    .score-form textarea {
+      min-height: 75px;
+      resize: vertical;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 9px;
+      padding: 11px 15px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover:not(:disabled) { background: #5034d2; }
+    .btn-secondary { background: #eef0f4; color: #354052; }
+    .btn:disabled { opacity: .55; cursor: not-allowed; }
+
+    .score-form .btn { width: 100%; margin-top: 12px; }
+
+    .score-display {
+      background: var(--success-light);
+      color: var(--success);
+      padding: 9px;
+      border-radius: 8px;
+      margin-top: 10px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .message {
+      display: none;
+      padding: 12px 14px;
+      border-radius: 9px;
+      font-size: 12px;
+      margin-bottom: 15px;
+    }
+
+    .message.error {
+      display: block;
+      color: #b53636;
+      background: #fff0f0;
+    }
+
+    .message.success {
+      display: block;
+      color: var(--success);
+      background: var(--success-light);
+    }
+
+    .empty {
+      padding: 35px 15px;
+      text-align: center;
+      background: #fafbfc;
+      border: 1px dashed var(--border);
+      border-radius: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      grid-column: 1 / -1;
+    }
+
+    .loading { padding: 20px 0; color: var(--muted); font-size: 12px; }
+
+    @media(max-width:850px) {
+      .sidebar { width: 68px; padding: 22px 8px; }
+      .brand { font-size: 0; padding: 0 8px 25px; }
+      .brand:first-letter { font-size: 22px; }
+      .nav-label, .nav-link span, .sidebar-bottom div { display: none; }
+      .nav-link { text-align: center; font-size: 0; padding: 13px 5px; }
+      .nav-link::first-letter { font-size: 17px; }
+      .sidebar-bottom { padding: 12px 0 0; }
+      .sidebar-bottom button { font-size: 0; padding: 10px 3px; }
+      main { margin-left: 68px; padding: 25px 18px; }
+    }
+
+    @media(max-width:600px) {
+      main { padding: 20px 13px; }
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .stats { grid-template-columns: 1fr; gap: 10px; }
+      .panel { padding: 17px; }
+      .toolbar { flex-direction: column; align-items: stretch; }
+      .toolbar select { max-width: none; }
+    }
+  </style>
+</head>
+
+<body>
+
+<aside class="sidebar">
+  <div class="brand">LENS <span>CIRCLE</span></div>
+
+  <div class="nav-label">Judge Workspace</div>
+  <a class="nav-link active" href="dashboard.html">▦ <span>Dashboard</span></a>
+  <a class="nav-link" href="#competitions">◇ <span>My Competitions</span></a>
+  <a class="nav-link" href="#entries">▤ <span>Review Entries</span></a>
+
+  <div class="sidebar-bottom">
+    <div>Judge Account</div>
+    <button id="logoutBtn">↪ Logout</button>
+  </div>
+</aside>
+
+<main>
+  <header class="topbar">
+    <div>
+      <div class="eyebrow">Lens Circle • Judge Workspace</div>
+      <h1>Judge Dashboard</h1>
+      <p class="subtitle">Review photographs, evaluate submissions and submit your scores.</p>
+    </div>
+    <div class="judge-badge">⚖ Assigned Judge</div>
+  </header>
+
+  <div class="notice">
+    <strong>Judging guidelines</strong>
+    Evaluate each photograph fairly and independently. Scores are from 0 to 100. Your score and feedback are submitted to the competition database. The current scoring system permits one score per judge per submission; submitting again updates your existing score.
+  </div>
+
+  <div id="pageMessage" class="message"></div>
+
+  <section class="stats">
+    <div class="stat-card">
+      <div class="stat-label">Assigned Competitions</div>
+      <div class="stat-value" id="competitionCount">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Entries Available to Review</div>
+      <div class="stat-value" id="entryCount">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Scores Submitted</div>
+      <div class="stat-value" id="scoredCount">—</div>
+    </div>
+  </section>
+
+  <section class="panel" id="competitions">
+    <div class="panel-heading">
+      <div>
+        <h2>My Competitions</h2>
+        <p>Only competitions assigned to your account are shown.</p>
+      </div>
+    </div>
+
+    <div id="competitionList" class="competition-list">
+      <div class="loading">Loading assignments…</div>
+    </div>
+  </section>
+
+  <section class="panel" id="entries">
+    <div class="panel-heading">
+      <div>
+        <h2>Photographs for Evaluation</h2>
+        <p id="selectedCompetitionText">Select an assigned competition to begin.</p>
+      </div>
+      <button class="btn btn-secondary" id="refreshBtn">Refresh</button>
+    </div>
+
+    <div id="scoreMessage" class="message"></div>
+
+    <div class="toolbar">
+      <select id="categoryFilter" disabled>
+        <option value="">All assigned categories</option>
+      </select>
+    </div>
+
+    <div id="entriesGrid" class="entries-grid">
+      <div class="empty">Select a competition to view its entries.</div>
+    </div>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../assets/js/supabase-client.js"></script>
+
+<script>
+(() => {
+  "use strict";
+
+  const db = window.LensCircle?.db;
+  const BUCKET = "competition-submissions-private";
+
+  let currentUser = null;
+  let assignments = [];
+  let selectedCompetitionId = null;
+  let selectedCompetition = null;
+  let categories = [];
+  let entries = [];
+  let myScores = [];
+
+  const $ = id => document.getElementById(id);
+
+  function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    })[char]);
+  }
+
+  function showMessage(id, message, type = "error") {
+    const element = $(id);
+    element.textContent = message;
+    element.className = "message " + type;
+    element.style.display = "block";
+  }
+
+  function clearMessage(id) {
+    const element = $(id);
+    element.textContent = "";
+    element.className = "message";
+    element.style.display = "none";
+  }
+
+  async function authenticate() {
+    if (!db) {
+      throw new Error("Supabase client is not configured. Check assets/js/supabase-client.js.");
+    }
+
+    const { data, error } = await db.auth.getSession();
+    if (error) throw error;
+
+    if (!data.session) {
+      location.href = "../staff/login.html";
+      return false;
+    }
+
+    currentUser = data.session.user;
+    return true;
+  }
+
+  async function loadAssignments() {
+    const { data, error } = await db
+      .from("competition_judges")
+      .select("id,competition_id,category_id,is_active,assigned_at")
+      .eq("judge_id", currentUser.id)
+      .eq("is_active", true)
+      .order("assigned_at", { ascending: false });
+
+    if (error) throw error;
+
+    assignments = data || [];
+    const competitionIds = [...new Set(assignments.map(item => item.competition_id))];
+
+    $("competitionCount").textContent = competitionIds.length;
+
+    if (!competitionIds.length) {
+      $("competitionList").innerHTML =
+        `<div class="empty">No active judging assignments have been found for your account. Contact the Lens Circle Administrator.</div>`;
+      return;
+    }
+
+    const { data: competitions, error: competitionError } = await db
+      .from("competitions")
+      .select("id,title,status,submission_deadline,results_date")
+      .in("id", competitionIds);
+
+    if (competitionError) throw competitionError;
+
+    renderCompetitions(competitions || []);
+  }
+
+  function renderCompetitions(competitions) {
+    const list = $("competitionList");
+
+    list.innerHTML = competitions.map(competition => {
+      const related = assignments.filter(item =>
+        item.competition_id === competition.id
+      );
+
+      const categoryIds = [...new Set(
+        related.map(item => item.category_id).filter(Boolean)
+      )];
+
+      const scope = related.some(item => item.category_id === null)
+        ? "Entire competition"
+        : `${categoryIds.length} assigned category/categories`;
+
+      return `
+        <article class="competition-card ${selectedCompetitionId === competition.id ? "selected" : ""}"
+          data-competition="${escapeHTML(competition.id)}">
+          <h3>${escapeHTML(competition.title)}</h3>
+          <p>Assignment: ${escapeHTML(scope)}<br>
+          Status: ${escapeHTML(competition.status || "—")}<br>
+          Results date: ${competition.results_date
+            ? escapeHTML(new Date(competition.results_date).toLocaleDateString())
+            : "Not announced"}</p>
+          <span class="tag">${escapeHTML(competition.status || "Assigned")}</span>
+        </article>
+      `;
+    }).join("");
+
+    list.querySelectorAll("[data-competition]").forEach(card => {
+      card.addEventListener("click", () =>
+        selectCompetition(card.dataset.competition, competitions)
+      );
+    });
+
+    if (!selectedCompetitionId && competitions.length === 1) {
+      selectCompetition(competitions[0].id, competitions);
+    }
+  }
+
+  async function selectCompetition(id, competitionList) {
+    selectedCompetitionId = id;
+    selectedCompetition = competitionList.find(item => item.id === id) || null;
+
+    document.querySelectorAll(".competition-card").forEach(card => {
+      card.classList.toggle("selected", card.dataset.competition === id);
+    });
+
+    if (!selectedCompetition) return;
+
+    $("selectedCompetitionText").textContent = selectedCompetition.title;
+    clearMessage("scoreMessage");
+
+    await loadCompetitionEntries();
+  }
+
+  async function loadCompetitionEntries() {
+    $("entriesGrid").innerHTML =
+      `<div class="loading">Loading assigned entries…</div>`;
+
+    $("categoryFilter").disabled = true;
+
+    const myAssignments = assignments.filter(item =>
+      item.competition_id === selectedCompetitionId
+    );
+
+    const assignedCategoryIds = [...new Set(
+      myAssignments.map(item => item.category_id).filter(Boolean)
+    )];
+
+    const entireCompetition = myAssignments.some(item =>
+      item.category_id === null
+    );
+
+    let categoryQuery = db
+      .from("competition_categories")
+      .select("id,name,description")
+      .eq("competition_id", selectedCompetitionId);
+
+    if (!entireCompetition) {
+      categoryQuery = categoryQuery.in("id", assignedCategoryIds);
+    }
+
+    const { data: categoryData, error: categoryError } = await categoryQuery;
+
+    if (categoryError) throw categoryError;
+
+    categories = categoryData || [];
+
+    let entryQuery = db
+      .from("competition_submissions")
+      .select("*")
+      .eq("competition_id", selectedCompetitionId)
+      .in("status", ["submitted", "shortlisted"])
+      .order("submitted_at", { ascending: true });
+
+    if (!entireCompetition) {
+      if (!assignedCategoryIds.length) {
+        entries = [];
+      } else {
+        entryQuery = entryQuery.in("category_id", assignedCategoryIds);
+        const { data, error } = await entryQuery;
+        if (error) throw error;
+        entries = data || [];
+      }
+    } else {
+      const { data, error } = await entryQuery;
+      if (error) throw error;
+      entries = data || [];
+    }
+
+    const { data: scores, error: scoreError } = await db
+      .from("competition_scores")
+      .select("id,submission_id,score,feedback,updated_at")
+      .eq("judge_id", currentUser.id)
+      .in("submission_id", entries.map(entry => entry.id).length
+        ? entries.map(entry => entry.id)
+        : ["00000000-0000-0000-0000-000000000000"]);
+
+    if (scoreError) throw scoreError;
+
+    myScores = scores || [];
+
+    $("entryCount").textContent = entries.length;
+    $("scoredCount").textContent = myScores.length;
+
+    $("categoryFilter").innerHTML =
+      `<option value="">All assigned categories</option>` +
+      categories.map(category =>
+        `<option value="${escapeHTML(category.id)}">${escapeHTML(category.name)}</option>`
+      ).join("");
+
+    $("categoryFilter").disabled = false;
+
+    await renderEntries();
+  }
+
+  async function signedPhotoUrl(path) {
+    if (!path) return null;
+
+    const { data, error } = await db.storage
+      .from(BUCKET)
+      .createSignedUrl(path, 3600);
+
+    if (error) {
+      console.error(error);
+      return null;
+    }
+
+    return data?.signedUrl || null;
+  }
+
+  function categoryLabel(id) {
+    return categories.find(category => category.id === id)?.name || "Unknown category";
+  }
+
+  async function renderEntries() {
+    const grid = $("entriesGrid");
+    const filter = $("categoryFilter").value;
+
+    const filtered = entries.filter(entry =>
+      !filter || entry.category_id === filter
+    );
+
+    if (!filtered.length) {
+      grid.innerHTML =
+        `<div class="empty">No eligible photographs are available in this category.</div>`;
+      return;
+    }
+
+    grid.innerHTML = `<div class="loading">Preparing photographs…</div>`;
+
+    const cards = await Promise.all(filtered.map(async entry => {
+      const photoUrl = await signedPhotoUrl(entry.photo_url);
+      const score = myScores.find(item => item.submission_id === entry.id);
+      const title = entry.title || "Untitled photograph";
+
+      return `
+        <article class="entry-card">
+          <div class="entry-image">
+            ${photoUrl
+              ? `<img src="${escapeHTML(photoUrl)}" alt="${escapeHTML(title)}" loading="lazy">`
+              : "Photograph unavailable"}
+          </div>
+
+          <div class="entry-content">
+            <h3>${escapeHTML(title)}</h3>
+
+            <div class="entry-meta">
+              Category: ${escapeHTML(categoryLabel(entry.category_id))}<br>
+              Submission ID: ${escapeHTML(entry.id)}<br>
+              Status: ${escapeHTML(entry.status)}<br>
+              Submitted: ${entry.submitted_at
+                ? escapeHTML(new Date(entry.submitted_at).toLocaleDateString())
+                : "—"}
+            </div>
+
+            ${score
+              ? `<div class="score-display">Your current score: ${Number(score.score)}/100</div>`
+              : ""}
+
+            <form class="score-form" data-score-form="${escapeHTML(entry.id)}">
+              <label for="score-${escapeHTML(entry.id)}">Your score (0–100)</label>
+              <input id="score-${escapeHTML(entry.id)}"
+                name="score" type="number" min="0" max="100" step="0.5"
+                required value="${score ? escapeHTML(score.score) : ""}"
+                placeholder="Enter score">
+
+              <label for="feedback-${escapeHTML(entry.id)}">Feedback (optional)</label>
+              <textarea id="feedback-${escapeHTML(entry.id)}"
+                name="feedback" maxlength="2000"
+                placeholder="Write your evaluation…">${escapeHTML(score?.feedback || "")}</textarea>
+
+              <button class="btn btn-primary" type="submit">
+                ${score ? "Update My Score" : "Submit Score"}
+              </button>
+            </form>
+          </div>
+        </article>
+      `;
+    }));
+
+    grid.innerHTML = cards.join("");
+
+    grid.querySelectorAll("[data-score-form]").forEach(form => {
+      form.addEventListener("submit", submitScore);
+    });
+  }
+
+  async function submitScore(event) {
+    event.preventDefault();
+    clearMessage("scoreMessage");
+
+    const form = event.currentTarget;
+    const submissionId = form.dataset.scoreForm;
+    const scoreInput = form.elements.score;
+    const feedbackInput = form.elements.feedback;
+    const score = Number(scoreInput.value);
+    const feedback = feedbackInput.value.trim() || null;
+
+    if (!Number.isFinite(score) || score < 0 || score > 100) {
+      showMessage("scoreMessage", "Enter a valid score between 0 and 100.");
+      return;
+    }
+
+    const entry = entries.find(item => item.id === submissionId);
+    if (!entry) {
+      showMessage("scoreMessage", "This submission is no longer available.");
+      return;
+    }
+
+    if (!confirm("Submit this score? You can update your score later while judging remains open.")) {
+      return;
+    }
+
+    const button = form.querySelector("button[type='submit']");
+    button.disabled = true;
+    button.textContent = "Submitting…";
+
+    try {
+      const { data, error } = await db.rpc("judge_submit_competition_score", {
+        p_submission_id: submissionId,
+        p_score: score,
+        p_feedback: feedback
+      });
+
+      if (error) throw error;
+
+      showMessage("scoreMessage", data || "Your score was submitted successfully.", "success");
+
+      const existing = myScores.find(item => item.submission_id === submissionId);
+
+      if (existing) {
+        existing.score = score;
+        existing.feedback = feedback;
+        existing.updated_at = new Date().toISOString();
+      } else {
+        myScores.push({
+          submission_id: submissionId,
+          score,
+          feedback,
+          updated_at: new Date().toISOString()
+        });
+      }
+
+      $("scoredCount").textContent = myScores.length;
+
+      await renderEntries();
+
+    } catch (error) {
+      console.error(error);
+      showMessage("scoreMessage", error.message || "Unable to submit score.");
+      button.disabled = false;
+      button.textContent = "Try Again";
+    }
+  }
+
+  async function refresh() {
+    clearMessage("pageMessage");
+
+    try {
+      await loadAssignments();
+
+      if (selectedCompetitionId) {
+        const stillAssigned = assignments.some(item =>
+          item.competition_id === selectedCompetitionId
+        );
+
+        if (stillAssigned) {
+          const { data: competitionData, error } = await db
+            .from("competitions")
+            .select("id,title,status,submission_deadline,results_date")
+            .eq("id", selectedCompetitionId)
+            .single();
+
+          if (error) throw error;
+
+          await selectCompetition(selectedCompetitionId, [competitionData]);
+        } else {
+          selectedCompetitionId = null;
+          selectedCompetition = null;
+          $("entriesGrid").innerHTML =
+            `<div class="empty">Your assignment is no longer active.</div>`;
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      showMessage("pageMessage", error.message || "Unable to refresh dashboard.");
+    }
+  }
+
+  async function logout() {
+    if (!confirm("Are you sure you want to log out?")) return;
+
+    const { error } = await db.auth.signOut();
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+
+    location.href = "../staff/login.html";
+  }
+
+  async function init() {
+    try {
+      const allowed = await authenticate();
+      if (!allowed) return;
+
+      await loadAssignments();
+
+      $("categoryFilter").addEventListener("change", renderEntries);
+      $("refreshBtn").addEventListener("click", refresh);
+      $("logoutBtn").addEventListener("click", logout);
+
+    } catch (error) {
+      console.error(error);
+      showMessage("pageMessage", error.message || "Unable to load judge dashboard.");
+      $("competitionList").innerHTML =
+        `<div class="empty">Could not load your judging assignments.</div>`;
+    }
+  }
+
+  init();
+})();
+</script>
+
+</body>
+</html>

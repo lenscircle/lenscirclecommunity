@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Competition Entries | Lens Circle</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../assets/js/supabase-client.js"></script>
+<style>
+:root{--bg:#f5f6fa;--dark:#172033;--muted:#788196;--primary:#6254e7;--border:#e8eaf1;--green:#15966a;--red:#d94b58}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Arial,sans-serif;color:var(--dark)}
+.layout{display:flex;min-height:100vh}
+.sidebar{width:245px;background:var(--dark);color:white;padding:24px 16px;flex-shrink:0}
+.brand{font-size:21px;font-weight:800;padding:0 12px 28px}
+.brand span{color:#a99fff}
+.nav a{display:block;color:#cbd0dd;text-decoration:none;padding:12px;border-radius:9px;margin:4px 0}
+.nav a:hover,.nav a.active{background:#302d59;color:white}
+.main{flex:1;min-width:0;padding:30px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:24px}
+h1{margin:0 0 7px;font-size:27px}
+.subtitle{font-size:13px;color:var(--muted)}
+button,.btn{border:0;border-radius:9px;padding:10px 14px;font-weight:700;cursor:pointer;font-size:12px;text-decoration:none;display:inline-block}
+.primary{background:var(--primary);color:white}
+.secondary{background:#eeecff;color:var(--primary)}
+.success-btn{background:#e5f7ed;color:var(--green)}
+.danger{background:#fff0f0;color:var(--red)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:23px}
+.stat,.panel,.card{background:white;border:1px solid var(--border);border-radius:14px}
+.stat{padding:20px}.stat small{color:var(--muted)}.stat strong{display:block;font-size:28px;margin-top:8px}
+.panel{padding:22px}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+select,input{padding:11px;border:1px solid var(--border);border-radius:9px;font-size:13px;max-width:100%}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
+.card{overflow:hidden}
+.photo{width:100%;height:230px;object-fit:cover;background:#e9eaf1}
+.photo-empty{height:230px;display:grid;place-items:center;background:#e9eaf1;color:var(--muted);font-size:13px}
+.card-body{padding:17px}
+.card h3{margin:0 0 8px;font-size:16px}
+.meta{font-size:12px;color:var(--muted);margin:7px 0}
+.status{display:inline-block;padding:6px 9px;border-radius:20px;background:#f0f1f5;font-size:11px;font-weight:700}
+.status.shortlisted{background:#e5f7ed;color:var(--green)}
+.status.rejected{background:#fff0f0;color:var(--red)}
+.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:15px}
+.message{display:none;padding:12px;border-radius:9px;margin-bottom:15px;font-size:13px}
+.message.error{display:block;background:#fff0f0;color:#b52d3a}
+.message.success{display:block;background:#e9f8f0;color:#14784c}
+.empty{grid-column:1/-1;text-align:center;padding:45px;color:var(--muted)}
+@media(max-width:1000px){.cards{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:700px){.layout{display:block}.sidebar{width:100%;padding:15px}.nav{display:flex;overflow-x:auto}.nav a{white-space:nowrap}.main{padding:17px}.stats{grid-template-columns:repeat(2,1fr)}.cards{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+ <div class="brand">LENS <span>CIRCLE</span></div>
+ <nav class="nav">
+  <a href="dashboard.html">Dashboard</a>
+  <a href="members.html">Members</a>
+  <a href="directors.html">Directors</a>
+  <a href="staff.html">Staff</a>
+  <a href="competitions.html" class="active">Competitions</a>
+ </nav>
+</aside>
+
+<main class="main">
+<header>
+ <div>
+  <h1>Competition Entries</h1>
+  <div class="subtitle" id="competitionName">Review and manage submitted photographs.</div>
+ </div>
+ <a class="btn secondary" href="competitions.html">← Competitions</a>
+</header>
+
+<section class="stats">
+ <div class="stat"><small>Total Entries</small><strong id="total">—</strong></div>
+ <div class="stat"><small>Submitted</small><strong id="submitted">—</strong></div>
+ <div class="stat"><small>Shortlisted</small><strong id="shortlisted">—</strong></div>
+ <div class="stat"><small>Rejected</small><strong id="rejected">—</strong></div>
+</section>
+
+<section class="panel">
+ <div class="filters">
+  <select id="categoryFilter"><option value="">All categories</option></select>
+  <select id="statusFilter">
+   <option value="">All statuses</option>
+   <option value="submitted">Submitted</option>
+   <option value="shortlisted">Shortlisted</option>
+   <option value="rejected">Rejected</option>
+   <option value="withdrawn">Withdrawn</option>
+  </select>
+  <input id="search" placeholder="Search title or description">
+  <button class="secondary" id="refresh">Refresh</button>
+ </div>
+ <div id="alert" class="message"></div>
+ <div class="cards" id="cards"><div class="empty">Loading entries...</div></div>
+</section>
+</main>
+</div>
+
+<script>
+const db=window.LensCircle?.db;
+const competitionId=new URLSearchParams(location.search).get("competition");
+const bucket="competition-submissions-private";
+let entries=[],categories=[];
+
+const $=id=>document.getElementById(id);
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+
+function notice(text,type="error"){
+ $("alert").textContent=text;
+ $("alert").className="message "+type;
+}
+async function checkAdmin(){
+ if(!db)throw Error("Supabase client unavailable.");
+ const {data:{session},error}=await db.auth.getSession();
+ if(error||!session){location.href="../staff/login.html";return false}
+ const r=await db.rpc("get_my_role");
+ if(r.error||r.data!=="admin"){location.href="../staff/login.html";return false}
+ return true;
+}
+async function load(){
+ if(!competitionId){notice("Competition ID missing.");return}
+ $("cards").innerHTML='<div class="empty">Loading entries...</div>';
+ try{
+  const [cr,catr,sr]=await Promise.all([
+   db.from("competitions").select("title").eq("id",competitionId).single(),
+   db.from("competition_categories").select("id,name").eq("competition_id",competitionId),
+   db.from("competition_submissions").select("*").eq("competition_id",competitionId).order("submitted_at",{ascending:false})
+  ]);
+  if(cr.error)throw cr.error;
+  if(catr.error)throw catr.error;
+  if(sr.error)throw sr.error;
+  $("competitionName").textContent=cr.data.title;
+  categories=catr.data||[];
+  entries=sr.data||[];
+  $("categoryFilter").innerHTML='<option value="">All categories</option>'+
+   categories.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join("");
+  await Promise.all(entries.map(async e=>{
+   if(!e.photo_url)return;
+   const r=await db.storage.from(bucket).createSignedUrl(e.photo_url,3600);
+   e.signedUrl=r.error?null:r.data.signedUrl;
+  }));
+  render();
+ }catch(e){console.error(e);notice(e.message);$("cards").innerHTML='<div class="empty">Unable to load entries.</div>'}
+}
+function render(){
+ $("total").textContent=entries.length;
+ for(const s of ["submitted","shortlisted","rejected"])
+  $(s).textContent=entries.filter(e=>e.status===s).length;
+ const cat=$("categoryFilter").value,status=$("statusFilter").value,q=$("search").value.toLowerCase();
+ const filtered=entries.filter(e=>(!cat||e.category_id===cat)&&(!status||e.status===status)&&
+  ((e.title||"").toLowerCase().includes(q)||(e.description||"").toLowerCase().includes(q)));
+ $("cards").innerHTML=filtered.length?filtered.map(e=>{
+  const category=categories.find(c=>c.id===e.category_id);
+  return `<article class="card">
+   ${e.signedUrl?`<img class="photo" src="${esc(e.signedUrl)}" alt="${esc(e.title)}">`:'<div class="photo-empty">Image unavailable</div>'}
+   <div class="card-body">
+    <h3>${esc(e.title)}</h3>
+    <div class="meta">Category: ${esc(category?.name||"Unknown")}</div>
+    <div class="meta">Submitted: ${new Date(e.submitted_at).toLocaleString()}</div>
+    <div class="meta">Photographer ID: ${esc(e.user_id)}</div>
+    <div class="meta">${esc(e.description||"")}</div>
+    <span class="status ${esc(e.status)}">${esc(e.status)}</span>
+    <div class="actions">
+     <button class="success-btn" data-id="${esc(e.id)}" data-status="shortlisted" ${e.status==="withdrawn"?"disabled":""}>Shortlist</button>
+     <button class="danger" data-id="${esc(e.id)}" data-status="rejected" ${e.status==="withdrawn"?"disabled":""}>Reject</button>
+    </div>
+   </div></article>`;
+ }).join(""):'<div class="empty">No matching entries.</div>';
+}
+async function changeStatus(id,status){
+ const entry=entries.find(e=>e.id===id);
+ if(!entry||entry.status==="withdrawn")return;
+ if(!confirm(`Mark "${entry.title}" as ${status}?`))return;
+ try{
+  const r=await db.rpc("admin_update_submission_status",{p_submission_id:id,p_status:status});
+  if(r.error)throw r.error;
+  notice("Entry updated successfully.","success");
+  await load();
+ }catch(e){notice(e.message)}
+}
+$("cards").addEventListener("click",e=>{
+ const b=e.target.closest("button[data-id]");
+ if(b)changeStatus(b.dataset.id,b.dataset.status);
+});
+for(const id of ["categoryFilter","statusFilter","search"])
+ $(id).addEventListener(id==="search"?"input":"change",render);
+$("refresh").addEventListener("click",load);
+(async()=>{try{if(await checkAdmin())await load()}catch(e){notice(e.message)}})();
+</script>
+</body>
+</html>

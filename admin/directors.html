@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Director Management | Lens Circle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#f7f6f2;--ink:#252722;--muted:#777970;--accent:#a85e42;--line:#e6e2da;--white:#fff;--green:#28734c;--red:#a83f32}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"DM Sans",sans-serif}
+.layout{min-height:100vh;display:grid;grid-template-columns:250px 1fr}
+.sidebar{background:#252722;color:#f7f6f2;padding:28px 18px}
+.brand{font:27px "Playfair Display",serif;margin:0 12px}
+.brand span{color:#d18b6d}
+.side-label{font-size:10px;letter-spacing:2px;color:#a5a69d;margin:35px 12px 12px}
+.nav a{display:block;padding:12px;margin:4px 0;border-radius:7px;color:#ddd;text-decoration:none;font-size:13px}
+.nav a:hover,.nav a.active{background:#3b3d36;color:#fff}
+.nav a.active{border-left:3px solid #d18b6d}
+main{padding:35px 4%;min-width:0}
+.eyebrow{font-size:10px;letter-spacing:3px;color:var(--accent);font-weight:700}
+h1,h2,h3{font-family:"Playfair Display",serif;font-weight:500}
+h1{font-size:43px;margin:12px 0}
+.subtitle{font-size:13px;color:var(--muted);line-height:1.7}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap}
+.pill{background:white;border:1px solid var(--line);border-radius:30px;padding:11px 16px;font-size:12px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin:30px 0}
+.stat,.panel{background:white;border:1px solid var(--line);border-radius:12px;padding:21px}
+.stat small{color:var(--muted);font-size:12px}
+.stat strong{display:block;font:34px "Playfair Display",serif;margin-top:10px}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:15px;margin:30px 0 15px;flex-wrap:wrap}
+.section-head h2{font-size:26px;margin:0}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.primary{background:var(--ink);color:white;border:0;padding:12px 17px;font-size:12px}
+.primary:hover{background:var(--accent)}
+.secondary{background:white;border:1px solid var(--line);padding:10px 14px;font-size:12px}
+.secondary:hover{border-color:var(--accent);color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.dept{background:white;border:1px solid var(--line);border-radius:11px;padding:19px}
+.dept h3{font-size:21px;margin:0 0 7px}
+.dept p{font-size:12px;color:var(--muted);line-height:1.6;margin:0 0 13px}
+.dept small{font-size:10px;color:var(--accent);letter-spacing:1px}
+.table-wrap{overflow-x:auto;background:white;border:1px solid var(--line);border-radius:12px}
+table{width:100%;border-collapse:collapse;min-width:650px}
+th{text-align:left;font-size:10px;letter-spacing:1px;color:var(--muted);padding:16px;border-bottom:1px solid var(--line)}
+td{padding:16px;border-bottom:1px solid var(--line);font-size:12px;vertical-align:middle}
+tr:last-child td{border-bottom:0}
+.badge{display:inline-block;padding:6px 10px;border-radius:30px;background:#edf5ef;color:var(--green);font-size:10px}
+.actions{display:flex;gap:7px;flex-wrap:wrap}
+.notice{display:none;padding:13px 15px;margin:18px 0;font-size:12px;line-height:1.6;background:#fff2ee;border:1px solid #efc9c2;color:var(--red)}
+.notice.success{background:#eff8f0;border-color:#c8dfcc;color:var(--green)}
+.empty{text-align:center;padding:35px;color:var(--muted);font-size:13px}
+.modal{display:none;position:fixed;inset:0;background:#17191499;z-index:5;align-items:center;justify-content:center;padding:18px}
+.modal.open{display:flex}
+.modal-card{background:var(--paper);padding:27px;border-radius:13px;width:100%;max-width:540px;max-height:90vh;overflow:auto}
+.modal-head{display:flex;justify-content:space-between;align-items:center}
+.modal-head h2{margin:0;font-size:27px}
+.close{border:0;background:none;font-size:25px}
+label{display:block;font-size:12px;font-weight:700;margin:19px 0 8px}
+select{width:100%;padding:12px;border:1px solid var(--line);background:white}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:13px 0 20px}
+.check{display:flex;align-items:center;gap:9px;background:white;padding:12px;border:1px solid var(--line);font-size:12px}
+.check input{accent-color:var(--accent)}
+.form-actions{display:flex;gap:9px;margin-top:23px}
+.form-actions button{flex:1}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.sidebar{padding:14px}.side-label{display:none}.nav{display:flex;overflow-x:auto;gap:4px}.nav a{white-space:nowrap}.stats{grid-template-columns:1fr}.grid{grid-template-columns:1fr}main{padding:25px 5%}h1{font-size:36px}}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside class="sidebar">
+<div class="brand">Lens <span>Circle</span></div>
+<div class="side-label">ADMINISTRATION</div>
+<nav class="nav">
+<a href="dashboard.html">Overview</a>
+<a href="members.html">Members</a>
+<a href="directors.html" class="active">Directors & Departments</a>
+<a href="moderators.html">Moderators</a>
+<a href="competitions.html">Competitions</a>
+<a href="exhibitions.html">Exhibitions</a>
+<a href="stories.html">Stories & Editorial</a>
+<a href="analytics.html">Platform Analytics</a>
+<a href="settings.html">Platform Settings</a>
+</nav>
+</aside>
+
+<main>
+<div class="topbar">
+<div>
+<div class="eyebrow">LEADERSHIP & ORGANISATION</div>
+<h1>Directors</h1>
+<div class="subtitle">Appoint department leaders and manage their responsibilities.</div>
+</div>
+<div class="pill">● Administrator</div>
+</div>
+
+<div id="notice" class="notice" role="status"></div>
+
+<section class="stats">
+<div class="stat"><small>Active departments</small><strong id="departmentCount">6</strong></div>
+<div class="stat"><small>Appointed Directors</small><strong id="directorCount">—</strong></div>
+<div class="stat"><small>Available departments</small><strong id="availableCount">—</strong></div>
+</section>
+
+<div class="section-head">
+<h2>Departments</h2>
+</div>
+<div class="grid" id="departmentGrid"></div>
+
+<div class="section-head">
+<h2>Appointed Directors</h2>
+<button class="primary" id="appointButton">+ Appoint Director</button>
+</div>
+<div class="table-wrap">
+<table>
+<thead><tr><th>DIRECTOR</th><th>DEPARTMENTS</th><th>APPOINTED</th><th>STATUS</th><th>ACTIONS</th></tr></thead>
+<tbody id="directorsBody"><tr><td colspan="5" class="empty">Loading Directors...</td></tr></tbody>
+</table>
+</div>
+</main>
+</div>
+
+<div class="modal" id="directorModal" aria-hidden="true">
+<div class="modal-card">
+<div class="modal-head">
+<h2 id="modalTitle">Appoint Director</h2>
+<button class="close" id="closeModal" type="button">×</button>
+</div>
+<form id="directorForm">
+<label for="candidate">Select an existing Member</label>
+<select id="candidate" required>
+<option value="">Loading eligible Members...</option>
+</select>
+<label>Assign departments</label>
+<div class="checks" id="departmentChecks"></div>
+<div class="form-actions">
+<button class="secondary" type="button" id="cancelButton">Cancel</button>
+<button class="primary" type="submit" id="saveButton">Save appointment</button>
+</div>
+</form>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../assets/js/supabase-client.js"></script>
+<script>
+(function(){
+"use strict";
+
+const client=window.LensCircle;
+const db=client&&client.db;
+
+const departments=[
+{id:"8cb92332-0e7f-4275-b4b9-420e965058cf",name:"Activities Department",slug:"activities",description:"Photo of the Day, challenges and activities."},
+{id:"ee55d43c-58d4-4bd2-9568-eab275d1920d",name:"Administration Department",slug:"administration",description:"Internal administrative coordination."},
+{id:"4cfbc7d1-c543-4817-9088-972791e3c53d",name:"Community Department",slug:"community",description:"Member engagement and community management."},
+{id:"f124432b-2bbd-444c-9add-76059d6b7011",name:"Competition Department",slug:"competition",description:"Competitions, judging and awards."},
+{id:"0c533a48-4490-4854-a3b2-33c660d0dc63",name:"Editorial Department",slug:"editorial",description:"Photography stories and publications."},
+{id:"0c4de051-0302-473b-99f6-6c565bde44ad",name:"Outreach Department",slug:"outreach",description:"Partnerships and collaborations."}
+];
+
+let directors=[];
+let members=[];
+let editingId=null;
+
+const $=id=>document.getElementById(id);
+const notice=$("notice");
+
+function escapeHTML(value){
+return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+}
+
+function message(text,success=false){
+notice.textContent=text;
+notice.className=success?"notice success":"notice";
+notice.style.display="block";
+}
+
+function clearMessage(){notice.style.display="none";}
+
+function date(value){
+if(!value)return "—";
+const d=new Date(value);
+return Number.isNaN(d.getTime())?"—":d.toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"});
+}
+
+function renderDepartments(){
+$("departmentGrid").innerHTML=departments.map(d=>`
+<div class="dept">
+<h3>${escapeHTML(d.name)}</h3>
+<p>${escapeHTML(d.description)}</p>
+<small>/${escapeHTML(d.slug)}</small>
+</div>`).join("");
+$("departmentChecks").innerHTML=departments.map(d=>`
+<label class="check">
+<input type="checkbox" value="${d.id}" name="department">
+${escapeHTML(d.name)}
+</label>`).join("");
+}
+
+function departmentIds(director){
+const list=director.assigned_departments;
+if(!Array.isArray(list))return [];
+return list.map(item=>{
+if(typeof item==="string")return item;
+return item.department_id||item.id||null;
+}).filter(Boolean);
+}
+
+function departmentNames(director){
+const list=director.assigned_departments;
+if(!Array.isArray(list))return "No departments assigned";
+const names=list.map(item=>{
+if(typeof item==="string"){
+return departments.find(d=>d.id===item)?.name||item;
+}
+return item.department_name||item.name||
+departments.find(d=>d.id===(item.department_id||item.id))?.name||null;
+}).filter(Boolean);
+return names.length?names.map(escapeHTML).join("<br>"):"No departments assigned";
+}
+
+function renderDirectors(){
+$("directorCount").textContent=directors.length;
+const assigned=new Set(directors.flatMap(departmentIds));
+$("availableCount").textContent=departments.filter(d=>!assigned.has(d.id)).length;
+
+if(!directors.length){
+$("directorsBody").innerHTML='<tr><td colspan="5" class="empty">No Directors have been appointed yet.</td></tr>';
+return;
+}
+
+$("directorsBody").innerHTML=directors.map((d,index)=>`
+<tr>
+<td><strong>${escapeHTML(d.director_email||"Director")}</strong></td>
+<td>${departmentNames(d)}</td>
+<td>${date(d.assigned_at)}</td>
+<td><span class="badge">${d.is_active?"Active":"Inactive"}</span></td>
+<td><div class="actions">
+<button class="secondary" data-edit="${index}" type="button">Edit</button>
+<button class="secondary" data-remove="${index}" type="button">Remove</button>
+</div></td>
+</tr>`).join("");
+}
+
+async function loadDirectors(){
+const {data,error}=await db.rpc("admin_get_directors");
+if(error)throw error;
+directors=data||[];
+renderDirectors();
+}
+
+async function loadMembers(){
+const {data,error}=await db.rpc("admin_list_members",{p_search:""});
+if(error)throw error;
+members=data||[];
+$("candidate").innerHTML='<option value="">Choose a Member...</option>'+members.map(m=>{
+const label=m.full_name||m.username||m.id;
+return `<option value="${escapeHTML(m.id)}">${escapeHTML(label)}${m.username?" (@"+escapeHTML(m.username)+")":""}</option>`;
+}).join("");
+}
+
+function openModal(director=null){
+editingId=director?director.director_id:null;
+$("modalTitle").textContent=director?"Update Director":"Appoint Director";
+$("saveButton").textContent=director?"Update assignments":"Save appointment";
+$("candidate").disabled=!!director;
+$("candidate").value=director?director.director_id:"";
+
+const ids=director?departmentIds(director):[];
+document.querySelectorAll('input[name="department"]').forEach(input=>{
+input.checked=ids.includes(input.value);
+});
+$("directorModal").classList.add("open");
+$("directorModal").setAttribute("aria-hidden","false");
+}
+
+function closeModal(){
+$("directorModal").classList.remove("open");
+$("directorModal").setAttribute("aria-hidden","true");
+editingId=null;
+$("directorForm").reset();
+$("candidate").disabled=false;
+}
+
+async function submitForm(event){
+event.preventDefault();
+clearMessage();
+
+const userId=editingId||$("candidate").value;
+const departmentIdsSelected=Array.from(document.querySelectorAll('input[name="department"]:checked')).map(i=>i.value);
+
+if(!userId){message("Please select a Member.");return;}
+if(!departmentIdsSelected.length){message("Select at least one department.");return;}
+
+$("saveButton").disabled=true;
+$("saveButton").textContent="Saving...";
+
+try{
+const functionName=editingId?"admin_update_director_departments":"admin_appoint_director";
+const {data,error}=await db.rpc(functionName,{
+p_user_id:userId,
+p_department_ids:departmentIdsSelected
+});
+if(error)throw error;
+closeModal();
+message(data||"Director appointment updated successfully.",true);
+await loadDirectors();
+}catch(error){
+console.error(error);
+message(error.message||"Unable to save Director appointment.");
+}finally{
+$("saveButton").disabled=false;
+$("saveButton").textContent=editingId?"Update assignments":"Save appointment";
+}
+}
+
+async function removeDirector(director){
+const label=director.director_email||"this Director";
+if(!confirm(`Remove the Director appointment for ${label}?`))return;
+
+clearMessage();
+try{
+const {data,error}=await db.rpc("admin_remove_director",{p_user_id:director.director_id});
+if(error)throw error;
+message(data||"Director appointment removed successfully.",true);
+await loadDirectors();
+}catch(error){
+message(error.message||"Unable to remove Director.");
+}
+}
+
+async function initialise(){
+try{
+if(!client||!client.configured||!db)throw new Error("Supabase client is not configured.");
+
+const {data,error}=await db.auth.getSession();
+if(error)throw error;
+if(!data.session){window.location.replace("../staff/login.html");return;}
+
+const {data:role,error:roleError}=await db.rpc("get_my_role");
+if(roleError)throw roleError;
+if(role!=="admin"){
+await db.auth.signOut();
+window.location.replace("../staff/login.html");
+return;
+}
+
+renderDepartments();
+await Promise.all([loadDirectors(),loadMembers()]);
+}catch(error){
+console.error(error);
+message(error.message||"Unable to load Director management.");
+$("directorsBody").innerHTML='<tr><td colspan="5" class="empty">Unable to load Director records.</td></tr>';
+}
+}
+
+$("appointButton").addEventListener("click",()=>{
+if(!members.length){message("No eligible Member accounts were found. Members must have an active Member role.");return;}
+openModal();
+});
+
+$("directorForm").addEventListener("submit",submitForm);
+$("closeModal").addEventListener("click",closeModal);
+$("cancelButton").addEventListener("click",closeModal);
+$("directorModal").addEventListener("click",e=>{if(e.target.id==="directorModal")closeModal();});
+
+$("directorsBody").addEventListener("click",e=>{
+const edit=e.target.closest("[data-edit]");
+const remove=e.target.closest("[data-remove]");
+if(edit)openModal(directors[Number(edit.dataset.edit)]);
+if(remove)removeDirector(directors[Number(remove.dataset.remove)]);
+});
+
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});
+
+initialise();
+})();
+</script>
+</body>
+</html>

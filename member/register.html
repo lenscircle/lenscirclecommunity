@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -416,7 +416,6 @@
 
   <main class="main">
 
-    <!-- LEFT VISUAL PANEL -->
     <section class="visual-panel">
       <div class="visual-content">
 
@@ -440,7 +439,6 @@
       </div>
     </section>
 
-    <!-- REGISTRATION FORM -->
     <section class="register-panel">
       <div class="register-card">
 
@@ -618,33 +616,16 @@
   <!-- SUPABASE SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+  <!-- SHARED LENS CIRCLE SUPABASE CLIENT -->
+  <script src="../assets/js/supabase-client.js"></script>
+
   <script>
-    /*
-      SUPABASE CONFIGURATION
+    "use strict";
 
-      Replace these values with your actual project credentials.
-
-      Use only the publishable key or legacy anon key.
-      NEVER use the service_role key in frontend code.
-    */
-
-    const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
-    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY";
-
-    const isConfigured =
-      SUPABASE_URL.startsWith("https://") &&
-      !SUPABASE_URL.includes("YOUR_SUPABASE") &&
-      SUPABASE_ANON_KEY.length > 20 &&
-      !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE");
-
-    let supabaseClient = null;
-
-    if (isConfigured && window.supabase) {
-      supabaseClient = window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_ANON_KEY
-      );
-    }
+    // Use the existing shared Supabase client.
+    const supabaseClient = window.LensCircle?.configured
+      ? window.LensCircle.db
+      : null;
 
     const form = document.getElementById("registerForm");
     const fullNameInput = document.getElementById("fullName");
@@ -684,32 +665,32 @@
     });
 
     // Validate matching passwords
-    confirmPasswordInput.addEventListener("input", () => {
+    function validatePasswords() {
       confirmPasswordInput.setCustomValidity(
         confirmPasswordInput.value &&
         confirmPasswordInput.value !== passwordInput.value
           ? "Passwords do not match."
           : ""
       );
-    });
+    }
 
-    passwordInput.addEventListener("input", () => {
-      confirmPasswordInput.setCustomValidity(
-        confirmPasswordInput.value &&
-        confirmPasswordInput.value !== passwordInput.value
-          ? "Passwords do not match."
-          : ""
-      );
-    });
+    confirmPasswordInput.addEventListener("input", validatePasswords);
+    passwordInput.addEventListener("input", validatePasswords);
 
     // Existing session check
     async function checkExistingSession() {
       if (!supabaseClient) return;
 
-      const { data, error } = await supabaseClient.auth.getSession();
+      try {
+        const { data, error } = await supabaseClient.auth.getSession();
 
-      if (!error && data.session) {
-        window.location.replace("dashboard.html");
+        if (error) throw error;
+
+        if (data.session) {
+          window.location.replace("dashboard.html");
+        }
+      } catch (error) {
+        console.error("Session check failed:", error);
       }
     }
 
@@ -720,7 +701,7 @@
 
       if (!supabaseClient) {
         showStatus(
-          "Supabase is not configured yet. Add your project URL and publishable/anon key in this file.",
+          "Supabase could not be initialized. Check assets/js/supabase-client.js and confirm that the Supabase SDK loads before it.",
           "error"
         );
         return;
@@ -796,9 +777,7 @@
           }
         });
 
-        if (error) {
-          throw error;
-        }
+        if (error) throw error;
 
         if (data.session) {
           showStatus(
@@ -840,3 +819,4 @@
 
 </body>
 </html>
+```

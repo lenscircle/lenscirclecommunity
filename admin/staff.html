@@ -1,0 +1,562 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staff Management | Lens Circle Admin</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../assets/js/supabase-client.js"></script>
+
+<style>
+:root {
+    --bg:#f5f6fa;
+    --white:#fff;
+    --dark:#172033;
+    --muted:#788196;
+    --primary:#6254e7;
+    --border:#e8eaf1;
+    --green:#15966a;
+    --red:#d94b58;
+    --shadow:0 5px 22px rgba(20,30,60,.06);
+}
+*{box-sizing:border-box}
+body{
+    margin:0;
+    font-family:Inter,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--dark);
+}
+.layout{display:flex;min-height:100vh}
+.sidebar{
+    width:250px;
+    background:#172033;
+    color:white;
+    padding:26px 17px;
+    flex-shrink:0;
+}
+.brand{font-size:21px;font-weight:800;padding:0 12px 30px}
+.brand span{color:#a99fff}
+.nav-label{
+    color:#8790a5;font-size:11px;font-weight:700;
+    letter-spacing:1.5px;padding:12px;
+}
+.nav a{
+    display:block;color:#c8cddd;text-decoration:none;
+    padding:12px;border-radius:9px;margin:4px 0;font-size:14px;
+}
+.nav a:hover,.nav a.active{background:#302d59;color:white}
+.main{flex:1;min-width:0;padding:32px}
+.topbar{
+    display:flex;justify-content:space-between;
+    align-items:center;gap:15px;margin-bottom:28px;
+}
+h1{font-size:27px;margin:0 0 7px}
+.subtitle{color:var(--muted);font-size:14px}
+.badge{
+    background:#eeecff;color:var(--primary);
+    padding:9px 14px;border-radius:20px;font-size:12px;font-weight:700;
+}
+.stats{
+    display:grid;grid-template-columns:repeat(3,1fr);
+    gap:18px;margin-bottom:25px;
+}
+.stat,.panel{
+    background:white;border:1px solid var(--border);
+    border-radius:15px;padding:22px;box-shadow:var(--shadow);
+}
+.stat small{color:var(--muted);font-size:13px}
+.stat strong{display:block;font-size:29px;margin-top:9px}
+.panel{padding:24px}
+.panel-head{
+    display:flex;justify-content:space-between;
+    align-items:center;gap:15px;flex-wrap:wrap;margin-bottom:20px;
+}
+.panel h2{font-size:18px;margin:0}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+input,select{
+    border:1px solid var(--border);border-radius:9px;
+    padding:11px 13px;font-size:13px;background:white;
+    outline:none;max-width:100%;
+}
+input:focus,select:focus{border-color:var(--primary)}
+button{
+    border:0;border-radius:9px;padding:11px 16px;
+    font-weight:700;cursor:pointer;font-size:13px;
+}
+.primary{background:var(--primary);color:white}
+.secondary{background:#eeecff;color:var(--primary)}
+.danger{background:#fff0f0;color:var(--red)}
+button:disabled{opacity:.55;cursor:not-allowed}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:760px}
+th{
+    text-align:left;color:var(--muted);font-size:11px;
+    text-transform:uppercase;letter-spacing:.7px;
+    padding:13px;border-bottom:1px solid var(--border);
+}
+td{
+    padding:15px 13px;border-bottom:1px solid var(--border);
+    font-size:13px;vertical-align:middle;
+}
+.person{font-weight:700}
+.email{font-size:11px;color:var(--muted);margin-top:5px}
+.role{
+    display:inline-block;padding:6px 9px;border-radius:20px;
+    font-size:11px;font-weight:700;background:#eeecff;color:var(--primary);
+}
+.role.director{background:#e5f5ed;color:#148354}
+.department{display:inline-block;background:#f1f2f7;
+    padding:5px 8px;border-radius:6px;margin:2px;font-size:11px}
+.empty{text-align:center;padding:35px;color:var(--muted)}
+.message{padding:12px;border-radius:9px;margin-bottom:15px;font-size:13px;display:none}
+.error{background:#fff0f0;color:#b52d3a}
+.success{background:#e9f8f0;color:#14784c}
+.modal-bg{
+    display:none;position:fixed;inset:0;background:#11182799;
+    z-index:20;align-items:center;justify-content:center;padding:15px;
+}
+.modal{
+    background:white;width:100%;max-width:540px;
+    border-radius:16px;padding:25px;max-height:90vh;overflow:auto;
+}
+.modal h2{margin:0 0 8px}
+.modal p{font-size:13px;color:var(--muted);line-height:1.5}
+.form-group{margin:17px 0}
+.form-group label{display:block;font-size:12px;font-weight:700;margin-bottom:8px}
+.form-group select,.form-group input{width:100%}
+.department-list{
+    display:grid;grid-template-columns:1fr 1fr;gap:10px;
+}
+.dept-option{
+    border:1px solid var(--border);padding:12px;
+    border-radius:9px;font-size:12px;display:flex;
+    gap:8px;align-items:center;
+}
+.dept-option input{width:auto}
+.modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}
+.loading{text-align:center;padding:35px;color:var(--muted)}
+@media(max-width:850px){
+    .sidebar{width:205px}
+    .main{padding:22px}
+}
+@media(max-width:650px){
+    .layout{display:block}
+    .sidebar{width:100%;padding:15px}
+    .brand{padding-bottom:12px}
+    .nav{display:flex;overflow-x:auto;gap:5px}
+    .nav-label{display:none}
+    .nav a{white-space:nowrap;font-size:12px}
+    .main{padding:18px}
+    .stats{grid-template-columns:1fr}
+    .topbar{align-items:flex-start}
+    .department-list{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<div class="layout">
+
+<aside class="sidebar">
+    <div class="brand">LENS <span>CIRCLE</span></div>
+
+    <div class="nav-label">ADMINISTRATION</div>
+
+    <nav class="nav">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="members.html">Members</a>
+        <a href="directors.html">Directors</a>
+        <a href="staff.html" class="active">Staff Management</a>
+    </nav>
+</aside>
+
+<main class="main">
+
+<header class="topbar">
+    <div>
+        <h1>Staff Management</h1>
+        <div class="subtitle">Manage department assignments and staff appointments.</div>
+    </div>
+    <div class="badge">ADMIN CONTROL</div>
+</header>
+
+<section class="stats">
+    <div class="stat">
+        <small>Total Staff</small>
+        <strong id="totalStaff">—</strong>
+    </div>
+    <div class="stat">
+        <small>Directors</small>
+        <strong id="totalDirectors">—</strong>
+    </div>
+    <div class="stat">
+        <small>Moderators</small>
+        <strong id="totalModerators">—</strong>
+    </div>
+</section>
+
+<section class="panel">
+
+    <div class="panel-head">
+        <h2>Staff Directory</h2>
+
+        <div class="actions">
+            <input id="searchInput" type="search"
+                   placeholder="Search staff..." oninput="renderStaff()">
+
+            <button class="secondary" onclick="loadStaff()">Refresh</button>
+
+            <button class="primary" onclick="openModal()">
+                + Appoint Moderator
+            </button>
+        </div>
+    </div>
+
+    <div id="alertBox" class="message"></div>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Staff Member</th>
+                    <th>Role</th>
+                    <th>Department</th>
+                    <th>Assignment</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="staffTable">
+                <tr><td colspan="5" class="loading">Loading staff...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+</section>
+</main>
+</div>
+
+<!-- APPOINTMENT MODAL -->
+
+<div class="modal-bg" id="modalBg">
+<div class="modal">
+
+    <h2>Appoint Moderator</h2>
+    <p>Select an existing Member and assign them to one or more departments.</p>
+
+    <div id="modalAlert" class="message"></div>
+
+    <form id="appointmentForm">
+
+        <div class="form-group">
+            <label>Select Member</label>
+            <select id="memberSelect" required>
+                <option value="">Loading members...</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Select Departments</label>
+            <div class="department-list" id="departmentList"></div>
+        </div>
+
+        <div class="modal-actions">
+            <button type="button" class="secondary" onclick="closeModal()">Cancel</button>
+            <button type="submit" class="primary" id="submitButton">Appoint Moderator</button>
+        </div>
+
+    </form>
+</div>
+</div>
+
+<script>
+const db = window.LensCircle?.db;
+
+let staffData = [];
+let membersData = [];
+let departmentsData = [];
+
+function showMessage(message, type="error", target="alertBox"){
+    const box = document.getElementById(target);
+    box.textContent = message;
+    box.className = "message " + type;
+    box.style.display = "block";
+}
+
+function hideMessage(target="alertBox"){
+    const box = document.getElementById(target);
+    box.style.display = "none";
+}
+
+function escapeHTML(value){
+    return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&":"&amp;",
+        "<":"&lt;",
+        ">":"&gt;",
+        '"':"&quot;",
+        "'":"&#039;"
+    })[char]);
+}
+
+async function checkAdmin(){
+    if(!db){
+        throw new Error("Supabase client is not configured.");
+    }
+
+    const {data:{session},error} = await db.auth.getSession();
+
+    if(error || !session){
+        location.href="../staff/login.html";
+        return false;
+    }
+
+    const {data:role,error:roleError} = await db.rpc("get_my_role");
+
+    if(roleError || role !== "admin"){
+        location.href="../staff/login.html";
+        return false;
+    }
+
+    return true;
+}
+
+async function loadStaff(){
+    hideMessage();
+
+    document.getElementById("staffTable").innerHTML =
+        '<tr><td colspan="5" class="loading">Loading staff records...</td></tr>';
+
+    try{
+        const {data,error} = await db.rpc("admin_list_staff");
+
+        if(error) throw error;
+
+        staffData = data || [];
+        renderStaff();
+
+    }catch(error){
+        console.error(error);
+        document.getElementById("staffTable").innerHTML =
+            '<tr><td colspan="5" class="empty">Unable to load staff records.</td></tr>';
+
+        showMessage(error.message || "Could not load staff records.");
+    }
+}
+
+function renderStaff(){
+    const query = document.getElementById("searchInput").value.toLowerCase().trim();
+
+    const filtered = staffData.filter(person =>
+        [person.full_name,person.username,person.email,person.department_name,
+         person.assignment_role]
+        .some(value => String(value || "").toLowerCase().includes(query))
+    );
+
+    const uniqueStaff = new Map();
+
+    staffData.forEach(person => {
+        if(!uniqueStaff.has(person.user_id)){
+            uniqueStaff.set(person.user_id,person.assignment_role);
+        }
+    });
+
+    document.getElementById("totalStaff").textContent = uniqueStaff.size;
+    document.getElementById("totalDirectors").textContent =
+        [...uniqueStaff.values()].filter(role => role === "director").length;
+    document.getElementById("totalModerators").textContent =
+        [...uniqueStaff.values()].filter(role => role === "moderator").length;
+
+    const tbody = document.getElementById("staffTable");
+
+    if(!filtered.length){
+        tbody.innerHTML = '<tr><td colspan="5" class="empty">No staff records found.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = filtered.map(person => `
+        <tr>
+            <td>
+                <div class="person">${escapeHTML(person.full_name || "Unnamed Member")}</div>
+                <div class="email">
+                    ${escapeHTML(person.email || "")}
+                    ${person.username ? " · @" + escapeHTML(person.username) : ""}
+                </div>
+            </td>
+
+            <td>
+                <span class="role ${person.assignment_role === "director" ? "director" : ""}">
+                    ${escapeHTML(person.assignment_role)}
+                </span>
+            </td>
+
+            <td>
+                <span class="department">${escapeHTML(person.department_name)}</span>
+            </td>
+
+            <td>
+                <span style="color:var(--green);font-weight:700">Active</span>
+            </td>
+
+            <td>
+                <button class="danger"
+                    onclick="removeAssignment('${person.user_id}','${person.department_id}','${escapeHTML(person.full_name || "this staff member")}','${escapeHTML(person.department_name)}')">
+                    Remove
+                </button>
+            </td>
+        </tr>
+    `).join("");
+}
+
+async function loadMembers(){
+    const {data,error} = await db.rpc("admin_list_members",{p_search:""});
+
+    if(error) throw error;
+
+    membersData = data || [];
+
+    const select = document.getElementById("memberSelect");
+
+    if(!membersData.length){
+        select.innerHTML = '<option value="">No eligible members available</option>';
+        return;
+    }
+
+    select.innerHTML = '<option value="">Choose a member</option>' +
+        membersData.map(member => `
+            <option value="${member.id}">
+                ${escapeHTML(member.full_name || member.username || member.id)}
+                ${member.username ? " (@" + escapeHTML(member.username) + ")" : ""}
+            </option>
+        `).join("");
+}
+
+async function loadDepartments(){
+    const {data,error} = await db
+        .from("departments")
+        .select("id,name,slug")
+        .eq("is_active",true)
+        .order("name");
+
+    if(error) throw error;
+
+    departmentsData = data || [];
+
+    document.getElementById("departmentList").innerHTML =
+        departmentsData.map(department => `
+            <label class="dept-option">
+                <input type="checkbox" name="departments"
+                       value="${department.id}">
+                ${escapeHTML(department.name)}
+            </label>
+        `).join("");
+}
+
+function openModal(){
+    hideMessage("modalAlert");
+    document.getElementById("modalBg").style.display = "flex";
+}
+
+function closeModal(){
+    document.getElementById("modalBg").style.display = "none";
+    document.getElementById("appointmentForm").reset();
+    hideMessage("modalAlert");
+}
+
+async function appointModerator(event){
+    event.preventDefault();
+
+    const userId = document.getElementById("memberSelect").value;
+
+    const selectedDepartments = [
+        ...document.querySelectorAll('input[name="departments"]:checked')
+    ].map(input => input.value);
+
+    if(!userId){
+        showMessage("Please select a Member.","error","modalAlert");
+        return;
+    }
+
+    if(!selectedDepartments.length){
+        showMessage("Select at least one department.","error","modalAlert");
+        return;
+    }
+
+    const button = document.getElementById("submitButton");
+    button.disabled = true;
+    button.textContent = "Processing...";
+
+    try{
+        for(const departmentId of selectedDepartments){
+            const {error} = await db.rpc("assign_staff_member",{
+                p_user_id:userId,
+                p_department_id:departmentId,
+                p_assignment_role:"moderator"
+            });
+
+            if(error) throw error;
+        }
+
+        closeModal();
+        showMessage("Moderator appointment completed successfully.","success");
+        await loadStaff();
+
+    }catch(error){
+        console.error(error);
+        showMessage(error.message || "Appointment failed.","error","modalAlert");
+    }finally{
+        button.disabled = false;
+        button.textContent = "Appoint Moderator";
+    }
+}
+
+async function removeAssignment(userId,departmentId,name,department){
+    const confirmed = confirm(
+        `Remove ${name} from ${department}?\n\nThis will deactivate only this department assignment.`
+    );
+
+    if(!confirmed) return;
+
+    try{
+        const {error} = await db.rpc("remove_staff_member",{
+            p_user_id:userId,
+            p_department_id:departmentId
+        });
+
+        if(error) throw error;
+
+        showMessage("Department assignment removed successfully.","success");
+        await loadStaff();
+
+    }catch(error){
+        console.error(error);
+        showMessage(error.message || "Could not remove assignment.");
+    }
+}
+
+document.getElementById("appointmentForm")
+    .addEventListener("submit",appointModerator);
+
+(async function init(){
+    try{
+        const authorized = await checkAdmin();
+        if(!authorized) return;
+
+        await Promise.all([
+            loadMembers(),
+            loadDepartments()
+        ]);
+
+        await loadStaff();
+
+    }catch(error){
+        console.error(error);
+        showMessage(error.message || "Page initialization failed.");
+    }
+})();
+</script>
+
+</body>
+</html>
+```

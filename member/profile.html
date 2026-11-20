@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -538,16 +538,14 @@
 
       <div class="profile-layout">
 
-        <!-- PROFILE PREVIEW -->
         <aside class="profile-sidebar">
 
           <section class="card avatar-section">
 
-            <div class="avatar" id="avatarPreview">
-              M
-            </div>
+            <div class="avatar" id="avatarPreview">M</div>
 
             <h2 id="previewName">Member Name</h2>
+
             <div class="username-display" id="previewUsername">
               @username
             </div>
@@ -594,7 +592,6 @@
 
         </aside>
 
-        <!-- PROFILE FORM -->
         <section class="card form-card">
 
           <h2>Profile information</h2>
@@ -681,6 +678,7 @@
                 id="bio"
                 maxlength="500"
                 placeholder="Tell the community about yourself, your photography journey and what inspires you..."></textarea>
+
               <p class="field-note">
                 Maximum 500 characters.
                 <span id="bioCount">0 / 500</span>
@@ -756,6 +754,7 @@
             </div>
 
             <div class="form-actions">
+
               <button
                 type="submit"
                 class="save-button"
@@ -766,6 +765,7 @@
               <a href="dashboard.html" class="cancel-link">
                 Cancel and return
               </a>
+
             </div>
 
             <div
@@ -789,34 +789,60 @@
     © <span id="year"></span> Lens Circle. The world, through your lens.
   </footer>
 
+  <!-- SUPABASE SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
-    /*
-      SUPABASE CONFIGURATION
+    "use strict";
 
-      Use your project's URL and publishable/anon key.
-      Never place the service_role key in frontend code.
+    /*
+    ========================================================
+    LENS CIRCLE - PROFILE PAGE
+    Direct Supabase initialization
+    ========================================================
     */
 
-    const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
-    const SUPABASE_ANON_KEY = "YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY";
+    const SUPABASE_URL =
+      "https://cmqxweqbepfsslghxaog.supabase.co";
 
-    const isConfigured =
-      SUPABASE_URL.startsWith("https://") &&
-      !SUPABASE_URL.includes("YOUR_SUPABASE") &&
-      SUPABASE_ANON_KEY.length > 20 &&
-      !SUPABASE_ANON_KEY.includes("YOUR_SUPABASE");
+    const SUPABASE_PUBLISHABLE_KEY =
+      "sb_publishable_9UdYM-0Csw-RMv1FTRJqLQ_U6G704SI";
 
     let supabaseClient = null;
     let currentUser = null;
     let previewObjectUrl = null;
 
-    if (isConfigured && window.supabase) {
-      supabaseClient = window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_ANON_KEY
-      );
+    // Initialize Supabase directly
+    if (
+      window.supabase &&
+      typeof window.supabase.createClient === "function"
+    ) {
+      try {
+        supabaseClient = window.supabase.createClient(
+          SUPABASE_URL,
+          SUPABASE_PUBLISHABLE_KEY,
+          {
+            auth: {
+              autoRefreshToken: true,
+              persistSession: true,
+              detectSessionInUrl: true
+            }
+          }
+        );
+
+        console.info(
+          "Lens Circle: Profile Supabase client initialized."
+        );
+
+      } catch (error) {
+        console.error(
+          "Lens Circle profile initialization failed:",
+          error
+        );
+      }
+
+    } else {
+      console.error("Lens Circle: Supabase SDK did not load.");
     }
 
     const loading = document.getElementById("loading");
@@ -853,11 +879,13 @@
       const username = usernameInput.value.trim() || "username";
 
       document.getElementById("previewName").textContent = name;
+
       document.getElementById("previewUsername").textContent =
         "@" + username;
 
       if (!previewObjectUrl) {
-        avatarPreview.textContent = name.charAt(0).toUpperCase();
+        avatarPreview.textContent =
+          name.charAt(0).toUpperCase();
       }
     }
 
@@ -868,14 +896,20 @@
 
     function getSelectedInterests() {
       return Array.from(
-        document.querySelectorAll(".interest-option input:checked")
+        document.querySelectorAll(
+          ".interest-option input:checked"
+        )
       ).map(input => input.value);
     }
 
     function setSelectedInterests(interests) {
-      const selected = Array.isArray(interests) ? interests : [];
+      const selected = Array.isArray(interests)
+        ? interests
+        : [];
 
-      document.querySelectorAll(".interest-option input").forEach(input => {
+      document.querySelectorAll(
+        ".interest-option input"
+      ).forEach(input => {
         input.checked = selected.includes(input.value);
       });
     }
@@ -891,9 +925,11 @@
       websiteInput.value = metadata.website || "";
       bioInput.value = metadata.bio || "";
 
-      setSelectedInterests(metadata.photography_interests || []);
+      setSelectedInterests(
+        metadata.photography_interests || []
+      );
 
-      if (metadata.avatar_url) {
+      if (metadata.avatar_url && !previewObjectUrl) {
         avatarPreview.innerHTML = "";
 
         const image = document.createElement("img");
@@ -913,7 +949,7 @@
     async function initializeProfile() {
       if (!supabaseClient) {
         showError(
-          "Supabase is not configured. Add your project URL and publishable/anon key to this file."
+          "The Supabase service could not be initialized. Refresh the page and try again. If the problem continues, check whether the Supabase SDK is loading."
         );
         return;
       }
@@ -930,17 +966,25 @@
         }
 
         currentUser = data.session.user;
+
         populateProfile(currentUser);
 
       } catch (error) {
+        console.error("Profile loading error:", error);
+
         showError(
-          error.message || "Unable to load your member profile."
+          error.message ||
+          "Unable to load your member profile."
         );
       }
     }
 
-    // Update live preview
-    fullNameInput.addEventListener("input", updatePreview);
+    // Live preview
+    fullNameInput.addEventListener(
+      "input",
+      updatePreview
+    );
+
     usernameInput.addEventListener("input", () => {
       usernameInput.value = usernameInput.value
         .replace(/[^A-Za-z0-9_]/g, "")
@@ -949,9 +993,12 @@
       updatePreview();
     });
 
-    bioInput.addEventListener("input", updateBioCount);
+    bioInput.addEventListener(
+      "input",
+      updateBioCount
+    );
 
-    // Local-only profile photo preview
+    // Local profile photo preview
     document.getElementById("profilePhoto").addEventListener(
       "change",
       event => {
@@ -970,6 +1017,7 @@
             "Please select a JPG, PNG or WebP image.",
             "error"
           );
+
           event.target.value = "";
           return;
         }
@@ -979,6 +1027,7 @@
             "Your image must be smaller than 2 MB.",
             "error"
           );
+
           event.target.value = "";
           return;
         }
@@ -998,7 +1047,7 @@
         avatarPreview.appendChild(image);
 
         showStatus(
-          "Photo preview updated. Permanent photo upload will be enabled after Storage integration.",
+          "Photo preview updated. Permanent photo upload is not enabled yet.",
           "info"
         );
       }
@@ -1015,8 +1064,11 @@
 
         document.getElementById("profilePhoto").value = "";
 
-        const name = fullNameInput.value.trim() || "Member";
-        avatarPreview.textContent = name.charAt(0).toUpperCase();
+        const name =
+          fullNameInput.value.trim() || "Member";
+
+        avatarPreview.textContent =
+          name.charAt(0).toUpperCase();
 
         showStatus(
           "Local photo preview removed. No stored profile photo was changed.",
@@ -1038,14 +1090,21 @@
       }
 
       const fullName = fullNameInput.value.trim();
-      const username = usernameInput.value.trim().toLowerCase();
+
+      const username =
+        usernameInput.value.trim().toLowerCase();
+
       const location = locationInput.value.trim();
       const website = websiteInput.value.trim();
       const bio = bioInput.value.trim();
+
       const interests = getSelectedInterests();
 
       if (fullName.length < 2) {
-        showStatus("Please enter a valid display name.", "error");
+        showStatus(
+          "Please enter a valid display name.",
+          "error"
+        );
         return;
       }
 
@@ -1093,31 +1152,41 @@
         );
 
       } catch (error) {
+        console.error("Profile save error:", error);
+
         showStatus(
-          error.message || "Unable to save your profile.",
+          error.message ||
+          "Unable to save your profile.",
           "error"
         );
 
       } finally {
         saveButton.disabled = false;
-        saveButton.textContent = "Save profile changes →";
+        saveButton.textContent =
+          "Save profile changes →";
       }
     });
 
-    // Keep the profile page protected
+    // Authentication state monitoring
     if (supabaseClient) {
-      supabaseClient.auth.onAuthStateChange((event, session) => {
-        if (event === "SIGNED_OUT" || !session) {
-          window.location.replace("login.html");
+      supabaseClient.auth.onAuthStateChange(
+        (event, session) => {
+          if (event === "SIGNED_OUT" || !session) {
+            window.location.replace("login.html");
+          }
         }
-      });
+      );
     }
 
+    // Footer year
     document.getElementById("year").textContent =
       new Date().getFullYear();
 
+    // Initialize page
     initializeProfile();
+
   </script>
 
 </body>
 </html>
+```
